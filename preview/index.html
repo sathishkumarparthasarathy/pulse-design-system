@@ -1,0 +1,2958 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PULSE Design System · Powered by scienaptic.ai</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: {
+          sans: ['Inter','-apple-system','BlinkMacSystemFont','sans-serif'],
+          mono: ['JetBrains Mono','ui-monospace','Menlo','monospace'],
+        },
+        fontSize: {
+          'display-2xl': ['4.5rem',  { lineHeight: '5.625rem', letterSpacing: '-0.02em' }],
+          'display-xl':  ['3.75rem', { lineHeight: '4.5rem',   letterSpacing: '-0.02em' }],
+          'display-lg':  ['3rem',    { lineHeight: '3.75rem',  letterSpacing: '-0.02em' }],
+          'display-md':  ['2.25rem', { lineHeight: '2.75rem',  letterSpacing: '-0.02em' }],
+          'display-sm':  ['1.875rem',{ lineHeight: '2.375rem' }],
+          'display-xs':  ['1.5rem',  { lineHeight: '2rem' }],
+          'text-xl': ['1.25rem',  { lineHeight: '1.875rem' }],
+          'text-lg': ['1.125rem', { lineHeight: '1.75rem' }],
+          'text-md': ['1rem',     { lineHeight: '1.5rem' }],
+          'text-sm': ['0.875rem', { lineHeight: '1.25rem' }],
+          'text-xs': ['0.75rem',  { lineHeight: '1.125rem' }],
+        },
+        boxShadow: {
+          // Elevation
+          'xs':  '0 1px 2px 0 rgba(16, 24, 40, 0.05)',
+          'sm':  '0 1px 2px 0 rgba(16, 24, 40, 0.06), 0 1px 3px 0 rgba(16, 24, 40, 0.10)',
+          'md':  '0 2px 4px -2px rgba(16, 24, 40, 0.06), 0 4px 8px -2px rgba(16, 24, 40, 0.10)',
+          'lg':  '0 4px 6px -2px rgba(16, 24, 40, 0.03), 0 12px 16px -4px rgba(16, 24, 40, 0.08)',
+          'xl':  '0 8px 8px -4px rgba(16, 24, 40, 0.03), 0 20px 24px -4px rgba(16, 24, 40, 0.08)',
+          '2xl': '0 24px 48px -12px rgba(16, 24, 40, 0.18)',
+          '3xl': '0 32px 64px -12px rgba(16, 24, 40, 0.14)',
+          'skeu': 'inset 0 -2px 0 0 rgba(16, 24, 40, 0.12), 0 1px 2px 0 rgba(16, 24, 40, 0.08)',
+          // Inner
+          'inner-xs': 'inset 0 1px 2px 0 rgba(16, 24, 40, 0.05)',
+          'inner-sm': 'inset 0 2px 4px 0 rgba(16, 24, 40, 0.06)',
+          'inner-md': 'inset 0 4px 8px 0 rgba(16, 24, 40, 0.08)',
+          'inner-lg': 'inset 0 8px 16px -4px rgba(16, 24, 40, 0.10)',
+          // Colored glows
+          'glow-brand':   '0 0 24px 0 rgba(255, 121, 24, 0.35)',
+          'glow-error':   '0 0 24px 0 rgba(239, 68, 68, 0.30)',
+          'glow-success': '0 0 24px 0 rgba(16, 185, 129, 0.30)',
+          'glow-warning': '0 0 24px 0 rgba(234, 179, 8, 0.30)',
+          'glow-info':    '0 0 24px 0 rgba(46, 144, 250, 0.30)',
+          // Focus rings
+          'ring-brand':   '0 0 0 4px rgba(255, 121, 24, 0.24)',
+          'ring-gray':    '0 0 0 4px rgba(152, 162, 179, 0.14)',
+          'ring-error':   '0 0 0 4px rgba(239, 68, 68, 0.24)',
+          'ring-success': '0 0 0 4px rgba(16, 185, 129, 0.24)',
+          'ring-warning': '0 0 0 4px rgba(234, 179, 8, 0.24)',
+        },
+        blur: {
+          'none': '0',
+          'xs':   '2px',
+          'sm':   '4px',
+          'md':   '8px',
+          'lg':   '16px',
+          'xl':   '24px',
+          '2xl':  '40px',
+          '3xl':  '64px',
+        },
+        backdropBlur: {
+          'none': '0',
+          'xs':   '2px',
+          'sm':   '4px',
+          'md':   '8px',
+          'lg':   '16px',
+          'xl':   '24px',
+          '2xl':  '40px',
+          '3xl':  '64px',
+        },
+        borderRadius: { 'xxs':'2px','xs':'4px','sm':'6px','md':'8px','lg':'10px','xl':'12px','2xl':'16px','3xl':'20px','4xl':'24px' },
+        colors: {
+          brand: {25:'#FFF7F0',50:'#FFEEDD',100:'#FFDFC2',200:'#FFC094',300:'#FFA168',400:'#FF8C45',500:'#FF7918',600:'#E5610A',700:'#BB4D08',800:'#913C0C',900:'#6D2D0E',950:'#481C08'},
+          gray:  {25:'#FCFCFD',50:'#F8FAFC',100:'#EEF2F6',200:'#E3E8EF',300:'#CDD5DF',400:'#9AA4B2',500:'#697586',600:'#4B5565',700:'#364152',800:'#202939',900:'#121926',950:'#0D121C'},
+          neutral: {25:'#FCFCFC',50:'#FAFAFA',100:'#F5F5F5',200:'#E5E5E5',300:'#D4D4D4',400:'#A3A3A3',500:'#737373',600:'#525252',700:'#404040',800:'#262626',900:'#171717',950:'#0A0A0A'},
+          slate: {25:'#FBFCFD',50:'#F8FAFC',100:'#F1F5F9',200:'#E2E8F0',300:'#CBD5E1',400:'#94A3B8',500:'#64748B',600:'#475569',700:'#334155',800:'#1E293B',900:'#0F172A',950:'#020617'},
+          zinc:  {25:'#FCFCFD',50:'#FAFAFA',100:'#F4F4F5',200:'#E4E4E7',300:'#D4D4D8',400:'#A1A1AA',500:'#71717A',600:'#52525B',700:'#3F3F46',800:'#27272A',900:'#18181B',950:'#09090B'},
+          stone: {25:'#FDFCFB',50:'#FAFAF9',100:'#F5F5F4',200:'#E7E5E4',300:'#D6D3D1',400:'#A8A29E',500:'#78716C',600:'#57534E',700:'#44403C',800:'#292524',900:'#1C1917',950:'#0C0A09'},
+          warmGray: {25:'#FCFAF7',50:'#F9F5F0',100:'#F3EBE0',200:'#E5D5C0',300:'#CDB89F',400:'#A8927A',500:'#7E6C57',600:'#5E4F3F',700:'#443A2F',800:'#2D2620',900:'#1A1614',950:'#0F0C0A'},
+          coolGray: {25:'#F9FAFB',50:'#F3F6FA',100:'#E5EDF3',200:'#C9D6E1',300:'#A6B7C7',400:'#7B8FA3',500:'#56697D',600:'#3F4F5F',700:'#2C3845',800:'#1B232C',900:'#10141A',950:'#07090C'},
+          error:   {25:'#FFFBFA',50:'#FEF2F2',100:'#FEE2E2',200:'#FECACA',300:'#FCA5A5',400:'#F87171',500:'#EF4444',600:'#DC2626',700:'#B91C1C',800:'#991B1B',900:'#7F1D1D',950:'#450A0A'},
+          warning: {25:'#FFFDF2',50:'#FEFCE8',100:'#FEF9C3',200:'#FEF08A',300:'#FDE047',400:'#FACC15',500:'#EAB308',600:'#CA8A04',700:'#A16207',800:'#854D0E',900:'#713F12',950:'#422006'},
+          success: {25:'#F6FDF9',50:'#ECFDF5',100:'#D1FAE5',200:'#A7F3D0',300:'#6EE7B7',400:'#34D399',500:'#10B981',600:'#059669',700:'#047857',800:'#065F46',900:'#064E3B',950:'#022C22'},
+          blue:       {25:'#F5FAFF',50:'#EFF8FF',100:'#D1E9FF',200:'#B2DDFF',300:'#84CAFF',400:'#53B1FD',500:'#2E90FA',600:'#1570EF',700:'#175CD3',800:'#1849A9',900:'#194185',950:'#102A56'},
+          blueLight:  {25:'#F5FBFF',50:'#F0F9FF',100:'#E0F2FE',200:'#B9E6FE',300:'#7CD4FD',400:'#36BFFA',500:'#0BA5EC',600:'#0086C9',700:'#026AA2',800:'#065986',900:'#0B4A6F',950:'#062C41'},
+          indigo:     {25:'#F5F8FF',50:'#EEF4FF',100:'#E0EAFF',200:'#C7D7FE',300:'#A4BCFD',400:'#8098F9',500:'#6172F3',600:'#444CE7',700:'#3538CD',800:'#2D31A6',900:'#2D3282',950:'#1F235B'},
+          purple:     {25:'#FAFAFF',50:'#F4F3FF',100:'#EBE9FE',200:'#D9D6FE',300:'#BDB4FE',400:'#9B8AFB',500:'#7A5AF8',600:'#6938EF',700:'#5925DC',800:'#4A1FB8',900:'#3E1C96',950:'#27115F'},
+          violet:     {25:'#FBFAFF',50:'#F5F3FF',100:'#ECE9FE',200:'#DDD6FE',300:'#C3B5FD',400:'#A48AFB',500:'#875BF7',600:'#7839EE',700:'#6927DA',800:'#5720B7',900:'#491C96',950:'#2E125E'},
+          fuchsia:    {25:'#FEFAFF',50:'#FDF4FF',100:'#FBE8FF',200:'#F6D0FE',300:'#EEAAFD',400:'#E478FA',500:'#D444F1',600:'#BA24D5',700:'#9F1AB1',800:'#821890',900:'#6F1877',950:'#47104C'},
+          pink:       {25:'#FEF6FB',50:'#FDF2FA',100:'#FCE7F6',200:'#FCCEEE',300:'#FAA7E0',400:'#F670C7',500:'#EE46BC',600:'#DD2590',700:'#C11574',800:'#9E165F',900:'#851651',950:'#4E0D30'},
+          rose:       {25:'#FFF5F6',50:'#FFF1F3',100:'#FFE4E8',200:'#FECDD6',300:'#FEA3B4',400:'#FD6F8E',500:'#F63D68',600:'#E31B54',700:'#C01048',800:'#A11043',900:'#89123E',950:'#510B24'},
+          orange:     {25:'#FEFAF5',50:'#FEF6EE',100:'#FDEAD7',200:'#F9DBAF',300:'#F7B27A',400:'#F38744',500:'#EF6820',600:'#E04F16',700:'#B93815',800:'#932F19',900:'#772917',950:'#511C10'},
+          yellow:     {25:'#FEFDF0',50:'#FEFBE8',100:'#FEF7C3',200:'#FEEE95',300:'#FDE272',400:'#FAC515',500:'#EAAA08',600:'#CA8504',700:'#A15C07',800:'#854A0E',900:'#713B12',950:'#542C0D'},
+          teal:       {25:'#F6FEFC',50:'#F0FDF9',100:'#CCFBEF',200:'#99F6E0',300:'#5FE9D0',400:'#2ED3B7',500:'#15B79E',600:'#0E9384',700:'#107569',800:'#125D56',900:'#134E48',950:'#0A2926'},
+          cyan:       {25:'#F5FEFF',50:'#ECFDFF',100:'#CFF9FE',200:'#A5F0FC',300:'#67E3F9',400:'#22CCEE',500:'#06AED4',600:'#088AB2',700:'#0E7090',800:'#155B75',900:'#164C63',950:'#0D2D3A'},
+          moss:       {25:'#FAFDF7',50:'#F5FBEE',100:'#E6F4D7',200:'#CEEAB0',300:'#ACDC79',400:'#86CB3C',500:'#669F2A',600:'#4F7A21',700:'#3F621A',800:'#335015',900:'#2B4212',950:'#1A280B'},
+          greenLight: {25:'#FAFEF5',50:'#F3FEE7',100:'#E4FBCC',200:'#D0F8AB',300:'#A6EF67',400:'#85E13A',500:'#66C61C',600:'#4CA30D',700:'#3B7C0F',800:'#326212',900:'#2B5314',950:'#15290A'},
+          aiProcess:  {25:'#FAFAFF',50:'#F4F3FF',100:'#EBE9FE',200:'#D9D6FE',300:'#BDB4FE',400:'#9B8AFB',500:'#7A5AF8',600:'#6938EF',700:'#5925DC',800:'#4A1FB8',900:'#3E1C96',950:'#27115F'},
+        }
+      }
+    }
+  }
+</script>
+<style>
+  body { font-family: 'Inter', system-ui, sans-serif; font-feature-settings: 'cv11','ss01'; -webkit-font-smoothing: antialiased; }
+  .swatch { width: 100%; aspect-ratio: 1 / 1; border-radius: 6px; box-shadow: inset 0 0 0 1px rgba(16,24,40,0.04); }
+
+  /* Sidebar nav — hide all pages by default; JS un-hides the active one */
+  [data-page] { display: none; }
+  [data-page].is-active { display: block; }
+
+  .nav-link {
+    display: flex; align-items: center; gap: 10px;
+    height: 36px; padding: 0 10px; border-radius: 8px;
+    font-size: 14px; font-weight: 500; color: #364152; /* gray-700 */
+    transition: background-color 100ms, color 100ms;
+    cursor: pointer; user-select: none;
+  }
+  .nav-link:hover { background: #F8FAFC; /* gray-50 */ }
+  .nav-link .nav-icon { width: 18px; height: 18px; flex-shrink: 0; color: #697586; /* gray-500 */ }
+  /* Subtle active state · neutral gray-100 tint (distinct from gray-50 hover) */
+  .nav-link.is-active {
+    background: #EEF2F6;            /* gray-100 — neutral, calm */
+    color: #121926;                  /* gray-900 — strong text */
+    font-weight: 600;
+  }
+  .nav-link.is-active .nav-icon { color: #364152; /* gray-700 */ }
+
+  /* Visible group label that introduces a section of the sidebar nav.
+     Replaces the old thin divider lines — now the section is named. */
+  .nav-group-title {
+    font-size: 11px; font-weight: 600;
+    color: #697586; /* gray-500 */
+    text-transform: uppercase; letter-spacing: 0.05em;
+    padding: 16px 10px 6px;
+  }
+
+  /* Search input */
+  .sidebar-search {
+    position: relative; margin: 8px 4px 16px;
+  }
+  .sidebar-search svg {
+    position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+    width: 16px; height: 16px; color: #9AA4B2; pointer-events: none;
+  }
+  .sidebar-search input {
+    width: 100%; height: 36px; padding: 0 12px 0 36px;
+    background: #FFFFFF; border: 1px solid #E3E8EF; border-radius: 9999px;
+    font-size: 13px; color: #121926;
+    outline: none; transition: box-shadow 100ms, border-color 100ms;
+  }
+  .sidebar-search input::placeholder { color: #9AA4B2; }
+  .sidebar-search input:focus { border-color: #FFC094; box-shadow: 0 0 0 3px rgba(255, 121, 24, 0.18); }
+
+  /* User profile pinned to bottom */
+  .sidebar-user {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 12px; border-radius: 8px;
+    background: #FFFFFF; transition: background-color 100ms;
+    cursor: pointer;
+  }
+  .sidebar-user:hover { background: #F8FAFC; }
+
+  /* Icons page — size + stroke + color all driven by CSS variables on the
+     page container, updated by the controls above the grid. Only the gallery
+     icons are affected — the search-bar icon stays its default size. */
+  [data-page="icons"] #icon-curated .lucide,
+  [data-page="icons"] #icon-all .lucide {
+    width: var(--icon-size, 20px) !important;
+    height: var(--icon-size, 20px) !important;
+    stroke-width: var(--icon-stroke, 2) !important;
+    stroke: var(--icon-color, currentColor) !important;
+  }
+
+  /* Color picker swatches */
+  .color-swatch {
+    width: 20px; height: 20px;
+    border-radius: 9999px;
+    border: 2px solid transparent;
+    cursor: pointer;
+    padding: 0;
+    transition: transform 100ms ease, border-color 100ms, box-shadow 100ms;
+  }
+  .color-swatch:hover { transform: scale(1.12); }
+  .color-swatch.is-active {
+    border-color: #FFFFFF;
+    box-shadow: 0 0 0 2px #FF7918;
+  }
+  .color-swatch.swatch-reset {
+    background:
+      linear-gradient(135deg, transparent 46%, #DC2626 46%, #DC2626 54%, transparent 54%),
+      #FFFFFF;
+    border: 1px solid #CDD5DF;
+  }
+  .color-swatch.swatch-reset.is-active {
+    border-color: #FF7918;
+    box-shadow: 0 0 0 1px #FF7918;
+  }
+  .color-swatch.swatch-custom {
+    background: conic-gradient(from 0deg, #FF7918, #EAB308, #10B981, #2E90FA, #7A5AF8, #EE46BC, #FF7918);
+    position: relative;
+    display: inline-block;
+  }
+  .color-swatch.swatch-custom input[type="color"] {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    opacity: 0; cursor: pointer;
+    border: 0; padding: 0;
+  }
+
+  /* "On this page" TOC */
+  #toc a {
+    display: block;
+    padding: 5px 12px;
+    border-left: 2px solid transparent;
+    color: #4B5565;
+    font-size: 13px;
+    line-height: 1.4;
+    transition: color 100ms, border-color 100ms, background-color 100ms;
+    text-decoration: none;
+  }
+  #toc a:hover { color: #FF7918; }
+  #toc a.is-active {
+    color: #FF7918;
+    border-left-color: #FF7918;
+    font-weight: 600;
+  }
+  #toc a.toc-h3 {
+    padding-left: 24px;
+    font-size: 12px;
+    color: #697586;
+  }
+  #toc a.toc-h3.is-active { color: #FF7918; }
+  #toc a.toc-h3:hover { color: #FF7918; }
+
+  /* Breadcrumb */
+  #breadcrumb a {
+    color: #697586;
+    text-decoration: none;
+    transition: color 100ms;
+  }
+  #breadcrumb a:hover { color: #364152; }
+  #breadcrumb .breadcrumb-current {
+    color: #121926;
+    font-weight: 500;
+  }
+  #breadcrumb svg {
+    width: 12px; height: 12px;
+    color: #9AA4B2;
+    flex-shrink: 0;
+  }
+
+  /* Smooth scroll target offset for TOC links */
+  [data-page] h2[id],
+  [data-page] [id^="sub-"] {
+    scroll-margin-top: 24px;
+  }
+
+  /* Snippet chips — live spec viewer/copier */
+  .snippet-chip {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 11px;
+    padding: 5px 10px; border-radius: 6px;
+    background: #F3F4F6; border: 1px solid #E5E7EB;
+    color: #364152; cursor: pointer;
+    transition: background-color 100ms, color 100ms, border-color 100ms;
+    max-width: 100%;
+  }
+  .snippet-chip:hover { background: #E5E7EB; border-color: #CBD5E1; }
+  .snippet-chip.copied { background: #10B981; border-color: #059669; color: #FFFFFF; }
+  .snippet-chip.copied .opacity-60 { opacity: 0.85; }
+
+  /* Per-icon "Copy SVG" overlay button — visible on hover */
+  .icon-svg-btn {
+    position: absolute; top: 3px; right: 3px;
+    width: 20px; height: 20px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 4px; background: #FFFFFF; border: 1px solid #E5E7EB;
+    color: #697586; cursor: pointer;
+    opacity: 0; transition: opacity 100ms, background-color 100ms, color 100ms;
+  }
+  .group:hover .icon-svg-btn { opacity: 1; }
+  .icon-svg-btn:hover { background: #FF7918; color: #FFFFFF; border-color: #FF7918; }
+  .icon-svg-btn.copied { background: #10B981; color: #FFFFFF; border-color: #059669; opacity: 1; }
+</style>
+</head>
+<body class="bg-white text-gray-900">
+
+<!-- Header -->
+<!-- Top header removed — brand identity now lives in the sidebar. -->
+
+<div class="flex">
+
+  <!-- ============================================================
+       SIDEBAR
+  ============================================================ -->
+  <aside class="w-[260px] shrink-0 bg-white flex flex-col sticky top-0 h-screen z-10"
+         style="box-shadow: 4px 0 16px -2px rgba(16, 24, 40, 0.06), 1px 0 0 0 rgba(16, 24, 40, 0.05);">
+
+    <!-- Brand mark · scienaptic wordmark + PULSE Design System caption -->
+    <div class="px-[18px] pt-6 pb-4">
+      <img src="assets/scienaptic-logo.png" alt="Scienaptic" class="h-7 w-auto block" />
+      <div class="mt-3 pt-3 border-t border-gray-100">
+        <div class="text-base font-bold text-gray-900 tracking-tight leading-tight">PULSE</div>
+        <div class="text-[11px] text-gray-500 leading-tight mt-1 uppercase tracking-wider font-medium">Design System</div>
+      </div>
+    </div>
+
+    <!-- Search -->
+    <div class="px-4">
+      <div class="sidebar-search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7.5"/><path d="M21 21l-4.35-4.35"/></svg>
+        <input type="search" placeholder="Search here" oninput="filterNav(this.value)" />
+      </div>
+    </div>
+
+    <!-- Nav -->
+    <nav class="flex-1 overflow-y-auto px-2 pb-4">
+      <!-- Group 1: Get started -->
+      <div class="nav-link" data-nav="overview">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9zM9 22V12h6v10"/></svg>
+        Overview
+      </div>
+
+      <div class="nav-group-title">Foundations</div>
+
+      <!-- Group 2: Foundations -->
+      <div class="nav-link" data-nav="colors">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 21.5l4.5-13.5 4.5 13.5M5 15h4M14 7l1.5 4.5L20 13l-4.5 1.5L14 19l-1.5-4.5L8 13l4.5-1.5L14 7zM17 2l.75 2.25L20 5l-2.25.75L17 8l-.75-2.25L14 5l2.25-.75L17 2z"/></svg>
+        Colors
+      </div>
+      <div class="nav-link" data-nav="gradients">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"><path d="M15 4V2M15 16v-2M8 9h2M20 9h2M17.8 11.8L19 13M15 9h0M17.8 6.2L19 5M3 21l9-9M12.2 6.2L11 5"/></svg>
+        Gradients
+      </div>
+      <div class="nav-link" data-nav="shadows-blurs">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        Shadows &amp; blurs
+      </div>
+      <div class="nav-link" data-nav="spacing-grids">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3h7v7H3zM14 3h7v7h-7zM14 14h7v7h-7zM3 14h7v7H3z"/></svg>
+        Spacing &amp; grids
+      </div>
+      <div class="nav-link" data-nav="typography">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V9zM13 2v7h7"/></svg>
+        Typography
+      </div>
+      <div class="nav-link" data-nav="icons">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3M12 17h.01"/></svg>
+        Icons
+      </div>
+
+      <div class="nav-group-title">Components</div>
+
+      <!-- Group 3: Components -->
+      <div class="nav-link" data-nav="buttons">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14m-7-7h14"/></svg>
+        Buttons
+      </div>
+      <div class="nav-link" data-nav="button-group">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+        Button group
+      </div>
+      <div class="nav-link" data-nav="social-buttons">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2M13 7a4 4 0 11-8 0 4 4 0 018 0zM23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+        Social buttons
+      </div>
+      <div class="nav-link" data-nav="close-button">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        Close button
+      </div>
+      <div class="nav-link" data-nav="avatars">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2M16 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+        Avatars
+      </div>
+      <div class="nav-link" data-nav="badges">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14M22 4L12 14.01l-3-3"/></svg>
+        Badges
+      </div>
+      <div class="nav-link" data-nav="badge-groups">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9 12l2 2 4-4"/></svg>
+        Badge groups
+      </div>
+      <div class="nav-link" data-nav="status-pills">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+        Status pills
+      </div>
+      <div class="nav-link" data-nav="forms">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7m-1.5-9.5a2.121 2.121 0 013 3L12 18l-4 1 1-4 9.5-9.5z"/></svg>
+        Forms &amp; inputs
+      </div>
+      <div class="nav-link" data-nav="cards">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>
+        Cards
+      </div>
+    </nav>
+
+    <!-- User profile pinned to bottom -->
+    <div class="border-t border-gray-200 p-3 shrink-0">
+      <div class="sidebar-user">
+        <img src="https://i.pravatar.cc/120?img=14" alt="" class="h-8 w-8 rounded-full shrink-0 object-cover" />
+        <div class="flex-1 min-w-0">
+          <div class="text-sm font-medium text-gray-900 truncate">Sathish Kumar</div>
+        </div>
+        <span class="shrink-0 inline-flex flex-col items-center text-gray-400" aria-hidden>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-top:-3px"><path d="M6 9l6 6 6-6"/></svg>
+        </span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ============================================================
+       CONTENT
+  ============================================================ -->
+  <main class="flex-1 px-10 py-10 min-w-0">
+    <!-- Breadcrumb · populated by JS when the active page changes -->
+    <nav id="breadcrumb" aria-label="Breadcrumb" class="mb-6 flex items-center gap-2 text-sm text-gray-500"></nav>
+
+
+  <!-- OVERVIEW (hero) -->
+  <section class="mb-20 max-w-3xl" data-page="overview">
+    <span class="inline-flex items-center gap-2 h-6 px-2.5 rounded-full bg-brand-50 text-brand-700 border border-brand-200 text-xs font-medium mb-5">
+      <span class="h-1.5 w-1.5 rounded-full bg-brand-500"></span>
+      v0.2.0 · Untitled UI inspired
+    </span>
+    <h1 class="text-display-xl font-semibold text-gray-900 mb-5">
+      A modern design system for B2B SaaS
+    </h1>
+    <p class="text-text-xl text-gray-600 mb-8">
+      Built on Untitled UI's conventions — semantic tokens, the signature ring shadow, focus rings at 24% opacity, and Inter at its best. Theme is your brand tangerine.
+    </p>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl">
+      <a href="#colors" class="block p-5 rounded-xl border border-gray-200 hover:border-gray-300 hover:shadow-sm transition-all bg-white shadow-xs">
+        <div class="text-sm font-semibold text-gray-900">Start with foundations</div>
+        <div class="text-sm text-gray-600 mt-1">Colors, typography, icons</div>
+      </a>
+      <a href="#buttons" class="block p-5 rounded-xl border border-gray-200 hover:border-gray-300 hover:shadow-sm transition-all bg-white shadow-xs">
+        <div class="text-sm font-semibold text-gray-900">Browse components</div>
+        <div class="text-sm text-gray-600 mt-1">10 hierarchies of buttons, badges, forms</div>
+      </a>
+    </div>
+  </section>
+
+  <!-- COLOR FOUNDATIONS -->
+  <section class="mb-20" data-page="colors">
+    <div class="mb-6">
+      <h2 class="text-display-xs font-semibold text-gray-900">Colors</h2>
+      <p class="text-text-md text-gray-600 mt-1">12-step scales anchored on the new brand <code class="font-mono text-brand-700 bg-brand-50 px-1.5 py-0.5 rounded">#FF7918</code> · click any shade to copy its hex</p>
+    </div>
+
+    <!-- Brand spotlight -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+      <div class="md:col-span-2 rounded-xl overflow-hidden shadow-xs border border-gray-200" style="background: #FF7918;">
+        <div class="p-8 text-white">
+          <div class="text-xs font-semibold uppercase tracking-wider opacity-90 mb-2">Brand · primary</div>
+          <div class="text-display-lg font-bold font-mono mb-1">#FF7918</div>
+          <div class="text-sm opacity-90">Vibrant tangerine · HSL(26°, 100%, 55%)</div>
+        </div>
+      </div>
+      <div class="bg-white border border-gray-200 rounded-xl shadow-xs p-6 flex flex-col justify-between">
+        <div>
+          <div class="text-xs font-semibold uppercase tracking-wider text-gray-500 mb-2">Action color</div>
+          <div class="text-display-sm font-bold font-mono text-brand-700 mb-1">#E5610A</div>
+          <div class="text-sm text-gray-600">brand-600 — primary button fill &amp; link text</div>
+        </div>
+        <div class="mt-4 flex gap-2">
+          <div class="h-8 flex-1 rounded-md" style="background:#FF7918"></div>
+          <div class="h-8 flex-1 rounded-md" style="background:#E5610A"></div>
+          <div class="h-8 flex-1 rounded-md" style="background:#BB4D08"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Brand + primary neutral -->
+    <div class="bg-white border border-gray-200 rounded-xl shadow-xs">
+      <div class="px-6 py-5 border-b border-gray-200">
+        <div class="text-xs font-semibold uppercase tracking-wider text-gray-500">Core</div>
+        <div class="text-sm text-gray-600 mt-1">Brand &amp; primary gray — your default neutral</div>
+      </div>
+      <div class="px-6 py-4" id="color-rows-core"></div>
+    </div>
+
+    <!-- Additional neutrals (6 more gray scales) -->
+    <div class="bg-white border border-gray-200 rounded-xl shadow-xs mt-6">
+      <div class="px-6 py-5 border-b border-gray-200">
+        <div class="text-xs font-semibold uppercase tracking-wider text-gray-500">Neutrals · extended</div>
+        <div class="text-sm text-gray-600 mt-1">6 additional neutral scales · different temperatures &amp; undertones for different surface contexts</div>
+      </div>
+      <div class="px-6 py-4" id="color-rows-neutrals"></div>
+    </div>
+
+    <!-- Semantic -->
+    <div class="bg-white border border-gray-200 rounded-xl shadow-xs mt-6">
+      <div class="px-6 py-5 border-b border-gray-200">
+        <div class="text-xs font-semibold uppercase tracking-wider text-gray-500">Semantic</div>
+        <div class="text-sm text-gray-600 mt-1">Error / warning / success / info — for feedback &amp; state</div>
+      </div>
+      <div class="px-6 py-4" id="color-rows-semantic"></div>
+    </div>
+
+    <!-- Extended palette -->
+    <div class="bg-white border border-gray-200 rounded-xl shadow-xs mt-6">
+      <div class="px-6 py-5 border-b border-gray-200">
+        <div class="text-xs font-semibold uppercase tracking-wider text-gray-500">Extended palette</div>
+        <div class="text-sm text-gray-600 mt-1">Blue, indigo, purple, pink, teal, etc. — for tags, illustrations, and multi-category UI</div>
+      </div>
+      <div class="px-6 py-4" id="color-rows-extended"></div>
+    </div>
+
+    <!-- Chart palette -->
+    <div class="bg-white border border-gray-200 rounded-xl shadow-xs mt-6">
+      <div class="px-6 py-5 border-b border-gray-200">
+        <div class="text-xs font-semibold uppercase tracking-wider text-gray-500">Chart palette</div>
+        <div class="text-sm text-gray-600 mt-1">Categorical (12 distinct hues) · sequential (brand 1→8) · diverging (negative ↔ positive)</div>
+      </div>
+      <div class="px-6 py-6 space-y-6">
+        <div>
+          <div class="text-sm font-semibold text-gray-800 mb-2">Categorical · 12 series colors</div>
+          <div class="grid grid-cols-4 md:grid-cols-6 gap-3" id="chart-categorical"></div>
+        </div>
+        <div>
+          <div class="text-sm font-semibold text-gray-800 mb-2">Sequential · brand 1 → 8 (use for ordinal data)</div>
+          <div class="grid gap-1" id="chart-sequential" style="grid-template-columns: repeat(8, minmax(0,1fr))"></div>
+        </div>
+        <div>
+          <div class="text-sm font-semibold text-gray-800 mb-2">Diverging · negative ↔ neutral ↔ positive (11 stops)</div>
+          <div class="grid gap-1" id="chart-diverging" style="grid-template-columns: repeat(11, minmax(0,1fr))"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Copy toast -->
+    <div id="copy-toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 px-4 py-2.5 rounded-lg bg-gray-900 text-white text-sm font-medium shadow-lg opacity-0 pointer-events-none transition-opacity duration-150 z-50">
+      Copied
+    </div>
+  </section>
+
+  <!-- GRADIENTS -->
+  <section class="mb-20" data-page="gradients">
+    <div class="mb-6">
+      <h2 class="text-display-xs font-semibold text-gray-900">Gradients</h2>
+      <p class="text-text-md text-gray-600 mt-1">Brand, multi-color, mesh, radial &amp; conic · click any to copy the CSS</p>
+    </div>
+
+    <div class="bg-white border border-gray-200 rounded-xl shadow-xs">
+      <div class="px-6 py-5 border-b border-gray-200">
+        <div class="text-xs font-semibold uppercase tracking-wider text-gray-500">Brand</div>
+      </div>
+      <div class="px-6 py-6 grid grid-cols-2 md:grid-cols-3 gap-4" id="grad-brand"></div>
+    </div>
+
+    <!-- Soft (pastel) — new -->
+    <div class="bg-white border border-gray-200 rounded-xl shadow-xs mt-6">
+      <div class="px-6 py-5 border-b border-gray-200">
+        <div class="text-xs font-semibold uppercase tracking-wider text-gray-500">Soft &amp; pastel</div>
+        <div class="text-sm text-gray-600 mt-1">Low-contrast subtle gradients for hero backgrounds, empty states, cards, and oversized surfaces</div>
+      </div>
+      <div class="px-6 py-6 grid grid-cols-2 md:grid-cols-3 gap-4" id="grad-soft"></div>
+    </div>
+
+    <div class="bg-white border border-gray-200 rounded-xl shadow-xs mt-6">
+      <div class="px-6 py-5 border-b border-gray-200">
+        <div class="text-xs font-semibold uppercase tracking-wider text-gray-500">Multi-color</div>
+        <div class="text-sm text-gray-600 mt-1">Warm gradients (fit the orange brand) + cool gradients for AI / data viz</div>
+      </div>
+      <div class="px-6 py-6 grid grid-cols-2 md:grid-cols-3 gap-4" id="grad-multi"></div>
+    </div>
+
+    <div class="bg-white border border-gray-200 rounded-xl shadow-xs mt-6">
+      <div class="px-6 py-5 border-b border-gray-200">
+        <div class="text-xs font-semibold uppercase tracking-wider text-gray-500">Mesh</div>
+        <div class="text-sm text-gray-600 mt-1">Multi-stop radial gradients · perfect for hero backgrounds and decorative blurs</div>
+      </div>
+      <div class="px-6 py-6 grid grid-cols-1 md:grid-cols-3 gap-4" id="grad-mesh"></div>
+    </div>
+
+    <div class="bg-white border border-gray-200 rounded-xl shadow-xs mt-6">
+      <div class="px-6 py-5 border-b border-gray-200">
+        <div class="text-xs font-semibold uppercase tracking-wider text-gray-500">Radial &amp; conic</div>
+      </div>
+      <div class="px-6 py-6 grid grid-cols-2 md:grid-cols-3 gap-4" id="grad-radial"></div>
+    </div>
+
+    <div class="bg-white border border-gray-200 rounded-xl shadow-xs mt-6">
+      <div class="px-6 py-5 border-b border-gray-200">
+        <div class="text-xs font-semibold uppercase tracking-wider text-gray-500">Background fades</div>
+        <div class="text-sm text-gray-600 mt-1">Subtle gradients for page backgrounds and large surfaces</div>
+      </div>
+      <div class="px-6 py-6 grid grid-cols-1 md:grid-cols-3 gap-4" id="grad-bg"></div>
+    </div>
+  </section>
+
+  <!-- SHADOWS & BLURS -->
+  <section class="mb-20" data-page="shadows-blurs">
+    <div class="mb-8">
+      <h2 class="text-display-xs font-semibold text-gray-900">Shadows &amp; blurs</h2>
+      <p class="text-text-md text-gray-600 mt-1">8 elevation levels · 4 inner · 5 colored glows · 5 focus rings · 8 blurs · click any to copy CSS</p>
+    </div>
+
+    <!-- Design rationale -->
+    <div class="bg-white border border-gray-200 rounded-xl shadow-xs p-6 mb-6">
+      <div class="text-xs font-semibold uppercase tracking-wider text-gray-500 mb-3">Design principle</div>
+      <p class="text-text-md text-gray-700 max-w-3xl">
+        Every elevation shadow is a <strong>two-layer stack</strong> — a sharp close-shadow that grounds the element + a soft ambient shadow that simulates light bleed. Together they produce natural depth that single-shadow systems can't match. Bump up exactly <strong>one level</strong> on hover.
+      </p>
+    </div>
+
+    <!-- Elevation -->
+    <div class="bg-white border border-gray-200 rounded-xl shadow-xs">
+      <div class="px-6 py-5 border-b border-gray-200">
+        <div class="text-xs font-semibold uppercase tracking-wider text-gray-500">Elevation · 8 levels</div>
+        <div class="text-sm text-gray-600 mt-1">From flat (none) to maximum overlay (3xl) · plus skeu for tactile button feel</div>
+      </div>
+      <div class="px-8 py-10 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-8 gap-y-12" id="sh-elevation"></div>
+    </div>
+
+    <!-- Inner -->
+    <div class="bg-white border border-gray-200 rounded-xl shadow-xs mt-6">
+      <div class="px-6 py-5 border-b border-gray-200">
+        <div class="text-xs font-semibold uppercase tracking-wider text-gray-500">Inner shadows · 4 levels</div>
+        <div class="text-sm text-gray-600 mt-1">For pressed states, inset wells, scroll indicators, divided panels</div>
+      </div>
+      <div class="px-8 py-10 grid grid-cols-2 md:grid-cols-4 gap-x-8 gap-y-8" id="sh-inner"></div>
+    </div>
+
+    <!-- Colored glows -->
+    <div class="bg-white border border-gray-200 rounded-xl shadow-xs mt-6">
+      <div class="px-6 py-5 border-b border-gray-200">
+        <div class="text-xs font-semibold uppercase tracking-wider text-gray-500">Colored glows · for emphasis</div>
+        <div class="text-sm text-gray-600 mt-1">Use sparingly on primary CTAs, error states, AI-thinking indicators</div>
+      </div>
+      <div class="px-8 py-10 grid grid-cols-2 md:grid-cols-5 gap-x-6 gap-y-8" id="sh-glow"></div>
+    </div>
+
+    <!-- Focus rings -->
+    <div class="bg-white border border-gray-200 rounded-xl shadow-xs mt-6">
+      <div class="px-6 py-5 border-b border-gray-200">
+        <div class="text-xs font-semibold uppercase tracking-wider text-gray-500">Focus rings · 4px @ 24% opacity</div>
+        <div class="text-sm text-gray-600 mt-1">Applied on <code class="font-mono text-xs">:focus-visible</code> for keyboard navigation</div>
+      </div>
+      <div class="px-8 py-10 grid grid-cols-2 md:grid-cols-5 gap-x-6 gap-y-8" id="sh-ring"></div>
+    </div>
+
+    <!-- Filter blurs -->
+    <div class="bg-white border border-gray-200 rounded-xl shadow-xs mt-6">
+      <div class="px-6 py-5 border-b border-gray-200">
+        <div class="text-xs font-semibold uppercase tracking-wider text-gray-500">Filter blurs · 8 levels</div>
+        <div class="text-sm text-gray-600 mt-1">Applied via <code class="font-mono text-xs">filter: blur(…)</code> — blurs the element itself</div>
+      </div>
+      <div class="px-8 py-10 grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-8" id="bl-filter"></div>
+    </div>
+
+    <!-- Backdrop blurs (glass morphism) -->
+    <div class="rounded-xl shadow-xs mt-6 overflow-hidden border border-gray-200" style="background: linear-gradient(135deg, #FACC15 0%, #FF7918 50%, #EE46BC 100%);">
+      <div class="px-6 py-5 border-b border-white/20 bg-white/10 backdrop-blur-sm">
+        <div class="text-xs font-semibold uppercase tracking-wider text-white/90">Backdrop blurs · glass morphism</div>
+        <div class="text-sm text-white/80 mt-1">Applied via <code class="font-mono text-xs">backdrop-filter: blur(…)</code> — blurs the layer BEHIND the element. Background shown is intentionally vibrant so the effect is visible.</div>
+      </div>
+      <div class="px-8 py-10 grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-8" id="bl-backdrop"></div>
+    </div>
+  </section>
+
+  <!-- SPACING & GRIDS -->
+  <section class="mb-20" data-page="spacing-grids">
+    <div class="mb-8">
+      <h2 class="text-display-xs font-semibold text-gray-900">Spacing &amp; grids</h2>
+      <p class="text-text-md text-gray-600 mt-1">4px base unit · 23-step scale · 11-step radius · 12-column grid · 8 container widths</p>
+    </div>
+
+    <!-- Design rationale -->
+    <div class="bg-white border border-gray-200 rounded-xl shadow-xs p-6 mb-6">
+      <div class="text-xs font-semibold uppercase tracking-wider text-gray-500 mb-3">Design principle</div>
+      <p class="text-text-md text-gray-700 max-w-3xl">
+        Everything is built on a <strong>4px atomic unit</strong>. Most production work uses multiples of <strong>8px</strong> for the rhythm. Two principles: (1) consistent spacing creates visual hierarchy without extra ink; (2) the 4px unit gives enough granularity for tight UI (icon paddings, badges) while 8px increments dominate for breathing room (card padding, gaps, sections).
+      </p>
+    </div>
+
+    <!-- Base unit visualization -->
+    <div class="bg-white border border-gray-200 rounded-xl shadow-xs mb-6">
+      <div class="px-6 py-5 border-b border-gray-200">
+        <div class="text-xs font-semibold uppercase tracking-wider text-gray-500">Base unit</div>
+      </div>
+      <div class="px-8 py-8 flex items-end gap-6">
+        <div class="flex flex-col items-center gap-2">
+          <div class="bg-brand-500 rounded-sm" style="width:4px; height:48px"></div>
+          <div class="text-sm font-mono font-semibold text-gray-900">4px</div>
+          <div class="text-xs text-gray-500">0.25rem</div>
+          <div class="text-xs text-gray-500 font-mono">spacing-1</div>
+        </div>
+        <div class="flex flex-col items-center gap-2">
+          <div class="bg-brand-500 rounded-sm" style="width:8px; height:48px"></div>
+          <div class="text-sm font-mono font-semibold text-gray-900">8px</div>
+          <div class="text-xs text-gray-500">0.5rem</div>
+          <div class="text-xs text-gray-500 font-mono">spacing-2</div>
+        </div>
+        <div class="flex flex-col items-center gap-2">
+          <div class="bg-brand-500 rounded-sm" style="width:16px; height:48px"></div>
+          <div class="text-sm font-mono font-semibold text-gray-900">16px</div>
+          <div class="text-xs text-gray-500">1rem</div>
+          <div class="text-xs text-gray-500 font-mono">spacing-4</div>
+        </div>
+        <div class="flex flex-col items-center gap-2">
+          <div class="bg-brand-500 rounded-sm" style="width:24px; height:48px"></div>
+          <div class="text-sm font-mono font-semibold text-gray-900">24px</div>
+          <div class="text-xs text-gray-500">1.5rem</div>
+          <div class="text-xs text-gray-500 font-mono">spacing-6</div>
+        </div>
+        <div class="ml-4 max-w-md text-sm text-gray-600">
+          <strong class="text-gray-900">Anchors:</strong> 4 (gap between adjacent text), 8 (default gap), 16 (body padding), 24 (card padding). Use these whenever possible.
+        </div>
+      </div>
+    </div>
+
+    <!-- Spacing scale -->
+    <div class="bg-white border border-gray-200 rounded-xl shadow-xs mb-6">
+      <div class="px-6 py-5 border-b border-gray-200">
+        <div class="text-xs font-semibold uppercase tracking-wider text-gray-500">Spacing scale · 23 steps</div>
+        <div class="text-sm text-gray-600 mt-1">Each bar's width equals the spacing value · click to copy</div>
+      </div>
+      <div class="px-8 py-6" id="spacing-scale"></div>
+    </div>
+
+    <!-- Radius scale -->
+    <div class="bg-white border border-gray-200 rounded-xl shadow-xs mb-6">
+      <div class="px-6 py-5 border-b border-gray-200">
+        <div class="text-xs font-semibold uppercase tracking-wider text-gray-500">Radius · 11 steps</div>
+        <div class="text-sm text-gray-600 mt-1">From sharp (none) to pill (full) · md (8px) is the default for buttons + inputs, xl (12px) for cards</div>
+      </div>
+      <div class="px-8 py-10 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6" id="radius-scale"></div>
+    </div>
+
+    <!-- Container widths -->
+    <div class="bg-white border border-gray-200 rounded-xl shadow-xs mb-6">
+      <div class="px-6 py-5 border-b border-gray-200">
+        <div class="text-xs font-semibold uppercase tracking-wider text-gray-500">Container widths · 8 sizes</div>
+        <div class="text-sm text-gray-600 mt-1">Max-widths for centered page layouts · this design system uses <code class="font-mono text-xs">3xl (1600px)</code> as the outer cap</div>
+      </div>
+      <div class="px-8 py-6" id="container-scale"></div>
+    </div>
+
+    <!-- 12-column grid -->
+    <div class="bg-white border border-gray-200 rounded-xl shadow-xs mb-6">
+      <div class="px-6 py-5 border-b border-gray-200">
+        <div class="text-xs font-semibold uppercase tracking-wider text-gray-500">12-column grid</div>
+        <div class="text-sm text-gray-600 mt-1">12 fluid columns · 16px gutters · 32px outer margin · typical layout patterns below</div>
+      </div>
+      <div class="px-8 py-8 space-y-6">
+        <!-- 12-column visualization -->
+        <div>
+          <div class="text-xs text-gray-500 mb-2 font-mono">12 cols</div>
+          <div class="grid grid-cols-12 gap-2">
+            <div class="h-12 bg-brand-100 border border-brand-200 rounded-md flex items-center justify-center text-xs font-mono text-brand-700">1</div>
+            <div class="h-12 bg-brand-100 border border-brand-200 rounded-md flex items-center justify-center text-xs font-mono text-brand-700">2</div>
+            <div class="h-12 bg-brand-100 border border-brand-200 rounded-md flex items-center justify-center text-xs font-mono text-brand-700">3</div>
+            <div class="h-12 bg-brand-100 border border-brand-200 rounded-md flex items-center justify-center text-xs font-mono text-brand-700">4</div>
+            <div class="h-12 bg-brand-100 border border-brand-200 rounded-md flex items-center justify-center text-xs font-mono text-brand-700">5</div>
+            <div class="h-12 bg-brand-100 border border-brand-200 rounded-md flex items-center justify-center text-xs font-mono text-brand-700">6</div>
+            <div class="h-12 bg-brand-100 border border-brand-200 rounded-md flex items-center justify-center text-xs font-mono text-brand-700">7</div>
+            <div class="h-12 bg-brand-100 border border-brand-200 rounded-md flex items-center justify-center text-xs font-mono text-brand-700">8</div>
+            <div class="h-12 bg-brand-100 border border-brand-200 rounded-md flex items-center justify-center text-xs font-mono text-brand-700">9</div>
+            <div class="h-12 bg-brand-100 border border-brand-200 rounded-md flex items-center justify-center text-xs font-mono text-brand-700">10</div>
+            <div class="h-12 bg-brand-100 border border-brand-200 rounded-md flex items-center justify-center text-xs font-mono text-brand-700">11</div>
+            <div class="h-12 bg-brand-100 border border-brand-200 rounded-md flex items-center justify-center text-xs font-mono text-brand-700">12</div>
+          </div>
+        </div>
+
+        <!-- Common patterns -->
+        <div>
+          <div class="text-xs text-gray-500 mb-2 font-mono">8 + 4 — content + sidebar</div>
+          <div class="grid grid-cols-12 gap-2">
+            <div class="col-span-8 h-12 bg-gray-100 border border-gray-200 rounded-md flex items-center justify-center text-xs font-mono text-gray-700">8 (content)</div>
+            <div class="col-span-4 h-12 bg-gray-200 border border-gray-300 rounded-md flex items-center justify-center text-xs font-mono text-gray-800">4 (sidebar)</div>
+          </div>
+        </div>
+
+        <div>
+          <div class="text-xs text-gray-500 mb-2 font-mono">3 × 4 — three equal cards</div>
+          <div class="grid grid-cols-12 gap-2">
+            <div class="col-span-4 h-12 bg-gray-100 border border-gray-200 rounded-md flex items-center justify-center text-xs font-mono text-gray-700">4</div>
+            <div class="col-span-4 h-12 bg-gray-100 border border-gray-200 rounded-md flex items-center justify-center text-xs font-mono text-gray-700">4</div>
+            <div class="col-span-4 h-12 bg-gray-100 border border-gray-200 rounded-md flex items-center justify-center text-xs font-mono text-gray-700">4</div>
+          </div>
+        </div>
+
+        <div>
+          <div class="text-xs text-gray-500 mb-2 font-mono">6 + 6 — two equal columns</div>
+          <div class="grid grid-cols-12 gap-2">
+            <div class="col-span-6 h-12 bg-gray-100 border border-gray-200 rounded-md flex items-center justify-center text-xs font-mono text-gray-700">6</div>
+            <div class="col-span-6 h-12 bg-gray-100 border border-gray-200 rounded-md flex items-center justify-center text-xs font-mono text-gray-700">6</div>
+          </div>
+        </div>
+
+        <div>
+          <div class="text-xs text-gray-500 mb-2 font-mono">2 + 8 + 2 — centered form</div>
+          <div class="grid grid-cols-12 gap-2">
+            <div class="col-span-2 h-12 rounded-md border border-dashed border-gray-300"></div>
+            <div class="col-span-8 h-12 bg-brand-100 border border-brand-200 rounded-md flex items-center justify-center text-xs font-mono text-brand-700">8 (form)</div>
+            <div class="col-span-2 h-12 rounded-md border border-dashed border-gray-300"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Common usage patterns -->
+    <div class="bg-white border border-gray-200 rounded-xl shadow-xs">
+      <div class="px-6 py-5 border-b border-gray-200">
+        <div class="text-xs font-semibold uppercase tracking-wider text-gray-500">Spacing recipes</div>
+        <div class="text-sm text-gray-600 mt-1">Memorize these so you stop guessing</div>
+      </div>
+      <div class="px-8 py-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4 text-sm" id="spacing-recipes"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TYPOGRAPHY -->
+  <section class="mb-20" data-page="typography">
+    <div class="mb-8">
+      <h2 class="text-display-xs font-semibold text-gray-900">Typography</h2>
+      <p class="text-text-md text-gray-600 mt-1">Inter · Display + Text scales · 4 weights · -2% letter-spacing on display</p>
+    </div>
+
+    <!-- ─── Family / specimen hero ─── -->
+    <div class="bg-white border border-gray-200 rounded-xl shadow-xs p-8 mb-10">
+      <div class="grid grid-cols-1 md:grid-cols-[1fr_320px] gap-10 items-start">
+        <div>
+          <div class="text-text-sm font-medium text-gray-900 mb-3">Inter</div>
+          <div class="text-[120px] leading-none font-semibold text-gray-900 tracking-tight mb-6">Ag</div>
+          <div class="font-mono text-sm text-gray-800 leading-relaxed space-y-0.5">
+            <div>ABCDEFGHIJKLMNOPQRSTUVWXYZ</div>
+            <div>abcdefghijklmnopqrstuvwxyz</div>
+            <div>0123456789 !@#$%^&amp;*()</div>
+          </div>
+        </div>
+        <div class="space-y-4">
+          <div class="flex items-center gap-4">
+            <span class="text-3xl font-normal text-gray-900 w-12">Aa</span>
+            <div>
+              <div class="text-text-sm font-semibold text-gray-900">Regular</div>
+              <div class="text-text-xs text-gray-500">Font weight: 400</div>
+            </div>
+          </div>
+          <div class="flex items-center gap-4">
+            <span class="text-3xl font-medium text-gray-900 w-12">Aa</span>
+            <div>
+              <div class="text-text-sm font-semibold text-gray-900">Medium</div>
+              <div class="text-text-xs text-gray-500">Font weight: 500</div>
+            </div>
+          </div>
+          <div class="flex items-center gap-4">
+            <span class="text-3xl font-semibold text-gray-900 w-12">Aa</span>
+            <div>
+              <div class="text-text-sm font-semibold text-gray-900">Semibold</div>
+              <div class="text-text-xs text-gray-500">Font weight: 600</div>
+            </div>
+          </div>
+          <div class="flex items-center gap-4">
+            <span class="text-3xl font-bold text-gray-900 w-12">Aa</span>
+            <div>
+              <div class="text-text-sm font-semibold text-gray-900">Bold</div>
+              <div class="text-text-xs text-gray-500">Font weight: 700</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── Size scale (rendered by JS) ─── -->
+    <div class="bg-white border border-gray-200 rounded-xl shadow-xs px-8 py-2">
+      <div id="type-scale"></div>
+    </div>
+  </section>
+
+  <!-- BUTTONS -->
+  <section class="mb-20" data-page="buttons">
+    <div class="mb-6">
+      <h2 class="text-display-xs font-semibold text-gray-900">Buttons</h2>
+      <p class="text-text-md text-gray-600 mt-1">10 hierarchies × 5 sizes · groups, social, close · signature shadow-xs · 4px focus rings</p>
+    </div>
+    <div class="bg-white border border-gray-200 rounded-xl shadow-xs">
+      <div class="px-6 py-6 space-y-8">
+
+        <div>
+          <div class="text-text-xs font-semibold uppercase tracking-wider text-gray-500 mb-3">Hierarchy</div>
+          <div class="flex flex-wrap gap-3">
+            <button class="inline-flex items-center justify-center gap-1.5 h-10 px-4 text-sm font-semibold rounded-md bg-brand-600 text-white border border-brand-600 shadow-xs hover:bg-brand-700">Primary</button>
+            <button class="inline-flex items-center justify-center gap-1.5 h-10 px-4 text-sm font-semibold rounded-md bg-white text-gray-700 border border-gray-300 shadow-xs hover:bg-gray-50">Secondary gray</button>
+            <button class="inline-flex items-center justify-center gap-1.5 h-10 px-4 text-sm font-semibold rounded-md bg-brand-50 text-brand-700 border border-brand-50 shadow-xs hover:bg-brand-100">Secondary color</button>
+            <button class="inline-flex items-center justify-center gap-1.5 h-10 px-4 text-sm font-semibold rounded-md bg-transparent text-gray-600 hover:bg-gray-50">Tertiary gray</button>
+            <button class="inline-flex items-center justify-center gap-1.5 h-10 px-4 text-sm font-semibold rounded-md bg-transparent text-brand-700 hover:bg-brand-50">Tertiary color</button>
+            <button class="inline-flex items-center text-sm font-semibold text-gray-600 hover:text-gray-800">Link gray</button>
+            <button class="inline-flex items-center text-sm font-semibold text-brand-700 hover:text-brand-800">Link color</button>
+          </div>
+        </div>
+
+        <div>
+          <div class="text-text-xs font-semibold uppercase tracking-wider text-gray-500 mb-3">Destructive</div>
+          <div class="flex flex-wrap gap-3">
+            <button class="inline-flex items-center justify-center gap-1.5 h-10 px-4 text-sm font-semibold rounded-md bg-error-600 text-white border border-error-600 shadow-xs hover:bg-error-700">Delete project</button>
+            <button class="inline-flex items-center justify-center gap-1.5 h-10 px-4 text-sm font-semibold rounded-md bg-white text-error-700 border border-error-300 shadow-xs hover:bg-error-50">Delete project</button>
+            <button class="inline-flex items-center justify-center gap-1.5 h-10 px-4 text-sm font-semibold rounded-md bg-transparent text-error-700 hover:bg-error-50">Delete project</button>
+          </div>
+        </div>
+
+        <div>
+          <div class="text-text-xs font-semibold uppercase tracking-wider text-gray-500 mb-3">Sizes</div>
+          <div class="flex flex-wrap items-center gap-3">
+            <button class="inline-flex items-center justify-center gap-1.5 h-9 px-3.5 text-sm font-semibold rounded-md bg-brand-600 text-white border border-brand-600 shadow-xs hover:bg-brand-700">Small (sm)</button>
+            <button class="inline-flex items-center justify-center gap-1.5 h-10 px-4 text-sm font-semibold rounded-md bg-brand-600 text-white border border-brand-600 shadow-xs hover:bg-brand-700">Medium (md)</button>
+            <button class="inline-flex items-center justify-center gap-1.5 h-11 px-[18px] text-base font-semibold rounded-md bg-brand-600 text-white border border-brand-600 shadow-xs hover:bg-brand-700">Large (lg)</button>
+            <button class="inline-flex items-center justify-center gap-1.5 h-12 px-5 text-base font-semibold rounded-md bg-brand-600 text-white border border-brand-600 shadow-xs hover:bg-brand-700">Extra Large (xl)</button>
+            <button class="inline-flex items-center justify-center gap-1.5 h-[60px] px-7 text-lg font-semibold rounded-md bg-brand-600 text-white border border-brand-600 shadow-xs hover:bg-brand-700">2XL</button>
+          </div>
+        </div>
+
+        <div>
+          <div class="text-text-xs font-semibold uppercase tracking-wider text-gray-500 mb-3">With icons</div>
+          <div class="flex flex-wrap gap-3">
+            <button class="inline-flex items-center justify-center gap-1.5 h-10 px-4 text-sm font-semibold rounded-md bg-brand-600 text-white border border-brand-600 shadow-xs hover:bg-brand-700">
+              <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+              New application
+            </button>
+            <button class="inline-flex items-center justify-center gap-1.5 h-10 px-4 text-sm font-semibold rounded-md bg-white text-gray-700 border border-gray-300 shadow-xs hover:bg-gray-50">
+              <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+              Export CSV
+            </button>
+            <button class="inline-flex items-center justify-center gap-1.5 h-10 px-4 text-sm font-semibold rounded-md bg-brand-50 text-brand-700 border border-brand-50 shadow-xs hover:bg-brand-100">
+              <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4M13 3l2.5 6.5L22 12l-6.5 2.5L13 21l-2.5-6.5L4 12l6.5-2.5z"/></svg>
+              Run AI Decision
+            </button>
+            <button aria-label="Add" class="inline-flex items-center justify-center h-10 w-10 rounded-md bg-brand-600 text-white border border-brand-600 shadow-xs hover:bg-brand-700">
+              <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <div>
+          <div class="text-text-xs font-semibold uppercase tracking-wider text-gray-500 mb-3">States</div>
+          <div class="flex flex-wrap gap-3 items-center">
+            <button class="inline-flex items-center justify-center h-10 px-4 text-sm font-semibold rounded-md bg-brand-600 text-white border border-brand-600 shadow-xs">Default</button>
+            <button class="inline-flex items-center justify-center h-10 px-4 text-sm font-semibold rounded-md bg-brand-700 text-white border border-brand-700 shadow-xs">Hover</button>
+            <button class="inline-flex items-center justify-center h-10 px-4 text-sm font-semibold rounded-md bg-brand-600 text-white border border-brand-600 shadow-ring-brand">Focused</button>
+            <button class="inline-flex items-center gap-1.5 h-10 px-4 text-sm font-semibold rounded-md bg-brand-600 text-white border border-brand-600 shadow-xs">
+              <svg class="h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path></svg>
+              Loading
+            </button>
+            <button disabled class="inline-flex items-center justify-center h-10 px-4 text-sm font-semibold rounded-md bg-gray-100 text-gray-400 border border-gray-200 cursor-not-allowed">Disabled</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- BUTTON GROUPS -->
+  <section class="mb-20" data-page="button-group">
+    <div class="mb-6">
+      <h2 class="text-display-xs font-semibold text-gray-900">Button group</h2>
+      <p class="text-text-md text-gray-600 mt-1">Joined / segmented buttons — for view toggles, filters, date ranges</p>
+    </div>
+    <div class="bg-white border border-gray-200 rounded-xl shadow-xs">
+      <div class="px-6 py-6 space-y-8">
+
+        <div>
+          <div class="text-text-xs font-semibold uppercase tracking-wider text-gray-500 mb-3">Text labels</div>
+          <div class="inline-flex shadow-xs rounded-md isolate">
+            <button class="inline-flex items-center justify-center h-10 px-4 text-sm font-semibold bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 rounded-l-md -ml-px first:ml-0">Day</button>
+            <button class="inline-flex items-center justify-center h-10 px-4 text-sm font-semibold bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 -ml-px">Week</button>
+            <button class="inline-flex items-center justify-center h-10 px-4 text-sm font-semibold bg-gray-50 text-gray-800 border border-gray-300 -ml-px z-10">Month</button>
+            <button class="inline-flex items-center justify-center h-10 px-4 text-sm font-semibold bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 -ml-px">Quarter</button>
+            <button class="inline-flex items-center justify-center h-10 px-4 text-sm font-semibold bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 rounded-r-md -ml-px">Year</button>
+          </div>
+        </div>
+
+        <div>
+          <div class="text-text-xs font-semibold uppercase tracking-wider text-gray-500 mb-3">With leading icons</div>
+          <div class="inline-flex shadow-xs rounded-md isolate">
+            <button class="inline-flex items-center justify-center gap-1.5 h-10 px-4 text-sm font-semibold bg-gray-50 text-gray-800 border border-gray-300 rounded-l-md z-10">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3h7v7H3zM14 3h7v7h-7zM14 14h7v7h-7zM3 14h7v7H3z"/></svg>
+              Grid
+            </button>
+            <button class="inline-flex items-center justify-center gap-1.5 h-10 px-4 text-sm font-semibold bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 -ml-px">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+              List
+            </button>
+            <button class="inline-flex items-center justify-center gap-1.5 h-10 px-4 text-sm font-semibold bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 rounded-r-md -ml-px">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V10M18 20V4M6 20v-4"/></svg>
+              Chart
+            </button>
+          </div>
+        </div>
+
+        <div>
+          <div class="text-text-xs font-semibold uppercase tracking-wider text-gray-500 mb-3">Icon-only</div>
+          <div class="inline-flex shadow-xs rounded-md isolate">
+            <button aria-label="Grid" class="inline-flex items-center justify-center h-10 w-10 bg-gray-50 text-gray-800 border border-gray-300 rounded-l-md z-10">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3h7v7H3zM14 3h7v7h-7zM14 14h7v7h-7zM3 14h7v7H3z"/></svg>
+            </button>
+            <button aria-label="List" class="inline-flex items-center justify-center h-10 w-10 bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 -ml-px">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+            </button>
+            <button aria-label="Chart" class="inline-flex items-center justify-center h-10 w-10 bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 rounded-r-md -ml-px">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V10M18 20V4M6 20v-4"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <div>
+          <div class="text-text-xs font-semibold uppercase tracking-wider text-gray-500 mb-3">Sizes (sm / md / lg)</div>
+          <div class="space-y-3">
+            <div class="inline-flex shadow-xs rounded-md isolate">
+              <button class="inline-flex items-center justify-center h-9 px-3.5 text-sm font-semibold bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 rounded-l-md">Day</button>
+              <button class="inline-flex items-center justify-center h-9 px-3.5 text-sm font-semibold bg-gray-50 text-gray-800 border border-gray-300 -ml-px z-10">Week</button>
+              <button class="inline-flex items-center justify-center h-9 px-3.5 text-sm font-semibold bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 rounded-r-md -ml-px">Month</button>
+            </div><br/>
+            <div class="inline-flex shadow-xs rounded-md isolate">
+              <button class="inline-flex items-center justify-center h-10 px-4 text-sm font-semibold bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 rounded-l-md">Day</button>
+              <button class="inline-flex items-center justify-center h-10 px-4 text-sm font-semibold bg-gray-50 text-gray-800 border border-gray-300 -ml-px z-10">Week</button>
+              <button class="inline-flex items-center justify-center h-10 px-4 text-sm font-semibold bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 rounded-r-md -ml-px">Month</button>
+            </div><br/>
+            <div class="inline-flex shadow-xs rounded-md isolate">
+              <button class="inline-flex items-center justify-center h-11 px-[18px] text-base font-semibold bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 rounded-l-md">Day</button>
+              <button class="inline-flex items-center justify-center h-11 px-[18px] text-base font-semibold bg-gray-50 text-gray-800 border border-gray-300 -ml-px z-10">Week</button>
+              <button class="inline-flex items-center justify-center h-11 px-[18px] text-base font-semibold bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 rounded-r-md -ml-px">Month</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- SOCIAL BUTTONS -->
+  <section class="mb-20" data-page="social-buttons">
+    <div class="mb-6">
+      <h2 class="text-display-xs font-semibold text-gray-900">Social buttons</h2>
+      <p class="text-text-md text-gray-600 mt-1">For OAuth sign-in flows · brand icons preserved in color</p>
+    </div>
+    <div class="bg-white border border-gray-200 rounded-xl shadow-xs">
+      <div class="px-6 py-6 space-y-8">
+        <div>
+          <div class="text-text-xs font-semibold uppercase tracking-wider text-gray-500 mb-3">Default mode</div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3 max-w-2xl" id="social-default"></div>
+        </div>
+        <div>
+          <div class="text-text-xs font-semibold uppercase tracking-wider text-gray-500 mb-3">Brand mode</div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3 max-w-2xl" id="social-brand"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CLOSE BUTTONS -->
+  <section class="mb-20" data-page="close-button">
+    <div class="mb-6">
+      <h2 class="text-display-xs font-semibold text-gray-900">Close button</h2>
+      <p class="text-text-md text-gray-600 mt-1">Dedicated X for modals, drawers, toasts, dismissible badges</p>
+    </div>
+    <div class="bg-white border border-gray-200 rounded-xl shadow-xs">
+      <div class="px-6 py-6 flex flex-wrap items-center gap-4">
+        <button aria-label="Close" class="inline-flex items-center justify-center shrink-0 h-8 w-8 rounded-md text-gray-500 hover:bg-gray-100 hover:text-gray-700">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+        <button aria-label="Close" class="inline-flex items-center justify-center shrink-0 h-9 w-9 rounded-md text-gray-500 hover:bg-gray-100 hover:text-gray-700">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+        <button aria-label="Close" class="inline-flex items-center justify-center shrink-0 h-10 w-10 rounded-md text-gray-500 hover:bg-gray-100 hover:text-gray-700">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+        <button aria-label="Close" class="inline-flex items-center justify-center shrink-0 h-11 w-11 rounded-md text-gray-500 hover:bg-gray-100 hover:text-gray-700">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+        <span class="text-sm text-gray-500 mx-3">/</span>
+        <button aria-label="Close" class="inline-flex items-center justify-center shrink-0 h-9 w-9 rounded-md text-brand-700 hover:bg-brand-100 hover:text-brand-800">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+        <button aria-label="Close" class="inline-flex items-center justify-center shrink-0 h-9 w-9 rounded-md text-gray-500 hover:text-gray-700">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- AVATARS -->
+  <section class="mb-20" data-page="avatars">
+    <div class="mb-8">
+      <h2 class="text-display-xs font-semibold text-gray-900">Avatars</h2>
+      <p class="text-text-md text-gray-600 mt-1">7 sizes · 3-tier fallback (image → initials → icon) · status dots · groups · profile</p>
+    </div>
+
+    <!-- Sizes -->
+    <div class="bg-white border border-gray-200 rounded-xl shadow-xs mb-6">
+      <div class="px-6 py-5 border-b border-gray-200">
+        <div class="text-sm font-semibold text-gray-900">Sizes</div>
+        <div class="text-sm text-gray-600 mt-1">From 24px (xs) compact lists to 96px (3xl) profile hero</div>
+      </div>
+      <div class="px-6 py-8 flex items-end flex-wrap gap-x-8 gap-y-4" id="av-sizes"></div>
+    </div>
+
+    <!-- Fallback waterfall -->
+    <div class="bg-white border border-gray-200 rounded-xl shadow-xs mb-6">
+      <div class="px-6 py-5 border-b border-gray-200">
+        <div class="text-sm font-semibold text-gray-900">Fallback waterfall</div>
+        <div class="text-sm text-gray-600 mt-1"><code class="font-mono text-xs">src</code> loads → image · loading fails OR no src → initials with stable color from name hash · no name → user icon</div>
+      </div>
+      <div class="px-6 py-8 grid grid-cols-2 md:grid-cols-4 gap-6" id="av-fallback"></div>
+    </div>
+
+    <!-- Shapes -->
+    <div class="bg-white border border-gray-200 rounded-xl shadow-xs mb-6">
+      <div class="px-6 py-5 border-b border-gray-200">
+        <div class="text-sm font-semibold text-gray-900">Shapes</div>
+        <div class="text-sm text-gray-600 mt-1">Circle (default for people) · square (rounded-md, for orgs / teams)</div>
+      </div>
+      <div class="px-6 py-8 flex flex-wrap items-end gap-8" id="av-shapes"></div>
+    </div>
+
+    <!-- Status dots -->
+    <div class="bg-white border border-gray-200 rounded-xl shadow-xs mb-6">
+      <div class="px-6 py-5 border-b border-gray-200">
+        <div class="text-sm font-semibold text-gray-900">Status dots</div>
+        <div class="text-sm text-gray-600 mt-1">Bottom-right indicator with 2px white ring · sized proportionally</div>
+      </div>
+      <div class="px-6 py-8 flex flex-wrap items-end gap-8" id="av-status"></div>
+    </div>
+
+    <!-- Avatar Group -->
+    <div class="bg-white border border-gray-200 rounded-xl shadow-xs mb-6">
+      <div class="px-6 py-5 border-b border-gray-200">
+        <div class="text-sm font-semibold text-gray-900">Avatar group</div>
+        <div class="text-sm text-gray-600 mt-1">Stack with negative-margin overlap + 2px white ring · automatic "+N" overflow pill</div>
+      </div>
+      <div class="px-6 py-8 space-y-6" id="av-groups"></div>
+    </div>
+
+    <!-- Avatar Profile -->
+    <div class="bg-white border border-gray-200 rounded-xl shadow-xs">
+      <div class="px-6 py-5 border-b border-gray-200">
+        <div class="text-sm font-semibold text-gray-900">Avatar profile</div>
+        <div class="text-sm text-gray-600 mt-1">Avatar + name + subtitle composition — for menu dropdowns, headers, comment lines</div>
+      </div>
+      <div class="px-6 py-8 space-y-6" id="av-profile"></div>
+    </div>
+  </section>
+
+  <!-- BADGES -->
+  <section class="mb-20" data-page="badges">
+    <div class="mb-6">
+      <h2 class="text-display-xs font-semibold text-gray-900">Badges</h2>
+      <p class="text-text-md text-gray-600 mt-1">4 variants × 10 tones × 3 sizes</p>
+    </div>
+    <div class="bg-white border border-gray-200 rounded-xl shadow-xs">
+      <div class="px-6 py-6 space-y-6">
+        <div>
+          <div class="text-text-xs font-semibold uppercase tracking-wider text-gray-500 mb-3">Pill · color</div>
+          <div class="flex flex-wrap gap-2" id="badges-pill-color"></div>
+        </div>
+        <div>
+          <div class="text-text-xs font-semibold uppercase tracking-wider text-gray-500 mb-3">Pill · outline</div>
+          <div class="flex flex-wrap gap-2" id="badges-pill-outline"></div>
+        </div>
+        <div>
+          <div class="text-text-xs font-semibold uppercase tracking-wider text-gray-500 mb-3">Badge · color (squared)</div>
+          <div class="flex flex-wrap gap-2" id="badges-color"></div>
+        </div>
+        <div>
+          <div class="text-text-xs font-semibold uppercase tracking-wider text-gray-500 mb-3">Badge · modern (white surface, colored dot)</div>
+          <div class="flex flex-wrap gap-2" id="badges-modern"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATUS PILLS -->
+  <section class="mb-20" data-page="status-pills">
+    <div class="mb-6">
+      <h2 class="text-display-xs font-semibold text-gray-900">Status pills</h2>
+      <p class="text-text-md text-gray-600 mt-1">Modern variant (white surface, colored dot) — Untitled UI signature</p>
+    </div>
+    <div class="bg-white border border-gray-200 rounded-xl shadow-xs">
+      <div class="px-6 py-6 space-y-4">
+        <div class="flex flex-wrap gap-3">
+          <span class="inline-flex items-center gap-1.5 h-6 px-2.5 rounded-full bg-white border border-gray-300 shadow-xs text-xs font-medium text-success-700"><span class="h-1.5 w-1.5 rounded-full bg-success-500"></span>Approved</span>
+          <span class="inline-flex items-center gap-1.5 h-6 px-2.5 rounded-full bg-white border border-gray-300 shadow-xs text-xs font-medium text-error-700"><span class="h-1.5 w-1.5 rounded-full bg-error-500"></span>Declined</span>
+          <span class="inline-flex items-center gap-1.5 h-6 px-2.5 rounded-full bg-white border border-gray-300 shadow-xs text-xs font-medium text-warning-700"><span class="h-1.5 w-1.5 rounded-full bg-warning-500"></span>Review</span>
+          <span class="inline-flex items-center gap-1.5 h-6 px-2.5 rounded-full bg-white border border-gray-300 shadow-xs text-xs font-medium text-aiProcess-700"><span class="h-1.5 w-1.5 rounded-full bg-aiProcess-500"></span>AI Process</span>
+          <span class="inline-flex items-center gap-1.5 h-6 px-2.5 rounded-full bg-white border border-gray-300 shadow-xs text-xs font-medium text-gray-700"><span class="h-1.5 w-1.5 rounded-full bg-gray-500"></span>Neutral</span>
+        </div>
+        <div class="flex flex-wrap gap-3">
+          <span class="inline-flex items-center gap-1.5 h-6 px-2.5 rounded-full bg-success-50 border border-success-200 text-xs font-medium text-success-700"><span class="h-1.5 w-1.5 rounded-full bg-success-500"></span>Approved</span>
+          <span class="inline-flex items-center gap-1.5 h-6 px-2.5 rounded-full bg-error-50 border border-error-200 text-xs font-medium text-error-700"><span class="h-1.5 w-1.5 rounded-full bg-error-500"></span>Declined</span>
+          <span class="inline-flex items-center gap-1.5 h-6 px-2.5 rounded-full bg-warning-50 border border-warning-200 text-xs font-medium text-warning-700"><span class="h-1.5 w-1.5 rounded-full bg-warning-500"></span>Review</span>
+          <span class="inline-flex items-center gap-1.5 h-6 px-2.5 rounded-full bg-aiProcess-50 border border-aiProcess-200 text-xs font-medium text-aiProcess-700"><span class="h-1.5 w-1.5 rounded-full bg-aiProcess-500"></span>AI Process</span>
+          <span class="inline-flex items-center gap-1.5 h-6 px-2.5 rounded-full bg-gray-100 border border-gray-200 text-xs font-medium text-gray-700"><span class="h-1.5 w-1.5 rounded-full bg-gray-500"></span>Neutral</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- INPUTS -->
+  <section class="mb-20" data-page="forms">
+    <div class="mb-6">
+      <h2 class="text-display-xs font-semibold text-gray-900">Forms & inputs</h2>
+      <p class="text-text-md text-gray-600 mt-1">Untitled UI: shadow-xs ring, brand focus ring, addons, hint icons</p>
+    </div>
+    <div class="bg-white border border-gray-200 rounded-xl shadow-xs">
+      <div class="px-6 py-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+
+        <div>
+          <label class="text-sm font-medium text-gray-700 inline-flex items-center gap-1 mb-1.5">Email <span class="text-brand-600">*</span></label>
+          <div class="relative">
+            <svg class="h-5 w-5 absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500" fill="none" stroke="currentColor" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l9 6 9-6M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+            <input type="email" placeholder="you@scienaptic.com" class="block w-full h-10 pl-[42px] pr-3.5 text-md bg-white border border-gray-300 rounded-md shadow-xs placeholder:text-gray-500 focus:outline-none focus:shadow-ring-brand focus:border-brand-300" />
+          </div>
+          <p class="text-sm mt-1.5 text-gray-600">We'll never share your email.</p>
+        </div>
+
+        <div>
+          <label class="text-sm font-medium text-gray-700 inline-flex items-center gap-1 mb-1.5">Website
+            <svg class="h-4 w-4 text-gray-500" fill="none" stroke="currentColor" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path stroke-linecap="round" d="M12 8v4m0 4h.01"/></svg>
+          </label>
+          <div class="flex w-full rounded-md shadow-xs border border-gray-300 bg-white focus-within:shadow-ring-brand focus-within:border-brand-300">
+            <span class="inline-flex items-center px-3.5 text-md text-gray-600 bg-white border-r border-gray-300 rounded-l-md">https://</span>
+            <input placeholder="scienaptic.com" class="flex-1 bg-transparent border-0 outline-none h-10 px-3.5 text-md text-gray-900 placeholder:text-gray-500" />
+          </div>
+        </div>
+
+        <div>
+          <label class="text-sm font-medium text-gray-700 inline-flex items-center gap-1 mb-1.5">API key</label>
+          <input value="sk_live_••••••••••••" class="block w-full h-10 px-3.5 text-md bg-white border border-error-300 rounded-md shadow-xs focus:outline-none focus:shadow-ring-error focus:border-error-300" />
+          <p class="text-sm mt-1.5 text-error-600 flex items-start gap-1.5">
+            <svg class="h-4 w-4 mt-0.5 shrink-0" fill="none" stroke="currentColor" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path stroke-linecap="round" d="M12 8v4m0 4h.01"/></svg>
+            <span>This key has expired. Generate a new one.</span>
+          </p>
+        </div>
+
+        <div>
+          <label class="text-sm font-medium text-gray-700 inline-flex items-center gap-1 mb-1.5">Search</label>
+          <div class="relative">
+            <svg class="h-5 w-5 absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500" fill="none" stroke="currentColor" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path stroke-linecap="round" d="M21 21l-4.3-4.3"/></svg>
+            <input placeholder="Search applications..." class="block w-full h-10 pl-[42px] pr-3.5 text-md bg-white border border-gray-300 rounded-md shadow-xs placeholder:text-gray-500 focus:outline-none focus:shadow-ring-brand focus:border-brand-300" />
+          </div>
+        </div>
+
+        <div>
+          <label class="text-sm font-medium text-gray-700 inline-flex items-center gap-1 mb-1.5">Disabled</label>
+          <input value="Locked value" disabled class="block w-full h-10 px-3.5 text-md bg-gray-50 border border-gray-300 rounded-md shadow-xs text-gray-500 cursor-not-allowed" />
+        </div>
+
+        <div>
+          <label class="text-sm font-medium text-gray-700 inline-flex items-center gap-1 mb-1.5">Focused (preview)</label>
+          <input value="Typing..." class="block w-full h-10 px-3.5 text-md bg-white border border-brand-300 rounded-md shadow-ring-brand outline-none" />
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- BADGE GROUPS -->
+  <section class="mb-20" data-page="badge-groups">
+    <div class="mb-6">
+      <h2 class="text-display-xs font-semibold text-gray-900">Badge groups</h2>
+      <p class="text-text-md text-gray-600 mt-1">Composite badge with leading pill + trailing message · perfect for announcement banners & inline CTAs</p>
+    </div>
+    <div class="bg-white border border-gray-200 rounded-xl shadow-xs">
+      <div class="px-6 py-6 space-y-8">
+
+        <!-- Pill · color -->
+        <div>
+          <div class="text-text-xs font-semibold uppercase tracking-wider text-gray-500 mb-3">Pill · color (themed across our palette)</div>
+          <div class="flex flex-wrap gap-3" id="bg-pill-color"></div>
+        </div>
+
+        <!-- Pill · outline -->
+        <div>
+          <div class="text-text-xs font-semibold uppercase tracking-wider text-gray-500 mb-3">Pill · outline</div>
+          <div class="flex flex-wrap gap-3" id="bg-pill-outline"></div>
+        </div>
+
+        <!-- Badge · color (squared) -->
+        <div>
+          <div class="text-text-xs font-semibold uppercase tracking-wider text-gray-500 mb-3">Badge · color (squared)</div>
+          <div class="flex flex-wrap gap-3" id="bg-badge-color"></div>
+        </div>
+
+        <!-- Modern with dot -->
+        <div>
+          <div class="text-text-xs font-semibold uppercase tracking-wider text-gray-500 mb-3">Modern · with colored dot <span class="text-gray-400 normal-case font-normal">(Untitled UI signature)</span></div>
+          <div class="flex flex-wrap gap-3" id="bg-modern"></div>
+        </div>
+
+        <!-- Sizes -->
+        <div>
+          <div class="text-text-xs font-semibold uppercase tracking-wider text-gray-500 mb-3">Sizes</div>
+          <div class="flex flex-wrap items-center gap-3" id="bg-sizes"></div>
+        </div>
+
+        <!-- Clickable -->
+        <div>
+          <div class="text-text-xs font-semibold uppercase tracking-wider text-gray-500 mb-3">As link · clickable banner</div>
+          <div class="flex flex-wrap gap-3" id="bg-link"></div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ICONS -->
+  <section class="mb-20" data-page="icons">
+    <div class="mb-6">
+      <h2 class="text-display-xs font-semibold text-gray-900">Icons</h2>
+      <p class="text-text-md text-gray-600 mt-1">Lucide (MIT) · <span id="icon-total-count">1500+</span> icons · 2px stroke · 24×24 · click any to copy its name</p>
+    </div>
+
+    <!-- Search + customizers -->
+    <div class="bg-white border border-gray-200 rounded-xl shadow-xs mb-6">
+      <div class="px-6 py-4 flex items-center gap-6 flex-wrap">
+        <!-- Search -->
+        <div class="flex items-center gap-3 flex-1 min-w-[260px]">
+          <i data-lucide="search" class="w-5 h-5 text-gray-500 shrink-0"></i>
+          <input
+            id="icon-search"
+            type="search"
+            placeholder="Search icons by name…"
+            class="flex-1 bg-transparent border-0 outline-none text-base text-gray-900 placeholder:text-gray-500"
+            autocomplete="off"
+          />
+          <span id="icon-search-count" class="text-text-xs text-gray-500 font-mono"></span>
+        </div>
+
+        <!-- Divider -->
+        <div class="hidden md:block h-6 w-px bg-gray-200"></div>
+
+        <!-- Size slider -->
+        <div class="flex items-center gap-3">
+          <label for="icon-size" class="text-text-sm font-medium text-gray-700 shrink-0">Size</label>
+          <input id="icon-size" type="range" min="16" max="48" value="20" step="2"
+                 class="w-28 accent-brand-500" />
+          <span id="icon-size-value" class="text-text-xs font-mono text-gray-500 w-10 text-right">20px</span>
+        </div>
+
+        <!-- Stroke slider -->
+        <div class="flex items-center gap-3">
+          <label for="icon-stroke" class="text-text-sm font-medium text-gray-700 shrink-0">Stroke</label>
+          <input id="icon-stroke" type="range" min="1" max="3" value="2" step="0.25"
+                 class="w-28 accent-brand-500" />
+          <span id="icon-stroke-value" class="text-text-xs font-mono text-gray-500 w-8 text-right">2</span>
+        </div>
+
+        <!-- Divider -->
+        <div class="hidden md:block h-6 w-px bg-gray-200"></div>
+
+        <!-- Color picker -->
+        <div class="flex items-center gap-2">
+          <label class="text-text-sm font-medium text-gray-700 shrink-0">Color</label>
+          <div class="flex items-center gap-1.5">
+            <button type="button" class="color-swatch swatch-reset is-active" data-reset onclick="setIconColor(null)" title="Reset (inherits)" aria-label="Reset"></button>
+            <button type="button" class="color-swatch" data-color="#FF7918" onclick="setIconColor('#FF7918')" style="background:#FF7918" title="Brand"   aria-label="Brand"></button>
+            <button type="button" class="color-swatch" data-color="#697586" onclick="setIconColor('#697586')" style="background:#697586" title="Gray"    aria-label="Gray"></button>
+            <button type="button" class="color-swatch" data-color="#EF4444" onclick="setIconColor('#EF4444')" style="background:#EF4444" title="Error"   aria-label="Error"></button>
+            <button type="button" class="color-swatch" data-color="#EAB308" onclick="setIconColor('#EAB308')" style="background:#EAB308" title="Warning" aria-label="Warning"></button>
+            <button type="button" class="color-swatch" data-color="#10B981" onclick="setIconColor('#10B981')" style="background:#10B981" title="Success" aria-label="Success"></button>
+            <button type="button" class="color-swatch" data-color="#2E90FA" onclick="setIconColor('#2E90FA')" style="background:#2E90FA" title="Info"    aria-label="Info"></button>
+            <label class="color-swatch swatch-custom" title="Custom color">
+              <input id="icon-color-custom" type="color" value="#FF7918" oninput="setIconColor(this.value)" />
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Live spec snippets — update as sliders move; click any to copy -->
+      <div class="px-6 pt-3 pb-4 border-t border-gray-100 flex items-center gap-2 flex-wrap">
+        <span class="text-text-xs font-semibold uppercase tracking-wider text-gray-500 mr-2">Spec</span>
+        <button type="button" class="snippet-chip" onclick="copySnippet(this, 'react')">
+          <span class="opacity-60 mr-1">React</span><code id="snip-react"></code>
+        </button>
+        <button type="button" class="snippet-chip" onclick="copySnippet(this, 'tw')">
+          <span class="opacity-60 mr-1">Tailwind</span><code id="snip-tw"></code>
+        </button>
+        <button type="button" class="snippet-chip" onclick="copySnippet(this, 'css')">
+          <span class="opacity-60 mr-1">CSS</span><code id="snip-css"></code>
+        </button>
+        <button type="button" class="snippet-chip" onclick="copySnippet(this, 'html')">
+          <span class="opacity-60 mr-1">HTML</span><code id="snip-html"></code>
+        </button>
+      </div>
+    </div>
+
+    <!-- Curated set -->
+    <div id="icon-curated-card" class="bg-white border border-gray-200 rounded-xl shadow-xs mb-6">
+      <div class="px-6 py-5 border-b border-gray-200">
+        <div class="text-xs font-semibold uppercase tracking-wider text-gray-500">Curated set</div>
+        <div class="text-sm text-gray-600 mt-1">The ~50 icons our components use most — categorized for quick scanning</div>
+      </div>
+      <div class="px-6 py-6" id="icon-curated"></div>
+    </div>
+
+    <!-- All Lucide icons — now always visible -->
+    <div id="icon-all-card" class="bg-white border border-gray-200 rounded-xl shadow-xs mb-6">
+      <div class="px-6 py-5 border-b border-gray-200 flex items-center justify-between gap-4 flex-wrap">
+        <div>
+          <div class="text-xs font-semibold uppercase tracking-wider text-gray-500">All Lucide icons <span id="icon-all-count" class="ml-1 text-gray-400">(0)</span></div>
+          <div class="text-sm text-gray-600 mt-1">All <span id="icon-all-total"></span> available via <code class="font-mono text-xs">@/icons</code> or <code class="font-mono text-xs">lucide-react</code></div>
+        </div>
+        <div class="text-text-xs text-gray-500">
+          <span class="inline-flex items-center gap-1 mr-3">
+            <kbd class="font-mono text-[10px] bg-gray-100 border border-gray-200 rounded px-1.5 py-0.5">click</kbd>
+            copy name
+          </span>
+          <span class="inline-flex items-center gap-1">
+            <kbd class="font-mono text-[10px] bg-gray-100 border border-gray-200 rounded px-1.5 py-0.5">hover &amp; click ⌗</kbd>
+            copy SVG
+          </span>
+        </div>
+      </div>
+      <div class="px-6 py-6 grid grid-cols-6 md:grid-cols-10 lg:grid-cols-12 gap-3" id="icon-all"></div>
+    </div>
+
+    <!-- Brand / OAuth color marks -->
+    <div class="bg-white border border-gray-200 rounded-xl shadow-xs">
+      <div class="px-6 py-5 border-b border-gray-200">
+        <div class="text-xs font-semibold uppercase tracking-wider text-gray-500">Brand / OAuth marks</div>
+        <div class="text-sm text-gray-600 mt-1">Color-filled, not stroked — kept inline. Used in SocialButton.</div>
+      </div>
+      <div class="px-6 py-6 grid grid-cols-3 md:grid-cols-7 gap-4" id="icon-brand"></div>
+    </div>
+  </section>
+
+  <!-- CARDS -->
+  <section class="mb-20" data-page="cards">
+    <div class="mb-6">
+      <h2 class="text-display-xs font-semibold text-gray-900">Cards</h2>
+      <p class="text-text-md text-gray-600 mt-1">Untitled UI radius-xl (12px) · shadow-xs default · composable Header / Content / Footer</p>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+      <div class="bg-white border border-gray-200 rounded-xl shadow-xs overflow-hidden">
+        <div class="px-6 pt-5 pb-5 border-b border-gray-200">
+          <h3 class="text-lg font-semibold text-gray-900">Applications today</h3>
+          <p class="text-sm text-gray-600">Last 24h activity</p>
+        </div>
+        <div class="px-6 py-5">
+          <div class="text-display-md font-semibold text-gray-900 tracking-tight">2,847</div>
+          <div class="text-sm text-success-700 mt-2 font-medium inline-flex items-center gap-1">
+            <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7"/></svg>
+            12.3% vs yesterday
+          </div>
+        </div>
+        <div class="px-6 py-4 border-t border-gray-200 bg-gray-50">
+          <button class="inline-flex items-center gap-1.5 text-sm font-semibold text-brand-700 hover:text-brand-800">
+            View all
+            <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14m-7-7l7 7-7 7"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="bg-white border border-gray-200 rounded-xl shadow-xs overflow-hidden">
+        <div class="px-6 pt-5 pb-5 border-b border-gray-200">
+          <div class="flex items-center justify-between">
+            <h3 class="text-lg font-semibold text-gray-900">AI Decisioning</h3>
+            <span class="inline-flex items-center gap-1.5 h-6 px-2.5 rounded-full bg-white border border-gray-300 shadow-xs text-xs font-medium text-aiProcess-700">
+              <span class="h-1.5 w-1.5 rounded-full bg-aiProcess-500"></span> Live
+            </span>
+          </div>
+          <p class="text-sm text-gray-600">Real-time scoring engine</p>
+        </div>
+        <div class="px-6 py-5 space-y-2.5">
+          <div class="flex justify-between text-sm"><span class="text-gray-600">Auto-approved</span><span class="font-medium text-gray-900">1,932</span></div>
+          <div class="flex justify-between text-sm"><span class="text-gray-600">Sent to review</span><span class="font-medium text-gray-900">487</span></div>
+          <div class="flex justify-between text-sm"><span class="text-gray-600">Declined</span><span class="font-medium text-gray-900">428</span></div>
+        </div>
+        <div class="px-6 py-4 border-t border-gray-200 bg-gray-50">
+          <span class="text-xs text-gray-600 font-mono">Accuracy: 98.2%</span>
+        </div>
+      </div>
+
+      <div class="bg-white border border-gray-200 rounded-xl shadow-xs overflow-hidden transition-shadow hover:shadow-md cursor-pointer">
+        <div class="px-6 pt-5 pb-5 border-b border-gray-200">
+          <h3 class="text-lg font-semibold text-gray-900">Recent activity</h3>
+          <p class="text-sm text-gray-600">Latest decisions</p>
+        </div>
+        <div class="px-6 py-5">
+          <ul class="space-y-3">
+            <li class="flex items-center justify-between">
+              <span class="text-sm text-gray-700">App #2891</span>
+              <span class="inline-flex items-center gap-1.5 h-6 px-2.5 rounded-full bg-white border border-gray-300 shadow-xs text-xs font-medium text-success-700"><span class="h-1.5 w-1.5 rounded-full bg-success-500"></span>Approved</span>
+            </li>
+            <li class="flex items-center justify-between">
+              <span class="text-sm text-gray-700">App #2890</span>
+              <span class="inline-flex items-center gap-1.5 h-6 px-2.5 rounded-full bg-white border border-gray-300 shadow-xs text-xs font-medium text-warning-700"><span class="h-1.5 w-1.5 rounded-full bg-warning-500"></span>Review</span>
+            </li>
+            <li class="flex items-center justify-between">
+              <span class="text-sm text-gray-700">App #2889</span>
+              <span class="inline-flex items-center gap-1.5 h-6 px-2.5 rounded-full bg-white border border-gray-300 shadow-xs text-xs font-medium text-error-700"><span class="h-1.5 w-1.5 rounded-full bg-error-500"></span>Declined</span>
+            </li>
+            <li class="flex items-center justify-between">
+              <span class="text-sm text-gray-700">App #2888</span>
+              <span class="inline-flex items-center gap-1.5 h-6 px-2.5 rounded-full bg-white border border-gray-300 shadow-xs text-xs font-medium text-aiProcess-700"><span class="h-1.5 w-1.5 rounded-full bg-aiProcess-500"></span>AI Process</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+</main>
+
+  <!-- Right-side "On this page" TOC · sticky, hidden on narrow viewports -->
+  <aside id="toc-sidebar" class="hidden xl:flex w-60 shrink-0 sticky top-0 self-start flex-col h-screen overflow-y-auto pt-10 px-6 pb-10">
+    <div class="text-xs font-semibold uppercase tracking-wider text-gray-500 mb-3">On this page</div>
+    <nav id="toc" class="flex flex-col"></nav>
+  </aside>
+</div>
+
+<footer class="border-t border-gray-200 py-6 bg-white">
+  <div class="max-w-[1600px] mx-auto px-6 text-sm text-gray-600 flex items-center justify-between">
+    <span>PULSE Design System · v0.2.0 · Powered by scienaptic.ai</span>
+    <span class="font-mono text-xs text-gray-500">React · TS · Tailwind · Radix</span>
+  </div>
+</footer>
+
+<script>
+  // ============================================================
+  // Left-nav routing
+  // ============================================================
+  function setActivePage(pageId, { updateHash = true } = {}) {
+    const pages = document.querySelectorAll('[data-page]');
+    let hit = false;
+    pages.forEach(p => {
+      const isMatch = p.dataset.page === pageId;
+      p.classList.toggle('is-active', isMatch);
+      if (isMatch) hit = true;
+    });
+    if (!hit && pageId !== 'overview') {
+      return setActivePage('overview', { updateHash });
+    }
+    document.querySelectorAll('.nav-link[data-nav]').forEach(link => {
+      link.classList.toggle('is-active', link.dataset.nav === pageId);
+    });
+    const navLink = document.querySelector(`.nav-link[data-nav="${pageId}"]`);
+    if (navLink) {
+      document.title = navLink.textContent.trim() + ' · PULSE Design System';
+    }
+    if (updateHash) history.replaceState(null, '', '#' + pageId);
+    window.scrollTo({ top: 0, behavior: 'instant' });
+
+    // Refresh breadcrumb + on-this-page TOC for the new page
+    updateBreadcrumb(pageId);
+    updateToc(pageId);
+  }
+
+  // ============================================================
+  // Breadcrumb (Group / Page) — derived from a static map since the sidebar
+  // uses HTML comments + dividers to group nav items rather than wrapper elements.
+  // ============================================================
+  const PAGE_GROUP = {
+    'overview':       'Get started',
+    'colors':         'Foundations',
+    'gradients':      'Foundations',
+    'shadows-blurs':  'Foundations',
+    'spacing-grids':  'Foundations',
+    'typography':     'Foundations',
+    'icons':          'Foundations',
+    'buttons':        'Components',
+    'button-group':   'Components',
+    'social-buttons': 'Components',
+    'close-button':   'Components',
+    'avatars':        'Components',
+    'badges':         'Components',
+    'badge-groups':   'Components',
+    'status-pills':   'Components',
+    'forms':          'Components',
+    'cards':          'Components',
+  };
+
+  function updateBreadcrumb(pageId) {
+    const bc = document.getElementById('breadcrumb');
+    if (!bc) return;
+    const navLink = document.querySelector(`.nav-link[data-nav="${pageId}"]`);
+    if (!navLink) { bc.innerHTML = ''; return; }
+    const pageName = navLink.textContent.trim();
+    const groupName = PAGE_GROUP[pageId] || '';
+
+    const chev = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>';
+    bc.innerHTML = (groupName ? `<span>${groupName}</span> ${chev} ` : '') +
+      `<span class="breadcrumb-current">${pageName}</span>`;
+  }
+
+  // ============================================================
+  // "On this page" TOC — auto-built from the active page's headings
+  // + IntersectionObserver scroll spy to highlight the current section
+  // ============================================================
+  let _tocObserver = null;
+  let _tocLinksByHash = {};
+
+  function slug(s) {
+    return String(s).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  }
+
+  function updateToc(pageId) {
+    const tocHost = document.getElementById('toc');
+    if (!tocHost) return;
+    if (_tocObserver) { _tocObserver.disconnect(); _tocObserver = null; }
+    _tocLinksByHash = {};
+
+    const page = document.querySelector(`[data-page="${pageId}"]`);
+    if (!page) { tocHost.innerHTML = ''; return; }
+
+    // Top-level entries: every <h2> on the page
+    // Sub-entries: card-header section labels (the uppercase tracking-wider gray-500 chips)
+    const items = [];
+    const headings = Array.from(page.querySelectorAll('h2'));
+    headings.forEach((h, i) => {
+      if (!h.id) h.id = 'h2-' + slug(h.textContent) + '-' + i;
+      items.push({ id: h.id, text: h.textContent.trim(), level: 'h2' });
+    });
+
+    // Sub-section labels — these are card headers like "CORE", "PRIMITIVES", etc.
+    const subSels = '.text-text-xs.font-semibold.uppercase.tracking-wider, .text-xs.font-semibold.uppercase.tracking-wider';
+    const subEls = Array.from(page.querySelectorAll(subSels));
+    subEls.forEach((el, i) => {
+      // Skip empty / icon-only labels
+      const t = el.textContent.trim();
+      if (!t) return;
+      // Skip the swatch-row mini-headers inside categorized grids (they're nested deep)
+      // We want only the top-level card section labels — those sit directly inside a card body or header
+      const isCardLevel = el.closest('.border-b') || el.parentElement?.classList.contains('mb-3') === false;
+      if (!isCardLevel) return;
+      if (!el.id) el.id = 'sub-' + slug(t) + '-' + i;
+      items.push({ id: el.id, text: t, level: 'h3' });
+    });
+
+    if (items.length === 0) { tocHost.innerHTML = ''; return; }
+
+    tocHost.innerHTML = items.map(item =>
+      `<a href="#${item.id}" data-toc-target="${item.id}" class="${item.level === 'h3' ? 'toc-h3' : ''}">${item.text}</a>`
+    ).join('');
+
+    // Smooth scroll on click without changing the URL hash (which would route)
+    tocHost.querySelectorAll('a[data-toc-target]').forEach(a => {
+      a.addEventListener('click', (e) => {
+        e.preventDefault();
+        const id = a.dataset.tocTarget;
+        const el = document.getElementById(id);
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+      _tocLinksByHash[a.dataset.tocTarget] = a;
+    });
+
+    // Scroll spy: highlight the link whose target is closest to the top
+    const targets = items.map(it => document.getElementById(it.id)).filter(Boolean);
+    _tocObserver = new IntersectionObserver((entries) => {
+      // Find the entry that's most "above the fold" (closest to top from above)
+      // We mark the LAST entry that has crossed the top of viewport
+      const visible = entries.filter(e => e.isIntersecting);
+      if (visible.length > 0) {
+        // Pick the topmost visible heading
+        visible.sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+        const activeId = visible[0].target.id;
+        Object.values(_tocLinksByHash).forEach(a => a.classList.remove('is-active'));
+        if (_tocLinksByHash[activeId]) _tocLinksByHash[activeId].classList.add('is-active');
+      }
+    }, {
+      rootMargin: '0px 0px -75% 0px',  // top quarter of viewport is the "active band"
+      threshold: 0,
+    });
+    targets.forEach(el => _tocObserver.observe(el));
+
+    // Initial: highlight the first item
+    if (items.length > 0 && _tocLinksByHash[items[0].id]) {
+      _tocLinksByHash[items[0].id].classList.add('is-active');
+    }
+  }
+
+  document.querySelectorAll('.nav-link[data-nav]').forEach(link => {
+    link.addEventListener('click', (e) => { e.preventDefault(); setActivePage(link.dataset.nav); });
+  });
+
+  // Intercept overview cross-links
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', (e) => {
+      const target = a.getAttribute('href').slice(1);
+      if (target && document.querySelector(`[data-page="${target}"]`)) {
+        e.preventDefault();
+        setActivePage(target);
+      }
+    });
+  });
+
+  function initFromHash() {
+    const hash = location.hash.slice(1);
+    setActivePage(hash || 'overview', { updateHash: false });
+  }
+  window.addEventListener('hashchange', initFromHash);
+  initFromHash();
+
+  // ─── Sidebar search filter ───
+  function filterNav(query) {
+    const q = query.trim().toLowerCase();
+    const links = document.querySelectorAll('.nav-link[data-nav]');
+    links.forEach(link => {
+      const label = link.textContent.trim().toLowerCase();
+      link.style.display = (!q || label.includes(q)) ? '' : 'none';
+    });
+    // Hide a group label if every nav-link in its group is filtered out
+    document.querySelectorAll('.nav-group-title').forEach(title => {
+      // A group title introduces the items that follow it (until the next title).
+      // If none of those items are visible, the title should hide too.
+      let hasVisibleAfter = false;
+      let el = title.nextElementSibling;
+      while (el) {
+        if (el.classList?.contains('nav-group-title')) break;
+        if (el.classList?.contains('nav-link') && el.style.display !== 'none') { hasVisibleAfter = true; break; }
+        el = el.nextElementSibling;
+      }
+      title.style.display = hasVisibleAfter ? '' : 'none';
+    });
+  }
+  // expose globally so the inline `oninput` handler works
+  window.filterNav = filterNav;
+
+  // ============================================================
+  // Color scales (used by Colors page)
+  // ============================================================
+  const scales = {
+    brand: {25:'#FFF7F0',50:'#FFEEDD',100:'#FFDFC2',200:'#FFC094',300:'#FFA168',400:'#FF8C45',500:'#FF7918',600:'#E5610A',700:'#BB4D08',800:'#913C0C',900:'#6D2D0E',950:'#481C08'},
+    gray:  {25:'#FCFCFD',50:'#F8FAFC',100:'#EEF2F6',200:'#E3E8EF',300:'#CDD5DF',400:'#9AA4B2',500:'#697586',600:'#4B5565',700:'#364152',800:'#202939',900:'#121926',950:'#0D121C'},
+    neutral: {25:'#FCFCFC',50:'#FAFAFA',100:'#F5F5F5',200:'#E5E5E5',300:'#D4D4D4',400:'#A3A3A3',500:'#737373',600:'#525252',700:'#404040',800:'#262626',900:'#171717',950:'#0A0A0A'},
+    slate: {25:'#FBFCFD',50:'#F8FAFC',100:'#F1F5F9',200:'#E2E8F0',300:'#CBD5E1',400:'#94A3B8',500:'#64748B',600:'#475569',700:'#334155',800:'#1E293B',900:'#0F172A',950:'#020617'},
+    zinc:  {25:'#FCFCFD',50:'#FAFAFA',100:'#F4F4F5',200:'#E4E4E7',300:'#D4D4D8',400:'#A1A1AA',500:'#71717A',600:'#52525B',700:'#3F3F46',800:'#27272A',900:'#18181B',950:'#09090B'},
+    stone: {25:'#FDFCFB',50:'#FAFAF9',100:'#F5F5F4',200:'#E7E5E4',300:'#D6D3D1',400:'#A8A29E',500:'#78716C',600:'#57534E',700:'#44403C',800:'#292524',900:'#1C1917',950:'#0C0A09'},
+    warmGray: {25:'#FCFAF7',50:'#F9F5F0',100:'#F3EBE0',200:'#E5D5C0',300:'#CDB89F',400:'#A8927A',500:'#7E6C57',600:'#5E4F3F',700:'#443A2F',800:'#2D2620',900:'#1A1614',950:'#0F0C0A'},
+    coolGray: {25:'#F9FAFB',50:'#F3F6FA',100:'#E5EDF3',200:'#C9D6E1',300:'#A6B7C7',400:'#7B8FA3',500:'#56697D',600:'#3F4F5F',700:'#2C3845',800:'#1B232C',900:'#10141A',950:'#07090C'},
+    error: {25:'#FFFBFA',50:'#FEF2F2',100:'#FEE2E2',200:'#FECACA',300:'#FCA5A5',400:'#F87171',500:'#EF4444',600:'#DC2626',700:'#B91C1C',800:'#991B1B',900:'#7F1D1D',950:'#450A0A'},
+    warning: {25:'#FFFDF2',50:'#FEFCE8',100:'#FEF9C3',200:'#FEF08A',300:'#FDE047',400:'#FACC15',500:'#EAB308',600:'#CA8A04',700:'#A16207',800:'#854D0E',900:'#713F12',950:'#422006'},
+    success: {25:'#F6FDF9',50:'#ECFDF5',100:'#D1FAE5',200:'#A7F3D0',300:'#6EE7B7',400:'#34D399',500:'#10B981',600:'#059669',700:'#047857',800:'#065F46',900:'#064E3B',950:'#022C22'},
+    blue: {25:'#F5FAFF',50:'#EFF8FF',100:'#D1E9FF',200:'#B2DDFF',300:'#84CAFF',400:'#53B1FD',500:'#2E90FA',600:'#1570EF',700:'#175CD3',800:'#1849A9',900:'#194185',950:'#102A56'},
+    blueLight: {25:'#F5FBFF',50:'#F0F9FF',100:'#E0F2FE',200:'#B9E6FE',300:'#7CD4FD',400:'#36BFFA',500:'#0BA5EC',600:'#0086C9',700:'#026AA2',800:'#065986',900:'#0B4A6F',950:'#062C41'},
+    indigo: {25:'#F5F8FF',50:'#EEF4FF',100:'#E0EAFF',200:'#C7D7FE',300:'#A4BCFD',400:'#8098F9',500:'#6172F3',600:'#444CE7',700:'#3538CD',800:'#2D31A6',900:'#2D3282',950:'#1F235B'},
+    purple: {25:'#FAFAFF',50:'#F4F3FF',100:'#EBE9FE',200:'#D9D6FE',300:'#BDB4FE',400:'#9B8AFB',500:'#7A5AF8',600:'#6938EF',700:'#5925DC',800:'#4A1FB8',900:'#3E1C96',950:'#27115F'},
+    violet: {25:'#FBFAFF',50:'#F5F3FF',100:'#ECE9FE',200:'#DDD6FE',300:'#C3B5FD',400:'#A48AFB',500:'#875BF7',600:'#7839EE',700:'#6927DA',800:'#5720B7',900:'#491C96',950:'#2E125E'},
+    fuchsia: {25:'#FEFAFF',50:'#FDF4FF',100:'#FBE8FF',200:'#F6D0FE',300:'#EEAAFD',400:'#E478FA',500:'#D444F1',600:'#BA24D5',700:'#9F1AB1',800:'#821890',900:'#6F1877',950:'#47104C'},
+    pink: {25:'#FEF6FB',50:'#FDF2FA',100:'#FCE7F6',200:'#FCCEEE',300:'#FAA7E0',400:'#F670C7',500:'#EE46BC',600:'#DD2590',700:'#C11574',800:'#9E165F',900:'#851651',950:'#4E0D30'},
+    rose: {25:'#FFF5F6',50:'#FFF1F3',100:'#FFE4E8',200:'#FECDD6',300:'#FEA3B4',400:'#FD6F8E',500:'#F63D68',600:'#E31B54',700:'#C01048',800:'#A11043',900:'#89123E',950:'#510B24'},
+    orange: {25:'#FEFAF5',50:'#FEF6EE',100:'#FDEAD7',200:'#F9DBAF',300:'#F7B27A',400:'#F38744',500:'#EF6820',600:'#E04F16',700:'#B93815',800:'#932F19',900:'#772917',950:'#511C10'},
+    yellow: {25:'#FEFDF0',50:'#FEFBE8',100:'#FEF7C3',200:'#FEEE95',300:'#FDE272',400:'#FAC515',500:'#EAAA08',600:'#CA8504',700:'#A15C07',800:'#854A0E',900:'#713B12',950:'#542C0D'},
+    teal: {25:'#F6FEFC',50:'#F0FDF9',100:'#CCFBEF',200:'#99F6E0',300:'#5FE9D0',400:'#2ED3B7',500:'#15B79E',600:'#0E9384',700:'#107569',800:'#125D56',900:'#134E48',950:'#0A2926'},
+    cyan: {25:'#F5FEFF',50:'#ECFDFF',100:'#CFF9FE',200:'#A5F0FC',300:'#67E3F9',400:'#22CCEE',500:'#06AED4',600:'#088AB2',700:'#0E7090',800:'#155B75',900:'#164C63',950:'#0D2D3A'},
+    moss: {25:'#FAFDF7',50:'#F5FBEE',100:'#E6F4D7',200:'#CEEAB0',300:'#ACDC79',400:'#86CB3C',500:'#669F2A',600:'#4F7A21',700:'#3F621A',800:'#335015',900:'#2B4212',950:'#1A280B'},
+    greenLight: {25:'#FAFEF5',50:'#F3FEE7',100:'#E4FBCC',200:'#D0F8AB',300:'#A6EF67',400:'#85E13A',500:'#66C61C',600:'#4CA30D',700:'#3B7C0F',800:'#326212',900:'#2B5314',950:'#15290A'},
+  };
+  const labels = {
+    brand:'Brand',
+    gray:'Gray (modern)', neutral:'Neutral', slate:'Slate', zinc:'Zinc', stone:'Stone', warmGray:'Warm gray', coolGray:'Cool gray',
+    error:'Error', warning:'Warning', success:'Success',
+    blue:'Blue', blueLight:'Blue light', indigo:'Indigo', purple:'Purple', violet:'Violet', fuchsia:'Fuchsia',
+    pink:'Pink', rose:'Rose', orange:'Orange', yellow:'Yellow', teal:'Teal', cyan:'Cyan', moss:'Moss', greenLight:'Green light',
+  };
+
+  // Categorical chart palette — 12 distinct hues for data viz
+  const CHART = {
+    1:  { name: 'chart-1',  hex: '#FF7918', hue: 'Brand orange' },
+    2:  { name: 'chart-2',  hex: '#2E90FA', hue: 'Blue' },
+    3:  { name: 'chart-3',  hex: '#10B981', hue: 'Emerald' },
+    4:  { name: 'chart-4',  hex: '#7A5AF8', hue: 'Purple' },
+    5:  { name: 'chart-5',  hex: '#F63D68', hue: 'Rose' },
+    6:  { name: 'chart-6',  hex: '#EAB308', hue: 'Amber' },
+    7:  { name: 'chart-7',  hex: '#15B79E', hue: 'Teal' },
+    8:  { name: 'chart-8',  hex: '#6172F3', hue: 'Indigo' },
+    9:  { name: 'chart-9',  hex: '#DD2590', hue: 'Pink' },
+    10: { name: 'chart-10', hex: '#06AED4', hue: 'Cyan' },
+    11: { name: 'chart-11', hex: '#66C61C', hue: 'Green light' },
+    12: { name: 'chart-12', hex: '#BA24D5', hue: 'Fuchsia' },
+  };
+  const CHART_SEQUENTIAL = ['#FFEEDD','#FFC094','#FFA168','#FF8C45','#FF7918','#E5610A','#BB4D08','#6D2D0E'];
+  const CHART_DIVERGING  = ['#7F1D1D','#DC2626','#F87171','#FCA5A5','#FEE2E2','#F8FAFC','#FFEEDD','#FFC094','#FF8C45','#E5610A','#6D2D0E'];
+
+  // Click-to-copy
+  const toast = document.getElementById('copy-toast');
+  function showToast(text) {
+    if (!toast) return;
+    toast.textContent = text;
+    toast.style.opacity = '1';
+    clearTimeout(showToast._t);
+    showToast._t = setTimeout(() => { toast.style.opacity = '0'; }, 1400);
+  }
+  async function copy(text) {
+    try { await navigator.clipboard.writeText(text); showToast('Copied · ' + text); }
+    catch { showToast(text); }
+  }
+
+  // Decide if text on a given bg should be white or dark, based on luminance.
+  function textColorFor(hex) {
+    const r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
+    const lum = (0.299*r + 0.587*g + 0.114*b) / 255;
+    return lum > 0.6 ? '#202939' : '#FFFFFF';
+  }
+
+  // WCAG contrast ratio (against the more readable of #fff or #000)
+  function relLum(hex) {
+    const c = [parseInt(hex.slice(1,3),16), parseInt(hex.slice(3,5),16), parseInt(hex.slice(5,7),16)]
+      .map(v => v/255)
+      .map(v => v <= 0.03928 ? v/12.92 : Math.pow((v+0.055)/1.055, 2.4));
+    return 0.2126*c[0] + 0.7152*c[1] + 0.0722*c[2];
+  }
+  function contrast(hex, against) {
+    const a = relLum(hex), b = relLum(against);
+    return (Math.max(a,b) + 0.05) / (Math.min(a,b) + 0.05);
+  }
+  function wcagBadge(hex) {
+    const onWhite = contrast(hex, '#ffffff');
+    const onBlack = contrast(hex, '#000000');
+    const best = Math.max(onWhite, onBlack);
+    let tag;
+    if (best >= 7) tag = 'AAA';
+    else if (best >= 4.5) tag = 'AA';
+    else if (best >= 3) tag = 'AA Lg';
+    else tag = 'Fail';
+    return { tag, ratio: best.toFixed(2) };
+  }
+
+  function shadeCard(step, hex) {
+    const { tag, ratio } = wcagBadge(hex);
+    return `<button type="button"
+      class="group flex flex-col text-left transition-transform hover:-translate-y-0.5 focus:outline-none"
+      onclick="copy('${hex}')" title="Copy ${hex} · contrast ${ratio}:1">
+      <span class="block h-[72px] w-full rounded-md group-hover:shadow-md transition-shadow"
+            style="background:${hex}; border: 1px solid rgba(16,24,40,0.06)"></span>
+      <span class="mt-2 px-0.5 space-y-0.5">
+        <span class="block text-xs font-mono font-semibold text-gray-800 leading-none">${step}</span>
+        <span class="block text-[10px] font-mono text-gray-500 uppercase leading-none">${hex}</span>
+        <span class="block text-[10px] font-mono text-gray-400 leading-none">${tag} ${ratio}</span>
+      </span>
+    </button>`;
+  }
+
+  function row(name, scaleKey) {
+    const scale = scales[scaleKey];
+    if (!scale) return '';
+    const steps = Object.keys(scale);
+    const cells = steps.map(s => shadeCard(s, scale[s])).join('');
+    return `<div class="py-3 border-b border-gray-100 last:border-0">
+      <div class="text-sm font-semibold text-gray-800 mb-2">${name}</div>
+      <div class="grid gap-2" style="grid-template-columns: repeat(${steps.length}, minmax(0, 1fr))">${cells}</div>
+    </div>`;
+  }
+
+  // Core — brand + primary gray
+  document.getElementById('color-rows-core').innerHTML =
+    ['brand','gray'].map(k => row(labels[k], k)).join('');
+
+  // Neutrals — additional gray scales (different temperatures)
+  document.getElementById('color-rows-neutrals').innerHTML =
+    ['neutral','slate','zinc','stone','warmGray','coolGray'].map(k => row(labels[k], k)).join('');
+
+  // Semantic
+  document.getElementById('color-rows-semantic').innerHTML =
+    ['error','warning','success'].map(k => row(labels[k] ?? k, k)).join('');
+
+  // Extended palette (everything that isn't core/neutrals/semantic)
+  const reservedKeys = new Set(['brand','gray','neutral','slate','zinc','stone','warmGray','coolGray','error','warning','success','info']);
+  const extendedKeys = Object.keys(scales).filter(k => !reservedKeys.has(k));
+  document.getElementById('color-rows-extended').innerHTML =
+    extendedKeys.map(k => row(labels[k] ?? k, k)).join('');
+
+  // Chart palette — block on top, labels below
+  document.getElementById('chart-categorical').innerHTML = Object.values(CHART).map(c => {
+    const { tag, ratio } = wcagBadge(c.hex);
+    return `<button type="button"
+      class="group flex flex-col text-left transition-transform hover:-translate-y-0.5 focus:outline-none"
+      onclick="copy('${c.hex}')" title="Copy ${c.hex}">
+      <span class="block h-16 w-full rounded-md group-hover:shadow-md transition-shadow"
+            style="background:${c.hex}; border: 1px solid rgba(16,24,40,0.06)"></span>
+      <span class="mt-2 px-0.5 space-y-0.5">
+        <span class="block text-xs font-mono font-semibold text-gray-800 leading-none">${c.name}</span>
+        <span class="block text-[10px] text-gray-500 leading-none">${c.hue}</span>
+        <span class="block text-[10px] font-mono text-gray-400 leading-none">${c.hex} · ${tag} ${ratio}</span>
+      </span>
+    </button>`;
+  }).join('');
+
+  // Sequential — joined strip, label below
+  document.getElementById('chart-sequential').innerHTML = CHART_SEQUENTIAL.map((hex, i) => `
+    <button type="button" class="flex flex-col items-center group focus:outline-none"
+      onclick="copy('${hex}')" title="${hex}">
+      <span class="block h-12 w-full rounded-md group-hover:shadow-md transition-shadow"
+            style="background:${hex}; border: 1px solid rgba(16,24,40,0.06)"></span>
+      <span class="block text-[10px] font-mono text-gray-500 mt-1.5 leading-none">${i+1} · ${hex}</span>
+    </button>
+  `).join('');
+
+  // Diverging — same treatment
+  document.getElementById('chart-diverging').innerHTML = CHART_DIVERGING.map((hex, i) => {
+    const label = i === 5 ? '0' : (i < 5 ? -(5-i) : (i-5));
+    return `<button type="button" class="flex flex-col items-center group focus:outline-none"
+      onclick="copy('${hex}')" title="${hex}">
+      <span class="block h-12 w-full rounded-md group-hover:shadow-md transition-shadow"
+            style="background:${hex}; border: 1px solid rgba(16,24,40,0.06)"></span>
+      <span class="block text-[10px] font-mono text-gray-500 mt-1.5 leading-none">${label}</span>
+    </button>`;
+  }).join('');
+
+  // ============================================================
+  // Gradients
+  // ============================================================
+  const GRADIENTS = {
+    brand: [
+      ['brand-vertical',   'linear-gradient(180deg, #FF8C45 0%, #E5610A 100%)'],
+      ['brand-horizontal', 'linear-gradient(90deg,  #FF8C45 0%, #E5610A 100%)'],
+      ['brand-diagonal',   'linear-gradient(135deg, #FFA168 0%, #BB4D08 100%)'],
+      ['brand-soft',       'linear-gradient(135deg, #FFEEDD 0%, #FFC094 100%)'],
+      ['brand-deep',       'linear-gradient(135deg, #FF7918 0%, #6D2D0E 100%)'],
+      ['brand-fade',       'linear-gradient(180deg, #FF7918 0%, rgba(255,121,24,0) 100%)'],
+    ],
+    soft: [
+      // Two-stop pastels
+      ['soft-blush',  'linear-gradient(135deg, #FFEEDD 0%, #FCE7F6 100%)'],
+      ['soft-cream',  'linear-gradient(135deg, #FFF7F0 0%, #FEFBE8 100%)'],
+      ['soft-mint',   'linear-gradient(135deg, #CCFBEF 0%, #D1E9FF 100%)'],
+      ['soft-lilac',  'linear-gradient(135deg, #EBE9FE 0%, #FCE7F6 100%)'],
+      ['soft-sand',   'linear-gradient(135deg, #FAFAF9 0%, #F3EBE0 100%)'],
+      ['soft-sky',    'linear-gradient(135deg, #EFF8FF 0%, #FFFFFF 100%)'],
+      ['soft-rose',   'linear-gradient(135deg, #FFE4E8 0%, #FFEEDD 100%)'],
+      ['soft-peach',  'linear-gradient(135deg, #FFC094 0%, #FEF9C3 100%)'],
+      ['soft-mist',   'linear-gradient(135deg, #F1F5F9 0%, #EFF8FF 100%)'],
+      ['soft-haze',   'linear-gradient(135deg, #F9F5F0 0%, #FFF7F0 100%)'],
+      ['soft-frost',  'linear-gradient(135deg, #ECFDFF 0%, #FFFFFF 100%)'],
+      ['soft-fog',    'linear-gradient(135deg, #F5F5F4 0%, #FFFFFF 100%)'],
+      // Three-stop soft mixes
+      ['soft-prism',  'linear-gradient(135deg, #FFEEDD 0%, #EBE9FE 50%, #D1E9FF 100%)'],
+      ['soft-coral',  'linear-gradient(135deg, #FFDFC2 0%, #FFE4E8 50%, #FFEEDD 100%)'],
+      ['soft-bloom',  'linear-gradient(135deg, #FCE7F6 0%, #EBE9FE 100%)'],
+      // Radial soft spots — gentle decorative blurs
+      ['soft-glow-brand',
+        'radial-gradient(ellipse at center, #FFEEDD 0%, #FFFFFF 70%)'],
+      ['soft-glow-cool',
+        'radial-gradient(ellipse at center, #D1E9FF 0%, #FFFFFF 70%)'],
+      ['soft-glow-rose',
+        'radial-gradient(ellipse at center, #FCE7F6 0%, #FFFFFF 70%)'],
+    ],
+    multi: [
+      // Warm
+      ['sunset',    'linear-gradient(135deg, #FACC15 0%, #FF7918 50%, #EE46BC 100%)'],
+      ['sunrise',   'linear-gradient(45deg,  #FFC094 0%, #FF7918 50%, #DC2626 100%)'],
+      ['ember',     'linear-gradient(135deg, #FF7918 0%, #DC2626 100%)'],
+      ['peach',     'linear-gradient(135deg, #FFDFC2 0%, #FAA7E0 100%)'],
+      ['mango',     'linear-gradient(135deg, #FACC15 0%, #FF7918 100%)'],
+      ['blossom',   'linear-gradient(135deg, #FAA7E0 0%, #F63D68 100%)'],
+      ['volcanic',  'linear-gradient(180deg, #FF7918 0%, #7F1D1D 100%)'],
+      ['marigold',  'linear-gradient(135deg, #FDE047 0%, #FF8C45 50%, #DC2626 100%)'],
+      // Cool
+      ['aurora',    'linear-gradient(135deg, #FF8C45 0%, #D444F1 50%, #6172F3 100%)'],
+      ['ocean',     'linear-gradient(135deg, #06AED4 0%, #2E90FA 50%, #6172F3 100%)'],
+      ['twilight',  'linear-gradient(135deg, #7A5AF8 0%, #DD2590 50%, #FF7918 100%)'],
+      ['glacier',   'linear-gradient(135deg, #5FE9D0 0%, #84CAFF 100%)'],
+      ['lavender',  'linear-gradient(135deg, #BDB4FE 0%, #FAA7E0 100%)'],
+      ['arctic',    'linear-gradient(135deg, #84CAFF 0%, #6172F3 100%)'],
+      ['nebula',    'linear-gradient(135deg, #6172F3 0%, #BA24D5 50%, #F63D68 100%)'],
+      ['midnight',  'linear-gradient(180deg, #121926 0%, #364152 100%)'],
+      // Neutral / monochrome
+      ['silver',    'linear-gradient(135deg, #F8FAFC 0%, #94A3B8 100%)'],
+      ['graphite',  'linear-gradient(135deg, #475569 0%, #0F172A 100%)'],
+    ],
+    mesh: [
+      ['mesh-warm',
+        'radial-gradient(at 0% 0%, #FFC094 0px, transparent 50%), ' +
+        'radial-gradient(at 100% 0%, #FAA7E0 0px, transparent 50%), ' +
+        'radial-gradient(at 100% 100%, #FF7918 0px, transparent 50%), ' +
+        'radial-gradient(at 0% 100%, #FACC15 0px, transparent 50%), #FFF7F0'],
+      ['mesh-cool',
+        'radial-gradient(at 0% 0%, #C7D7FE 0px, transparent 50%), ' +
+        'radial-gradient(at 100% 0%, #FAA7E0 0px, transparent 50%), ' +
+        'radial-gradient(at 100% 100%, #5FE9D0 0px, transparent 50%), ' +
+        'radial-gradient(at 0% 100%, #BDB4FE 0px, transparent 50%), #F5F8FF'],
+      ['mesh-mono',
+        'radial-gradient(at 0% 0%, #FFDFC2 0px, transparent 50%), ' +
+        'radial-gradient(at 100% 100%, #FF8C45 0px, transparent 50%), ' +
+        'radial-gradient(at 50% 50%, #FFC094 0px, transparent 50%), #FFEEDD'],
+      ['mesh-vibrant',
+        'radial-gradient(at 20% 0%, #FF7918 0px, transparent 40%), ' +
+        'radial-gradient(at 80% 0%, #7A5AF8 0px, transparent 40%), ' +
+        'radial-gradient(at 100% 100%, #DD2590 0px, transparent 40%), ' +
+        'radial-gradient(at 0% 100%, #06AED4 0px, transparent 40%), #FFFFFF'],
+      ['mesh-pastel',
+        'radial-gradient(at 25% 25%, #FFDFC2 0px, transparent 50%), ' +
+        'radial-gradient(at 75% 25%, #D1E9FF 0px, transparent 50%), ' +
+        'radial-gradient(at 75% 75%, #DCFAE6 0px, transparent 50%), ' +
+        'radial-gradient(at 25% 75%, #FCE7F6 0px, transparent 50%), #FFFFFF'],
+      ['mesh-dusk',
+        'radial-gradient(at 0% 0%, #913C0C 0px, transparent 50%), ' +
+        'radial-gradient(at 100% 0%, #5925DC 0px, transparent 50%), ' +
+        'radial-gradient(at 100% 100%, #BA24D5 0px, transparent 50%), ' +
+        'radial-gradient(at 0% 100%, #DC2626 0px, transparent 50%), #121926'],
+      ['mesh-dawn',
+        'radial-gradient(at 0% 30%, #FFA168 0px, transparent 50%), ' +
+        'radial-gradient(at 100% 30%, #FAA7E0 0px, transparent 50%), ' +
+        'radial-gradient(at 50% 100%, #FDE047 0px, transparent 50%), #FFF7F0'],
+    ],
+    radial: [
+      ['spot-brand', 'radial-gradient(ellipse at top, #FFC094 0%, transparent 60%), #FFFFFF'],
+      ['spot-cool',  'radial-gradient(ellipse at top, #C7D7FE 0%, transparent 60%), #FFFFFF'],
+      ['halo-brand', 'radial-gradient(circle at center, #FF7918 0%, rgba(255,121,24,0) 70%), #FFFFFF'],
+      ['conic-brand', 'conic-gradient(from 180deg at 50% 50%, #FF7918 0deg, #EE46BC 120deg, #6172F3 240deg, #FF7918 360deg)'],
+      ['conic-warm',  'conic-gradient(from 0deg at 50% 50%, #FACC15 0deg, #FF7918 120deg, #DC2626 240deg, #FACC15 360deg)'],
+    ],
+    bg: [
+      ['bg-warm',    'linear-gradient(180deg, #FFF7F0 0%, #FFFFFF 100%)'],
+      ['bg-cool',    'linear-gradient(180deg, #F5F8FF 0%, #FFFFFF 100%)'],
+      ['bg-neutral', 'linear-gradient(180deg, #F8FAFC 0%, #FFFFFF 100%)'],
+    ],
+  };
+
+  function gradientCard([name, css], { tall = false } = {}) {
+    const cssShort = css.length > 64 ? css.substring(0, 64) + '…' : css;
+    return `<button type="button"
+      class="group flex flex-col text-left transition-transform hover:-translate-y-0.5 focus:outline-none"
+      onclick="copy(\`${css.replace(/`/g,'\\`')}\`)" title="Copy CSS">
+      <span class="block ${tall ? 'h-44' : 'h-28'} w-full rounded-xl group-hover:shadow-md transition-shadow"
+            style="background:${css}; border: 1px solid rgba(16,24,40,0.06)"></span>
+      <span class="mt-2.5 px-0.5 space-y-1">
+        <span class="block text-xs font-mono font-semibold text-gray-800 leading-none">${name}</span>
+        <span class="block text-[10px] font-mono text-gray-500 leading-tight">${cssShort}</span>
+      </span>
+    </button>`;
+  }
+
+  // ============================================================
+  // Typography scale renderer
+  // ============================================================
+  const TYPE_SCALE = [
+    // [labelKey, displayName, fontSizePx, lineHeightPx, letterSpacingPct]
+    ['display-2xl', 'Display 2xl', 72, 90, -2],
+    ['display-xl',  'Display xl',  60, 72, -2],
+    ['display-lg',  'Display lg',  48, 60, -2],
+    ['display-md',  'Display md',  36, 44, -2],
+    ['display-sm',  'Display sm',  30, 38, null],
+    ['display-xs',  'Display xs',  24, 32, null],
+    ['text-xl',     'Text xl',     20, 30, null],
+    ['text-lg',     'Text lg',     18, 28, null],
+    ['text-md',     'Text md',     16, 24, null],
+    ['text-sm',     'Text sm',     14, 20, null],
+    ['text-xs',     'Text xs',     12, 18, null],
+  ];
+  const WEIGHTS = [
+    ['Regular',  400],
+    ['Medium',   500],
+    ['Semibold', 600],
+    ['Bold',     700],
+  ];
+
+  function typeRow(name, sizePx, lhPx, lsPct, isFirst) {
+    const lhRem = (lhPx / 16).toFixed(3).replace(/0+$/, '').replace(/\.$/, '');
+    const sizeRem = (sizePx / 16).toFixed(3).replace(/0+$/, '').replace(/\.$/, '');
+    const specs = [
+      `Font size: ${sizePx}px / ${sizeRem}rem`,
+      `Line height: ${lhPx}px / ${lhRem}rem`,
+      lsPct != null ? `Letter spacing: ${lsPct}%` : null,
+    ].filter(Boolean).join(' | ');
+
+    const lsCss = lsPct != null ? (lsPct / 100) + 'em' : '0';
+
+    const cells = WEIGHTS.map(([wName, wValue]) => `
+      <div class="min-w-0 overflow-hidden">
+        <div style="font-size:${sizePx}px; line-height:${lhPx}px; letter-spacing:${lsCss}; font-weight:${wValue}; color:#121926; word-break:break-word;">${name}</div>
+        <div style="font-size:${sizePx}px; line-height:${lhPx}px; letter-spacing:${lsCss}; font-weight:${wValue}; color:#121926; margin-top:${Math.max(8, lhPx * 0.1)}px; word-break:break-word;">${wName}</div>
+      </div>
+    `).join('');
+
+    return `
+      <div class="${isFirst ? 'pt-2' : 'pt-12'} pb-4 border-b border-gray-200 flex items-baseline justify-between">
+        <span class="text-text-sm font-medium text-gray-700">${name}</span>
+        <span class="text-text-xs text-gray-500 font-mono">${specs}</span>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-x-10 gap-y-4 pt-8 pb-2">${cells}</div>
+    `;
+  }
+
+  document.getElementById('type-scale').innerHTML =
+    TYPE_SCALE.map(([_, name, fs, lh, ls], i) => typeRow(name, fs, lh, ls, i === 0)).join('');
+
+  // ============================================================
+  // Shadows & Blurs
+  // ============================================================
+
+  // Elevation — 8 levels + skeu, with descriptive "when to use"
+  const ELEVATION = [
+    ['none', 'none',
+      'Flat — no depth at all.'],
+    ['xs',   '0 1px 2px 0 rgba(16, 24, 40, 0.05)',
+      'Subtle ring. Table rows, dense lists.'],
+    ['sm',   '0 1px 2px 0 rgba(16, 24, 40, 0.06), 0 1px 3px 0 rgba(16, 24, 40, 0.10)',
+      'Cards at rest, secondary surfaces.'],
+    ['md',   '0 2px 4px -2px rgba(16, 24, 40, 0.06), 0 4px 8px -2px rgba(16, 24, 40, 0.10)',
+      'Default card, table hover, dropdown trigger.'],
+    ['lg',   '0 4px 6px -2px rgba(16, 24, 40, 0.03), 0 12px 16px -4px rgba(16, 24, 40, 0.08)',
+      'Open dropdown, popover, tooltip.'],
+    ['xl',   '0 8px 8px -4px rgba(16, 24, 40, 0.03), 0 20px 24px -4px rgba(16, 24, 40, 0.08)',
+      'Modal at center, command palette.'],
+    ['2xl',  '0 24px 48px -12px rgba(16, 24, 40, 0.18)',
+      'Large modal, slide-over drawer.'],
+    ['3xl',  '0 32px 64px -12px rgba(16, 24, 40, 0.14)',
+      'Full-screen overlay, lightbox, hero.'],
+    ['skeu', 'inset 0 -2px 0 0 rgba(16, 24, 40, 0.12), 0 1px 2px 0 rgba(16, 24, 40, 0.08)',
+      'Tactile filled-button depth.'],
+  ];
+
+  const INNER = [
+    ['inner-xs', 'inset 0 1px 2px 0 rgba(16, 24, 40, 0.05)', 'Subtle 1px inset · scroll edge.'],
+    ['inner-sm', 'inset 0 2px 4px 0 rgba(16, 24, 40, 0.06)', 'Light inset · inset divider.'],
+    ['inner-md', 'inset 0 4px 8px 0 rgba(16, 24, 40, 0.08)', 'Pressed button · active toggle.'],
+    ['inner-lg', 'inset 0 8px 16px -4px rgba(16, 24, 40, 0.10)', 'Deep inset · hero panel.'],
+  ];
+
+  const GLOWS = [
+    ['glow-brand',   '0 0 24px 0 rgba(255, 121, 24, 0.35)', '#FF7918', 'Primary CTA halo'],
+    ['glow-error',   '0 0 24px 0 rgba(239, 68, 68, 0.30)',  '#EF4444', 'Error emphasis'],
+    ['glow-success', '0 0 24px 0 rgba(16, 185, 129, 0.30)', '#10B981', 'Success state'],
+    ['glow-warning', '0 0 24px 0 rgba(234, 179, 8, 0.30)',  '#EAB308', 'Warning highlight'],
+    ['glow-info',    '0 0 24px 0 rgba(46, 144, 250, 0.30)', '#2E90FA', 'AI thinking / info'],
+  ];
+
+  const FOCUS_RINGS = [
+    ['ring-brand',   '0 0 0 4px rgba(255, 121, 24, 0.24)',  '#FF7918', 'Default focus on brand controls'],
+    ['ring-gray',    '0 0 0 4px rgba(152, 162, 179, 0.14)', '#9AA4B2', 'Secondary / outlined controls'],
+    ['ring-error',   '0 0 0 4px rgba(239, 68, 68, 0.24)',   '#EF4444', 'Invalid inputs'],
+    ['ring-success', '0 0 0 4px rgba(16, 185, 129, 0.24)',  '#10B981', 'Valid / confirmed state'],
+    ['ring-warning', '0 0 0 4px rgba(234, 179, 8, 0.24)',   '#EAB308', 'Caution state'],
+  ];
+
+  const BLURS = [
+    ['blur-none', '0',    'No blur'],
+    ['blur-xs',   '2px',  'Subtle softening'],
+    ['blur-sm',   '4px',  'Tooltip backdrop'],
+    ['blur-md',   '8px',  'Default glass effect'],
+    ['blur-lg',   '16px', 'Modal backdrop'],
+    ['blur-xl',   '24px', 'Hero blur behind content'],
+    ['blur-2xl',  '40px', 'Decorative blob'],
+    ['blur-3xl',  '64px', 'Maximum — almost color-only'],
+  ];
+
+  // Card with shadow visualization
+  function shadowCard([name, css, desc]) {
+    return `<button type="button"
+      class="group flex flex-col text-left transition-transform hover:-translate-y-0.5 focus:outline-none"
+      onclick="copy(\`${css.replace(/`/g,'\\`')}\`)" title="Copy shadow">
+      <span class="block h-24 w-full rounded-xl bg-white" style="box-shadow:${css}; border:1px solid rgba(16,24,40,0.04)"></span>
+      <span class="mt-3 px-0.5 space-y-1">
+        <span class="block text-sm font-mono font-semibold text-gray-800 leading-none">${name}</span>
+        <span class="block text-xs text-gray-600 leading-tight">${desc}</span>
+      </span>
+    </button>`;
+  }
+
+  // Colored glow card — uses a colored block to show the halo
+  function glowCard([name, css, hex, desc]) {
+    return `<button type="button"
+      class="group flex flex-col text-left transition-transform hover:-translate-y-0.5 focus:outline-none p-3"
+      onclick="copy(\`${css.replace(/`/g,'\\`')}\`)" title="Copy shadow">
+      <span class="block h-20 w-full rounded-xl" style="background:${hex}; box-shadow:${css}"></span>
+      <span class="mt-4 px-0.5 space-y-1">
+        <span class="block text-sm font-mono font-semibold text-gray-800 leading-none">${name}</span>
+        <span class="block text-xs text-gray-600 leading-tight">${desc}</span>
+      </span>
+    </button>`;
+  }
+
+  // Focus ring card — shows the ring around a sample input
+  function ringCard([name, css, hex, desc]) {
+    return `<button type="button"
+      class="group flex flex-col text-left transition-transform hover:-translate-y-0.5 focus:outline-none p-3"
+      onclick="copy(\`${css.replace(/`/g,'\\`')}\`)" title="Copy ring">
+      <span class="flex items-center justify-center h-20 w-full">
+        <span class="inline-block h-10 w-32 rounded-md bg-white border" style="border-color:${hex}; box-shadow:${css}"></span>
+      </span>
+      <span class="mt-3 px-0.5 space-y-1">
+        <span class="block text-sm font-mono font-semibold text-gray-800 leading-none">${name}</span>
+        <span class="block text-xs text-gray-600 leading-tight">${desc}</span>
+      </span>
+    </button>`;
+  }
+
+  // Filter blur card — applies the blur to a colored shape
+  function filterBlurCard([name, value, desc]) {
+    return `<button type="button"
+      class="group flex flex-col text-left transition-transform hover:-translate-y-0.5 focus:outline-none"
+      onclick="copy('filter: blur(${value});')" title="Copy filter">
+      <span class="relative block h-28 w-full rounded-xl overflow-hidden bg-gray-50 border border-gray-200">
+        <span class="absolute inset-3 rounded-full" style="background: linear-gradient(135deg, #FF7918 0%, #DD2590 100%); filter: blur(${value})"></span>
+      </span>
+      <span class="mt-3 px-0.5 space-y-1">
+        <span class="block text-sm font-mono font-semibold text-gray-800 leading-none">${name} <span class="text-gray-500">· ${value}</span></span>
+        <span class="block text-xs text-gray-600 leading-tight">${desc}</span>
+      </span>
+    </button>`;
+  }
+
+  // Backdrop blur card — a semi-transparent panel over the colorful gradient background
+  function backdropBlurCard([name, value, desc]) {
+    return `<button type="button"
+      class="group flex flex-col text-left transition-transform hover:-translate-y-0.5 focus:outline-none"
+      onclick="copy('backdrop-filter: blur(${value});')" title="Copy backdrop-filter">
+      <span class="flex items-center justify-center h-28 w-full">
+        <span class="inline-flex items-center justify-center px-5 py-3 rounded-xl bg-white/30 border border-white/40 text-xs font-mono font-semibold text-white" style="backdrop-filter: blur(${value}); -webkit-backdrop-filter: blur(${value})">
+          ${value}
+        </span>
+      </span>
+      <span class="mt-3 px-0.5 space-y-1">
+        <span class="block text-sm font-mono font-semibold text-white/95 leading-none">${name}</span>
+        <span class="block text-xs text-white/80 leading-tight">${desc}</span>
+      </span>
+    </button>`;
+  }
+
+  document.getElementById('sh-elevation').innerHTML = ELEVATION.map(shadowCard).join('');
+  document.getElementById('sh-inner').innerHTML     = INNER.map(shadowCard).join('');
+  document.getElementById('sh-glow').innerHTML      = GLOWS.map(glowCard).join('');
+  document.getElementById('sh-ring').innerHTML      = FOCUS_RINGS.map(ringCard).join('');
+  document.getElementById('bl-filter').innerHTML    = BLURS.map(filterBlurCard).join('');
+  document.getElementById('bl-backdrop').innerHTML  = BLURS.map(backdropBlurCard).join('');
+
+  // ============================================================
+  // Spacing & grids
+  // ============================================================
+
+  // Spacing scale — [token, px value, rem value]
+  const SPACING = [
+    ['0',   0,   '0'],
+    ['px',  1,   '1px'],
+    ['0.5', 2,   '0.125rem'],
+    ['1',   4,   '0.25rem'],
+    ['1.5', 6,   '0.375rem'],
+    ['2',   8,   '0.5rem'],
+    ['2.5', 10,  '0.625rem'],
+    ['3',   12,  '0.75rem'],
+    ['3.5', 14,  '0.875rem'],
+    ['4',   16,  '1rem'],
+    ['5',   20,  '1.25rem'],
+    ['6',   24,  '1.5rem'],
+    ['7',   28,  '1.75rem'],
+    ['8',   32,  '2rem'],
+    ['10',  40,  '2.5rem'],
+    ['12',  48,  '3rem'],
+    ['14',  56,  '3.5rem'],
+    ['16',  64,  '4rem'],
+    ['20',  80,  '5rem'],
+    ['24',  96,  '6rem'],
+    ['32',  128, '8rem'],
+    ['40',  160, '10rem'],
+    ['48',  192, '12rem'],
+  ];
+
+  document.getElementById('spacing-scale').innerHTML = SPACING.map(([token, px, rem]) => {
+    const widthPct = Math.min(100, (px / 192) * 100); // 192px = max bar width
+    const isAnchor = ['4','8','16','24'].includes(String(px));
+    return `<button type="button"
+      class="group w-full flex items-center gap-4 py-2.5 px-2 -mx-2 rounded-md text-left hover:bg-gray-50 transition-colors focus:outline-none"
+      onclick="copy('${px}px')" title="Copy ${px}px">
+      <span class="w-16 shrink-0 text-sm font-mono font-semibold text-gray-800">${token}</span>
+      <span class="w-20 shrink-0 text-xs font-mono text-gray-600">${px}px</span>
+      <span class="w-24 shrink-0 text-xs font-mono text-gray-500">${rem}</span>
+      <span class="flex-1 relative" style="height:14px">
+        <span class="absolute inset-y-0 left-0 rounded-sm ${isAnchor ? 'bg-brand-500' : 'bg-gray-300'}"
+          style="width:${widthPct}%; min-width:1px"></span>
+      </span>
+    </button>`;
+  }).join('');
+
+  // Radius scale
+  const RADIUS = [
+    ['none', 0,   '0'],
+    ['xxs',  2,   '0.125rem'],
+    ['xs',   4,   '0.25rem'],
+    ['sm',   6,   '0.375rem'],
+    ['md',   8,   '0.5rem'],
+    ['lg',   10,  '0.625rem'],
+    ['xl',   12,  '0.75rem'],
+    ['2xl',  16,  '1rem'],
+    ['3xl',  20,  '1.25rem'],
+    ['4xl',  24,  '1.5rem'],
+    ['full', 9999,'9999px'],
+  ];
+
+  document.getElementById('radius-scale').innerHTML = RADIUS.map(([token, px, rem]) => {
+    const isDefault = token === 'md' || token === 'xl';
+    return `<button type="button"
+      class="group flex flex-col items-center gap-3 transition-transform hover:-translate-y-0.5 focus:outline-none"
+      onclick="copy('${rem}')" title="Copy ${rem}">
+      <span class="block w-20 h-20 bg-brand-500 ${isDefault ? 'ring-2 ring-offset-2 ring-brand-500/40' : ''}"
+        style="border-radius:${px}px"></span>
+      <span class="text-center">
+        <span class="block text-sm font-mono font-semibold text-gray-800 leading-none">${token}</span>
+        <span class="block text-xs text-gray-500 mt-1">${px === 9999 ? 'pill' : px + 'px'}</span>
+        ${isDefault ? '<span class="block text-[10px] text-brand-700 font-mono mt-0.5">default</span>' : ''}
+      </span>
+    </button>`;
+  }).join('');
+
+  // Container widths
+  const CONTAINERS = [
+    ['xs',  480,  'Narrow modal, single-column form'],
+    ['sm',  640,  'Mobile-only marketing pages'],
+    ['md',  768,  'Tablet portrait, dialog'],
+    ['lg',  1024, 'Tablet landscape, compact dashboard'],
+    ['xl',  1280, 'Narrow desktop, classic 12-col layout'],
+    ['2xl', 1440, 'Standard desktop dashboard'],
+    ['3xl', 1600, 'Wide desktop — used by this design system'],
+    ['4xl', 1920, 'Ultra-wide / TV displays'],
+  ];
+
+  document.getElementById('container-scale').innerHTML = CONTAINERS.map(([token, px, desc]) => {
+    const widthPct = Math.min(100, (px / 1920) * 100);
+    const isDefault = token === '3xl';
+    return `<button type="button"
+      class="group w-full flex items-center gap-4 py-2.5 px-2 -mx-2 rounded-md text-left hover:bg-gray-50 transition-colors focus:outline-none"
+      onclick="copy('${px}px')" title="Copy ${px}px">
+      <span class="w-16 shrink-0 text-sm font-mono font-semibold ${isDefault ? 'text-brand-700' : 'text-gray-800'}">${token}</span>
+      <span class="w-20 shrink-0 text-xs font-mono text-gray-600">${px}px</span>
+      <span class="flex-1 relative" style="height:18px">
+        <span class="absolute inset-y-0 left-0 rounded-sm ${isDefault ? 'bg-brand-500' : 'bg-gray-300'}"
+          style="width:${widthPct}%"></span>
+      </span>
+      <span class="w-72 shrink-0 text-xs text-gray-600 truncate">${desc}</span>
+    </button>`;
+  }).join('');
+
+  // Spacing recipes
+  const RECIPES = [
+    ['Card padding',       'px-6 py-5',    '24px / 20px'],
+    ['Card inner gap',     'gap-4',        '16px'],
+    ['Tight icon gap',     'gap-1.5',      '6px'],
+    ['Default text gap',   'gap-2',        '8px'],
+    ['Button padding (md)','px-4 h-10',    '16px / 40px'],
+    ['Input padding (md)', 'px-3.5 h-10',  '14px / 40px'],
+    ['Form field gap',     'gap-1.5',      '6px (label↔input)'],
+    ['Form fields gap',    'gap-6',        '24px (between fields)'],
+    ['Section margin',     'mb-20',        '80px'],
+    ['Section internal',   'mb-6',         '24px (heading↔body)'],
+    ['Modal padding',      'p-6',          '24px'],
+    ['Page margin',        'px-10 py-10',  '40px (desktop)'],
+  ];
+
+  document.getElementById('spacing-recipes').innerHTML = RECIPES.map(([label, cls, value]) => `
+    <div class="flex items-center justify-between gap-4 py-2 border-b border-gray-100 last:border-0">
+      <span class="text-gray-700">${label}</span>
+      <div class="flex items-center gap-3">
+        <code class="font-mono text-xs text-brand-700 bg-brand-50 px-1.5 py-0.5 rounded">${cls}</code>
+        <span class="text-xs font-mono text-gray-500 w-24 text-right">${value}</span>
+      </div>
+    </div>
+  `).join('');
+
+  // ============================================================
+  // Avatars
+  // ============================================================
+  const PEOPLE = [
+    { name: 'Olivia Reyna',   title: 'Product Designer',  src: 'https://i.pravatar.cc/120?img=47' },
+    { name: 'Marcus Chen',    title: 'Engineering Lead',  src: 'https://i.pravatar.cc/120?img=12' },
+    { name: 'Priya Sharma',   title: 'Data Scientist',    src: 'https://i.pravatar.cc/120?img=49' },
+    { name: 'Liam Anderson',  title: 'Customer Success',  src: 'https://i.pravatar.cc/120?img=33' },
+    { name: 'Zara Okonkwo',   title: 'Marketing',         src: 'https://i.pravatar.cc/120?img=44' },
+    { name: 'Hiroshi Tanaka', title: 'Backend Engineer',  src: 'https://i.pravatar.cc/120?img=68' },
+    { name: 'Sofia Russo',    title: 'QA Engineer',       src: 'https://i.pravatar.cc/120?img=45' },
+    { name: 'Kai Patel',      title: 'DevOps',            src: 'https://i.pravatar.cc/120?img=14' },
+  ];
+
+  // Stable color from name hash — same palette as React component
+  const INITIAL_PALETTE = ['#6172F3','#7A5AF8','#EE46BC','#F63D68','#FF7918','#EAB308','#10B981','#15B79E','#06AED4','#2E90FA'];
+  function stableColor(seed) {
+    let h = 0;
+    for (let i = 0; i < seed.length; i++) h = (h * 31 + seed.charCodeAt(i)) >>> 0;
+    return INITIAL_PALETTE[h % INITIAL_PALETTE.length];
+  }
+  function getInitials(name) {
+    if (!name) return '';
+    const parts = name.trim().split(/\s+/).filter(Boolean);
+    if (parts.length === 0) return '';
+    if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+    return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+  }
+
+  // Size → tailwind class lookups
+  const AV_BOX = {
+    xs:  'h-6 w-6 text-[10px]',
+    sm:  'h-8 w-8 text-xs',
+    md:  'h-10 w-10 text-sm',
+    lg:  'h-12 w-12 text-base',
+    xl:  'h-14 w-14 text-lg',
+    '2xl': 'h-16 w-16 text-xl',
+    '3xl': 'h-24 w-24 text-3xl',
+  };
+  const AV_DOT = {
+    xs:  'h-1.5 w-1.5',
+    sm:  'h-2 w-2',
+    md:  'h-2.5 w-2.5',
+    lg:  'h-3 w-3',
+    xl:  'h-3.5 w-3.5',
+    '2xl': 'h-4 w-4',
+    '3xl': 'h-5 w-5',
+  };
+  const AV_DOT_POS = {
+    xs: 'right-0 bottom-0', sm: 'right-0 bottom-0', md: 'right-0 bottom-0',
+    lg: 'right-0 bottom-0', xl: 'right-0 bottom-0', '2xl': 'right-0 bottom-0',
+    '3xl': 'right-1 bottom-1',
+  };
+  const AV_ICON_PX = { xs:12, sm:16, md:20, lg:24, xl:28, '2xl':32, '3xl':48 };
+  const STATUS_BG = { online: 'bg-success-500', busy: 'bg-error-500', away: 'bg-warning-500', offline: 'bg-gray-400' };
+
+  function userIconSvg(px) {
+    return `<svg width="${px}" height="${px}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round" class="text-gray-500"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2M16 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>`;
+  }
+
+  function avatarHtml({ size = 'md', src, name, status, shape = 'circle', bordered = false } = {}) {
+    const shapeCls = shape === 'square' ? 'rounded-md' : 'rounded-full';
+    const borderCls = bordered ? 'ring-2 ring-white' : '';
+    // INNER visual — has the rounded shape + overflow-hidden so the image is clipped.
+    const innerCls = `inline-flex items-center justify-center overflow-hidden bg-gray-100 text-gray-600 font-semibold select-none ${AV_BOX[size]} ${shapeCls} ${borderCls}`;
+
+    let inner;
+    let innerStyle = '';
+    if (src) {
+      const ini = getInitials(name);
+      const fbBg = name ? stableColor(name) : '#9AA4B2';
+      inner = `<img src="${src}" alt="${name ?? ''}" class="h-full w-full object-cover" onerror="this.style.display='none'; this.parentElement.style.background='${fbBg}'; this.parentElement.style.color='#FFFFFF'; this.insertAdjacentHTML('afterend','<span aria-hidden>${ini}</span>')" />`;
+    } else if (name) {
+      inner = `<span aria-hidden>${getInitials(name)}</span>`;
+      innerStyle = `background:${stableColor(name)}; color:#FFFFFF`;
+    } else {
+      inner = userIconSvg(AV_ICON_PX[size]);
+    }
+
+    const visual = `<span class="${innerCls}" style="${innerStyle}">${inner}</span>`;
+    const dot = status ? `<span class="absolute block rounded-full ring-2 ring-white ${STATUS_BG[status]} ${AV_DOT[size]} ${AV_DOT_POS[size]}"></span>` : '';
+
+    // OUTER wrapper — positioning context for the dot. NO overflow:hidden so the dot is not clipped.
+    return `<span role="img" aria-label="${name ?? 'User avatar'}" class="relative inline-flex shrink-0">${visual}${dot}</span>`;
+  }
+
+  // 1) Sizes
+  document.getElementById('av-sizes').innerHTML = ['xs','sm','md','lg','xl','2xl','3xl'].map(size => {
+    const px = { xs:24, sm:32, md:40, lg:48, xl:56, '2xl':64, '3xl':96 }[size];
+    return `<div class="flex flex-col items-center gap-2">
+      ${avatarHtml({ size, src: PEOPLE[0].src, name: PEOPLE[0].name })}
+      <div class="text-xs font-mono font-semibold text-gray-800 leading-none">${size}</div>
+      <div class="text-xs text-gray-500 leading-none">${px}px</div>
+    </div>`;
+  }).join('');
+
+  // 2) Fallback waterfall
+  document.getElementById('av-fallback').innerHTML = [
+    { av: { size: 'xl', src: PEOPLE[1].src, name: PEOPLE[1].name }, label: 'image', desc: 'src loads' },
+    { av: { size: 'xl', name: 'Olivia Reyna' }, label: 'initials', desc: '"OR" · stable color' },
+    { av: { size: 'xl', src: 'https://broken-url.example/x.jpg', name: 'Liam Anderson' }, label: 'image fails', desc: '→ falls to initials' },
+    { av: { size: 'xl' }, label: 'anonymous', desc: 'no name → icon' },
+  ].map(({ av, label, desc }) => `
+    <div class="flex flex-col items-center gap-2">
+      ${avatarHtml(av)}
+      <div class="text-xs font-mono text-gray-700">${label}</div>
+      <div class="text-xs text-gray-500">${desc}</div>
+    </div>
+  `).join('');
+
+  // 3) Shapes
+  document.getElementById('av-shapes').innerHTML = [
+    { av: { size: 'xl', src: PEOPLE[2].src, name: PEOPLE[2].name, shape: 'circle' }, label: 'circle' },
+    { av: { size: 'xl', src: PEOPLE[2].src, name: PEOPLE[2].name, shape: 'square' }, label: 'square' },
+    { av: { size: 'xl', name: 'Acme Inc', shape: 'square' }, label: 'square · initials' },
+  ].map(({ av, label }) => `
+    <div class="flex flex-col items-center gap-2">
+      ${avatarHtml(av)}
+      <div class="text-xs font-mono text-gray-700">${label}</div>
+    </div>
+  `).join('');
+
+  // 4) Status dots
+  document.getElementById('av-status').innerHTML = ['online','busy','away','offline'].map(status => `
+    <div class="flex flex-col items-center gap-2">
+      ${avatarHtml({ size: 'xl', src: PEOPLE[0].src, name: PEOPLE[0].name, status })}
+      <div class="text-xs font-mono text-gray-700 capitalize">${status}</div>
+    </div>
+  `).join('') + `<div class="flex flex-col items-center gap-2">
+    ${avatarHtml({ size: 'xl', name: 'Marcus Chen', status: 'online' })}
+    <div class="text-xs font-mono text-gray-700">initials + status</div>
+  </div>`;
+
+  // 5) Avatar groups
+  const OVERLAP = { xs:'-ml-1.5', sm:'-ml-2', md:'-ml-2.5', lg:'-ml-3', xl:'-ml-3.5', '2xl':'-ml-4', '3xl':'-ml-6' };
+  function groupHtml({ size = 'md', max = 4, total }) {
+    const all = PEOPLE;
+    const visible = all.slice(0, max);
+    const allCount = total ?? all.length;
+    const overflow = allCount - visible.length;
+    const items = visible.map((p, i) => `<span class="${i === 0 ? '' : OVERLAP[size]}">${avatarHtml({ size, src: p.src, name: p.name, bordered: true })}</span>`).join('');
+    const plus = overflow > 0
+      ? `<span class="${OVERLAP[size]} relative inline-flex shrink-0 items-center justify-center overflow-hidden rounded-full bg-gray-100 text-gray-700 font-semibold ring-2 ring-white ${AV_BOX[size]}">+${overflow}</span>`
+      : '';
+    return `<div class="inline-flex items-center">${items}${plus}</div>`;
+  }
+
+  document.getElementById('av-groups').innerHTML = `
+    <div>
+      <div class="text-xs font-semibold uppercase tracking-wider text-gray-500 mb-2">4 visible</div>
+      ${groupHtml({ size: 'md', max: 4 })}
+    </div>
+    <div>
+      <div class="text-xs font-semibold uppercase tracking-wider text-gray-500 mb-2">4 + 4 hidden = +4 pill</div>
+      ${groupHtml({ size: 'md', max: 4, total: 8 })}
+    </div>
+    <div>
+      <div class="text-xs font-semibold uppercase tracking-wider text-gray-500 mb-2">Sizes — sm / md / lg</div>
+      <div class="flex items-center gap-8">
+        ${groupHtml({ size: 'sm', max: 3, total: 6 })}
+        ${groupHtml({ size: 'md', max: 3, total: 6 })}
+        ${groupHtml({ size: 'lg', max: 3, total: 6 })}
+      </div>
+    </div>
+  `;
+
+  // 6) Avatar profile
+  function profileHtml({ size = 'md', src, name, subtitle, status }) {
+    const titleSize = (size === 'xs' || size === 'sm') ? 'text-xs' :
+                      (size === 'md' || size === 'lg') ? 'text-sm' : 'text-base';
+    const subtitleSize = (size === 'xs' || size === 'sm') ? 'text-[10px]' : 'text-xs';
+    return `<div class="inline-flex items-center gap-3">
+      ${avatarHtml({ size, src, name, status })}
+      <div class="min-w-0 flex-1">
+        <div class="${titleSize} font-semibold text-gray-900 truncate">${name}</div>
+        ${subtitle ? `<div class="${subtitleSize} text-gray-600 truncate">${subtitle}</div>` : ''}
+      </div>
+    </div>`;
+  }
+
+  document.getElementById('av-profile').innerHTML = `
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      ${PEOPLE.slice(0, 4).map(p => profileHtml({
+        size: 'md', src: p.src, name: p.name,
+        subtitle: p.title + ' · ' + p.name.toLowerCase().replace(/\\s+/g, '.') + '@scienaptic.com',
+        status: 'online',
+      })).join('')}
+    </div>
+    <div class="pt-6 border-t border-gray-200">
+      <div class="text-xs font-semibold uppercase tracking-wider text-gray-500 mb-3">Sizes — sm / md / lg</div>
+      <div class="space-y-4">
+        ${profileHtml({ size: 'sm', src: PEOPLE[0].src, name: 'Olivia Reyna', subtitle: 'Product Designer' })}
+        ${profileHtml({ size: 'md', src: PEOPLE[0].src, name: 'Olivia Reyna', subtitle: 'Product Designer · olivia@scienaptic.com' })}
+        ${profileHtml({ size: 'lg', src: PEOPLE[0].src, name: 'Olivia Reyna', subtitle: 'Product Designer · olivia@scienaptic.com' })}
+      </div>
+    </div>
+  `;
+
+  // ============================================================
+  // Gradients
+  // ============================================================
+  document.getElementById('grad-brand').innerHTML  = GRADIENTS.brand.map(g => gradientCard(g)).join('');
+  document.getElementById('grad-soft').innerHTML   = GRADIENTS.soft.map(g => gradientCard(g)).join('');
+  document.getElementById('grad-multi').innerHTML  = GRADIENTS.multi.map(g => gradientCard(g)).join('');
+  document.getElementById('grad-mesh').innerHTML   = GRADIENTS.mesh.map(g => gradientCard(g, {tall:true})).join('');
+  document.getElementById('grad-radial').innerHTML = GRADIENTS.radial.map(g => gradientCard(g)).join('');
+  document.getElementById('grad-bg').innerHTML     = GRADIENTS.bg.map(g => gradientCard(g)).join('');
+
+  // Badges
+  const tones = [
+    { k:'gray', label:'Gray' },
+    { k:'brand', label:'Brand' },
+    { k:'success', label:'Success' },
+    { k:'warning', label:'Warning' },
+    { k:'error', label:'Error' },
+    { k:'blue', label:'Blue' },
+    { k:'indigo', label:'Indigo' },
+    { k:'purple', label:'Purple' },
+    { k:'pink', label:'Pink' },
+    { k:'aiProcess', label:'AI' },
+  ];
+  document.getElementById('badges-pill-color').innerHTML = tones.map(t =>
+    `<span class="inline-flex items-center gap-1 h-6 px-2.5 rounded-full text-xs font-medium border bg-${t.k}-50 text-${t.k}-700 border-${t.k}-200"><span class="h-1.5 w-1.5 rounded-full bg-${t.k}-500"></span>${t.label}</span>`
+  ).join('');
+  document.getElementById('badges-pill-outline').innerHTML = tones.map(t =>
+    `<span class="inline-flex items-center h-6 px-2.5 rounded-full text-xs font-medium border bg-white text-${t.k}-700 border-${t.k}-300">${t.label}</span>`
+  ).join('');
+  document.getElementById('badges-color').innerHTML = tones.map(t =>
+    `<span class="inline-flex items-center h-6 px-2 rounded-md text-xs font-medium border bg-${t.k}-50 text-${t.k}-700 border-${t.k}-200">${t.label}</span>`
+  ).join('');
+  document.getElementById('badges-modern').innerHTML = tones.map(t =>
+    `<span class="inline-flex items-center gap-1.5 h-6 px-2.5 rounded-full text-xs font-medium border border-gray-300 bg-white shadow-xs text-gray-700"><span class="h-1.5 w-1.5 rounded-full bg-${t.k}-500"></span>${t.label}</span>`
+  ).join('');
+
+  // ============================================================
+  // Social Buttons
+  // ============================================================
+  const SOCIAL_ICONS = {
+    google: `<svg width="20" height="20" viewBox="0 0 24 24"><path d="M22.501 12.2332C22.501 11.3699 22.4296 10.7399 22.2748 10.0865H12.2153V13.9832H18.12C18.001 14.9515 17.3582 16.4099 15.9296 17.3898L15.9096 17.5203L19.0902 19.935L19.3106 19.9565C21.3343 18.1249 22.501 15.4399 22.501 12.2332Z" fill="#4285F4"/><path d="M12.2148 22.5C15.1058 22.5 17.5325 21.5666 19.3101 19.9567L15.9291 17.3899C15.0243 18.0083 13.8101 18.4399 12.2148 18.4399C9.38271 18.4399 6.97978 16.6083 6.12266 14.0766L5.99934 14.0871L2.69245 16.5954L2.65 16.7132C4.41546 20.1433 8.0291 22.5 12.2148 22.5Z" fill="#34A853"/><path d="M6.12198 14.0767C5.89571 13.4233 5.76476 12.7233 5.76476 12C5.76476 11.2766 5.89571 10.5767 6.11008 9.92337L6.10421 9.78423L2.7558 7.2356L2.64932 7.28667C1.91842 8.71002 1.49902 10.3084 1.49902 12C1.49902 13.6917 1.91842 15.29 2.64932 16.7133L6.12198 14.0767Z" fill="#FBBC05"/><path d="M12.2148 5.55997C14.2271 5.55997 15.5839 6.41163 16.3576 7.12335L19.3815 4.23C17.5208 2.53834 15.1058 1.5 12.2148 1.5C8.0291 1.5 4.41546 3.85665 2.65 7.28662L6.11074 9.92332C6.97978 7.39166 9.38271 5.55997 12.2148 5.55997Z" fill="#EB4335"/></svg>`,
+    apple: `<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.5435 12.4283C17.5341 10.8359 18.2548 9.63558 19.7104 8.75038C18.8964 7.58479 17.6648 6.94293 16.0394 6.81829C14.5006 6.69675 12.8175 7.71421 12.2014 7.71421C11.5505 7.71421 10.0608 6.86086 8.88944 6.86086C6.47233 6.89826 3.90405 8.78596 3.90405 12.6273C3.90405 13.7616 4.11078 14.9335 4.52424 16.1394C5.07591 17.7257 7.06676 21.6128 9.14338 21.5505C10.2306 21.5256 10.999 20.7783 12.4135 20.7783C13.7853 20.7783 14.4955 21.5505 15.708 21.5505C17.8005 21.5193 19.6033 17.9856 20.128 16.3962C17.3163 15.0691 17.5435 12.5085 17.5435 12.4283ZM15.0866 5.30671C16.2722 3.89989 16.1646 2.6192 16.1297 2.16003C15.0817 2.22106 13.8702 2.87437 13.18 3.67786C12.4198 4.53747 11.9728 5.6007 12.0686 6.79612C13.2014 6.88341 14.2354 6.30109 15.0866 5.30671Z"/></svg>`,
+    github: `<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M12.0006 1.6665C6.27579 1.6665 1.66724 6.30817 1.66724 12.0743C1.66724 16.679 4.6164 20.5803 8.70744 21.9645C9.21804 22.0683 9.40474 21.7448 9.40474 21.4734C9.40474 21.236 9.38777 20.4225 9.38777 19.5743C6.52366 20.1909 5.92831 18.3392 5.92831 18.3392C5.46881 17.135 4.78836 16.8295 4.78836 16.8295C3.85254 16.1957 4.85698 16.1957 4.85698 16.1957C5.89538 16.2649 6.44002 17.2614 6.44002 17.2614C7.35887 18.8358 8.83948 18.3911 9.43873 18.1196C9.52369 17.4513 9.79525 16.989 10.0834 16.7349C7.79881 16.4979 5.39542 15.6068 5.39542 11.6361C5.39542 10.5067 5.80335 9.58177 6.45698 8.86265C6.35498 8.6086 5.99784 7.5466 6.55976 6.12612C6.55976 6.12612 7.42816 5.85459 9.38735 7.18984C10.2257 6.9663 11.0902 6.85258 11.9591 6.85162C12.828 6.85162 13.7137 6.97005 14.5506 7.18984C16.51 5.85459 17.3784 6.12612 17.3784 6.12612C17.9403 7.5466 17.5829 8.6086 17.4809 8.86265C18.1517 9.58177 18.5428 10.5067 18.5428 11.6361C18.5428 15.6068 16.1394 16.481 13.8378 16.7349C14.2117 17.0568 14.5345 17.6649 14.5345 18.6276C14.5345 19.9967 14.5176 21.0926 14.5176 21.4732C14.5176 21.7448 14.7046 22.0683 15.215 21.9648C19.306 20.5801 22.2552 16.679 22.2552 12.0743C22.2722 6.30817 17.6466 1.6665 12.0006 1.6665Z"/></svg>`,
+    x: `<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M14.234 10.1623L21.3289 2H19.6477L13.4842 9.08881L8.56388 2H2.88867L10.3279 12.7155L2.88867 21.273H4.56999L11.0744 13.7898L16.272 21.273H21.9472L14.2336 10.1623H14.234ZM11.9279 12.8089L11.1739 11.7444L5.17541 3.26239H7.75921L12.5993 10.0926L13.3526 11.1571L19.6485 19.9961H17.0647L11.9279 12.8093V12.8089Z"/></svg>`,
+    facebook: `<svg width="20" height="20" viewBox="0 0 24 24"><path d="M24 12.0733C24 5.40541 18.6274 0 12 0C5.37258 0 0 5.40541 0 12.0733C0 18.0995 4.38823 23.0943 10.125 24V15.5633H7.07813V12.0733H10.125V9.41343C10.125 6.38755 11.9165 4.71615 14.6576 4.71615C15.9705 4.71615 17.3438 4.95195 17.3438 4.95195V7.92313H15.8306C14.3399 7.92313 13.875 8.85379 13.875 9.80887V12.0733H17.2031L16.6711 15.5633H13.875V24C19.6118 23.0943 24 18.0995 24 12.0733Z" fill="#1877F2"/></svg>`,
+    microsoft: `<svg width="20" height="20" viewBox="0 0 24 24"><path d="M11.4225 11.4225H1.6665V1.6665H11.4225V11.4225Z" fill="#F25022"/><path d="M22.1894 11.4225H12.4341V1.6665H22.1894V11.4225Z" fill="#7FBA00"/><path d="M11.4222 22.1894H1.6665V12.4341H11.4222V22.1894Z" fill="#00A4EF"/><path d="M22.1894 22.1894H12.4341V12.4341H22.1894V22.1894Z" fill="#FFB900"/></svg>`,
+    linkedin: `<svg width="20" height="20" viewBox="0 0 24 24"><path d="M20.4501 20.4498H16.8956V14.8829C16.8956 13.5552 16.8718 11.846 15.046 11.846C13.1936 11.846 12.9101 13.292 12.9101 14.786V20.4495H9.35583V8.9968H12.7681V10.5618H12.8158C13.1572 9.97742 13.6508 9.4969 14.2444 9.17131C14.8379 8.84572 15.5089 8.68713 16.1856 8.71243C19.7884 8.71243 20.4516 11.0824 20.4516 14.1657L20.4501 20.4498ZM5.34495 7.43153C4.93614 7.4316 4.5365 7.31041 4.19656 7.0833C3.85662 6.85619 3.59166 6.53337 3.43517 6.15567C3.27868 5.77796 3.23769 5.36234 3.31738 4.96135C3.39707 4.56035 3.59391 4.19202 3.88296 3.90284C4.17202 3.61367 4.54033 3.41666 4.94131 3.33677C5.34229 3.25688 5.75792 3.29766 6.13567 3.45396C6.51343 3.61026 6.83638 3.87505 7.06364 4.21488C7.2909 4.55472 7.41226 4.95431 7.41238 5.36311C7.41254 5.63468 7.35916 5.9036 7.25537 6.15457C7.15159 6.40554 6.99934 6.63364 6.80735 6.82575C6.61536 7.01786 6.38738 7.17024 6.13649 7.27416C5.8856 7.37808 5.61672 7.43156 5.34516 7.43153M7.12203 20.4496H3.5638V8.9968H7.12182V20.4496H7.12203ZM22.2226 0.00170108H1.77761C1.31292 -0.00354858 0.865254 0.176192 0.532893 0.501677C0.200532 0.827162 0.0114847 1.27098 0.000610352 1.73564V22.2641C0.0111459 22.7291 0.200042 23.1732 0.532419 23.4992C0.864796 23.8253 1.31265 24.0053 1.77761 24.0004H22.2226C22.6885 24.0061 23.1376 23.8265 23.4711 23.5005C23.8045 23.1745 23.9944 22.7297 24.0001 22.2641V1.73411C23.9942 1.26882 23.8043 0.824567 23.4709 0.499082C23.1374 0.173597 22.6884 -0.00558979 22.2226 0.000172716" fill="#0A66C2"/></svg>`,
+  };
+  const PROVIDERS = ['google','apple','github','microsoft','x','facebook','linkedin'];
+  const LABELS = { google:'Google', apple:'Apple', github:'GitHub', microsoft:'Microsoft', x:'X', facebook:'Facebook', linkedin:'LinkedIn' };
+
+  // Default mode
+  document.getElementById('social-default').innerHTML = PROVIDERS.map(p => `
+    <button class="inline-flex items-center justify-center gap-3 h-10 px-4 text-sm font-semibold rounded-md border bg-white text-gray-700 border-gray-300 shadow-xs hover:bg-gray-50">
+      ${SOCIAL_ICONS[p]}
+      Sign in with ${LABELS[p]}
+    </button>
+  `).join('');
+
+  // Brand mode
+  const brandBg = {
+    google: 'bg-white text-gray-900 border-gray-200 hover:bg-gray-50',
+    apple: 'bg-black text-white border-black hover:bg-gray-900',
+    github: 'bg-gray-900 text-white border-gray-900 hover:bg-gray-800',
+    microsoft: 'bg-white text-gray-900 border-gray-200 hover:bg-gray-50',
+    x: 'bg-black text-white border-black hover:bg-gray-900',
+    facebook: 'text-white hover:opacity-90',
+    linkedin: 'text-white hover:opacity-90',
+  };
+  const brandInline = { facebook: 'background:#1877F2;border-color:#1877F2', linkedin: 'background:#0A66C2;border-color:#0A66C2' };
+  document.getElementById('social-brand').innerHTML = PROVIDERS.map(p => `
+    <button class="inline-flex items-center justify-center gap-3 h-10 px-4 text-sm font-semibold rounded-md border shadow-xs ${brandBg[p]}" style="${brandInline[p] ?? ''}">
+      ${SOCIAL_ICONS[p]}
+      Sign in with ${LABELS[p]}
+    </button>
+  `).join('');
+
+  // ============================================================
+  // Badge Groups
+  // ============================================================
+  const arrowSvg = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m0 0l-6-6m6 6l-6 6"/></svg>`;
+
+  function bgPillColor(theme, addon, message, withArrow) {
+    return `<span class="inline-flex items-center font-medium gap-2 h-7 pl-1 pr-2.5 rounded-full border text-xs bg-${theme}-50 border-${theme}-200 text-${theme}-700">
+      <span class="inline-flex items-center h-5 px-2 text-xs font-semibold rounded-full bg-white border border-${theme}-200 text-${theme}-700">${addon}</span>
+      <span class="inline-flex items-center gap-1.5">${message}${withArrow ? arrowSvg : ''}</span>
+    </span>`;
+  }
+  function bgPillOutline(theme, addon, message, withArrow) {
+    return `<span class="inline-flex items-center font-medium gap-2 h-7 pl-1 pr-2.5 rounded-full border bg-transparent text-xs border-${theme}-300 text-${theme}-700">
+      <span class="inline-flex items-center h-5 px-2 text-xs font-semibold rounded-full bg-transparent border border-${theme}-300 text-${theme}-700">${addon}</span>
+      <span class="inline-flex items-center gap-1.5">${message}${withArrow ? arrowSvg : ''}</span>
+    </span>`;
+  }
+  function bgBadgeColor(theme, addon, message, withArrow) {
+    return `<span class="inline-flex items-center font-medium gap-2 h-7 pl-1 pr-2.5 rounded-md border text-xs bg-${theme}-50 border-${theme}-200 text-${theme}-700">
+      <span class="inline-flex items-center h-5 px-2 text-xs font-semibold rounded-md bg-white border border-${theme}-200 text-${theme}-700">${addon}</span>
+      <span class="inline-flex items-center gap-1.5">${message}${withArrow ? arrowSvg : ''}</span>
+    </span>`;
+  }
+  function bgModern(theme, addon, message, withArrow) {
+    return `<span class="inline-flex items-center font-medium gap-2 h-7 pl-1 pr-3 rounded-full bg-white border border-gray-300 shadow-xs text-xs text-gray-700">
+      <span class="inline-flex items-center gap-1.5 pl-1 pr-2 text-xs font-semibold text-gray-700">
+        <span class="h-1.5 w-1.5 rounded-full bg-${theme}-500"></span>${addon}
+      </span>
+      <span class="inline-flex items-center gap-1.5">${message}${withArrow ? arrowSvg : ''}</span>
+    </span>`;
+  }
+  function bgPillColorLg(theme, addon, message, withArrow) {
+    return `<span class="inline-flex items-center font-medium gap-2 h-9 pl-1.5 pr-3 rounded-full border text-sm bg-${theme}-50 border-${theme}-200 text-${theme}-700">
+      <span class="inline-flex items-center h-6 px-2.5 text-xs font-semibold rounded-full bg-white border border-${theme}-200 text-${theme}-700">${addon}</span>
+      <span class="inline-flex items-center gap-1.5">${message}${withArrow ? arrowSvg : ''}</span>
+    </span>`;
+  }
+  function bgModernLg(theme, addon, message, withArrow) {
+    return `<a href="#" class="inline-flex items-center font-medium gap-2 h-9 pl-1.5 pr-3 rounded-full bg-white border border-gray-300 shadow-xs text-sm text-gray-700 hover:opacity-90 cursor-pointer">
+      <span class="inline-flex items-center gap-1.5 pl-1 pr-2 text-xs font-semibold text-gray-700">
+        <span class="h-1.5 w-1.5 rounded-full bg-${theme}-500"></span>${addon}
+      </span>
+      <span class="inline-flex items-center gap-1.5">${message}${withArrow ? arrowSvg : ''}</span>
+    </a>`;
+  }
+
+  document.getElementById('bg-pill-color').innerHTML = [
+    bgPillColor('brand',   'New',     'AI Decisioning v2 just shipped', true),
+    bgPillColor('success', 'Live',    'Real-time scoring is now generally available', true),
+    bgPillColor('warning', 'Action',  '7 applications need your review', true),
+    bgPillColor('error',   'Incident','Webhook delivery degraded', false),
+    bgPillColor('aiProcess','AI',     'Try the new fraud scoring model', true),
+    bgPillColor('indigo',  'Beta',    'Decision explainability preview', false),
+    bgPillColor('purple',  'Update',  'Q1 model refresh available', false),
+  ].join('');
+
+  document.getElementById('bg-pill-outline').innerHTML = [
+    bgPillOutline('brand',   'v2.4.0',   'Read the changelog', true),
+    bgPillOutline('gray',    'Internal', 'Engineering announcement', true),
+    bgPillOutline('success', 'Stable',   'Production-ready', false),
+  ].join('');
+
+  document.getElementById('bg-badge-color').innerHTML = [
+    bgBadgeColor('brand', 'Featured', 'Customer story: Acme Bank', true),
+    bgBadgeColor('blue',  'Webinar',  'Thursday at 2 PM EST', false),
+  ].join('');
+
+  document.getElementById('bg-modern').innerHTML = [
+    bgModern('brand',     'New',  'Faster decisioning is here', true),
+    bgModern('success',   'Live', 'Auto-scoring 1,932 applications today', false),
+    bgModern('aiProcess', 'AI',   'Run an AI-powered audit on your model', true),
+  ].join('');
+
+  document.getElementById('bg-sizes').innerHTML = [
+    bgPillColor('brand',   'New', 'Default · md size', true),
+    bgPillColorLg('brand', 'New', 'Hero · lg size', true),
+  ].join('');
+
+  document.getElementById('bg-link').innerHTML = [
+    bgModernLg('aiProcess', 'AI', 'Explainability preview is now in beta', true),
+  ].join('');
+
+  // ============================================================
+  // Icons — backed by Lucide (MIT). All 1,500+ icons available; we showcase
+  // a curated set by default and reveal the full set when the user searches.
+  // ============================================================
+  // PascalCase → kebab-case (Lucide's data-attribute format)
+  function toKebab(s) {
+    return s
+      .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
+      .replace(/([A-Z])([A-Z][a-z])/g, '$1-$2')
+      .toLowerCase();
+  }
+
+  // The ~50 we use most, grouped by category — kebab-case names that Lucide ships
+  const ICON_CATEGORIES = [
+    { label: 'Arrows',           icons: ['arrow-right','arrow-left','arrow-up','arrow-down','arrow-up-right','arrow-down-right'] },
+    { label: 'Chevrons',         icons: ['chevron-right','chevron-left','chevron-down','chevron-up','chevrons-up-down'] },
+    { label: 'Actions',          icons: ['plus','minus','x','check','search','list-filter','download','upload','copy','trash-2','pencil','refresh-cw','external-link'] },
+    { label: 'Feedback',         icons: ['circle-alert','triangle-alert','circle-check','circle-x','info','circle-help','loader-2'] },
+    { label: 'Time',             icons: ['clock','calendar'] },
+    { label: 'Communication',    icons: ['mail','phone','bell'] },
+    { label: 'Users',            icons: ['user','users','eye','eye-off'] },
+    { label: 'Layout',           icons: ['house','settings','menu','grid-3x3'] },
+    { label: 'Files',            icons: ['file','folder'] },
+    { label: 'AI / Decisioning', icons: ['sparkles','wand-2','brain','zap'] },
+    { label: 'Data',             icons: ['bar-chart-3','trending-up','trending-down'] },
+    { label: 'Misc',             icons: ['more-horizontal','more-vertical'] },
+  ];
+
+  // Brand / OAuth color marks — Lucide is stroke-only, so these stay inline
+  const BRAND_MARKS = [
+    { name: 'GoogleColor',    svg: '<svg width="24" height="24" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.5 12.2c0-.9-.1-1.5-.3-2.2H12.2v3.9h5.9c-.1 1-.7 2.5-2.2 3.5l-.02.1 3.2 2.4.2.02c2.1-1.9 3.2-4.6 3.2-7.8z"/><path fill="#34A853" d="M12.2 22.5c2.9 0 5.3-.9 7.1-2.5l-3.4-2.6c-.9.6-2.1 1-3.7 1-2.8 0-5.2-1.8-6.1-4.4l-.1.01-3.3 2.5-.05.1c1.8 3.5 5.4 5.8 9.6 5.8z"/><path fill="#FBBC05" d="M6.1 14c-.2-.7-.4-1.4-.4-2.1 0-.7.1-1.4.3-2.1l-.01-.1-3.3-2.6-.1.05c-.7 1.4-1.1 3-1.1 4.7s.4 3.3 1.1 4.7L6.1 14z"/><path fill="#EB4335" d="M12.2 5.6c2 0 3.4.9 4.1 1.6l3-3c-1.9-1.7-4.3-2.7-7.1-2.7-4.2 0-7.8 2.4-9.6 5.8L6 9.9c.9-2.6 3.3-4.3 6.2-4.3z"/></svg>' },
+    { name: 'AppleColor',     svg: '<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 12.4c0-1.6.7-2.8 2.2-3.7-.8-1.2-2.1-1.8-3.7-1.9-1.5-.1-3.2.9-3.8.9-.6 0-2.1-.9-3.3-.9-2.4 0-5 1.9-5 5.8 0 1.1.2 2.3.6 3.5.5 1.6 2.5 5.5 4.6 5.4 1.1 0 1.9-.7 3.3-.7 1.4 0 2.1.7 3.3.7 2.1 0 3.9-3.5 4.4-5.1-2.8-1.3-2.6-3.9-2.6-4zM15.1 5.3c1.2-1.4 1.1-2.7 1-3.1-1 .1-2.2.7-2.9 1.5-.8.9-1.2 1.9-1.1 3.1 1.1.1 2.2-.5 3-1.5z"/></svg>' },
+    { name: 'GitHubColor',    svg: '<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1.7c-5.7 0-10.3 4.6-10.3 10.4 0 4.6 3 8.5 7.1 9.9.5.1.7-.2.7-.5v-1.9c-2.9.6-3.5-1.2-3.5-1.2-.5-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.6 1 1.6 1 .9 1.6 2.4 1.1 3 .8.1-.7.4-1.1.6-1.4-2.3-.2-4.7-1.1-4.7-5.1 0-1.1.4-2 1-2.8-.1-.3-.5-1.4.1-2.8 0 0 .9-.3 2.8 1.1.8-.2 1.7-.3 2.6-.3.9 0 1.8.1 2.6.3 1.9-1.3 2.8-1.1 2.8-1.1.6 1.4.2 2.5.1 2.8.6.7 1 1.7 1 2.8 0 4-2.4 4.8-4.7 5.1.4.3.7.9.7 1.9V21c0 .3.2.6.7.5 4.1-1.4 7.1-5.3 7.1-9.9C22.3 6.3 17.7 1.7 12 1.7z"/></svg>' },
+  ];
+
+  // Reusable icon card. Whole card click = copy kebab name. Hover reveals
+  // a small "</> SVG" button in the top-right corner for copying the rendered SVG.
+  function iconCard(name) {
+    return `<div
+      class="group relative flex flex-col items-center gap-2 p-3 rounded-md border border-gray-200 hover:border-gray-300 hover:bg-gray-50 transition-colors cursor-pointer"
+      onclick="copy('${name}')"
+      title="${name} (click to copy name)"
+    >
+      <button
+        type="button"
+        class="icon-svg-btn"
+        title="Copy as SVG"
+        onclick="event.stopPropagation(); copySvg('${name}', this)"
+      >
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+      </button>
+      <i data-lucide="${name}" class="w-5 h-5 text-gray-700 group-hover:text-gray-900"></i>
+      <span class="text-text-xs text-gray-500 font-mono truncate w-full text-center">${name}</span>
+    </div>`;
+  }
+
+  // Render curated set (categorized)
+  document.getElementById('icon-curated').innerHTML = ICON_CATEGORIES.map(cat => `
+    <div class="mb-6 last:mb-0">
+      <div class="text-text-xs font-semibold uppercase tracking-wider text-gray-500 mb-3">${cat.label}</div>
+      <div class="grid grid-cols-6 md:grid-cols-10 gap-3">
+        ${cat.icons.map(iconCard).join('')}
+      </div>
+    </div>
+  `).join('');
+
+  // Render all Lucide icons (from the loaded UMD global)
+  const allPascalNames = Object.keys(lucide.icons || {});
+  const allKebabNames  = allPascalNames.map(toKebab);
+  document.getElementById('icon-all').innerHTML  = allKebabNames.map(iconCard).join('');
+  document.getElementById('icon-all-count').textContent = `(${allKebabNames.length})`;
+  document.getElementById('icon-all-total').textContent = allKebabNames.length;
+  document.getElementById('icon-total-count').textContent = allKebabNames.length;
+
+  // Render brand marks (inline color SVGs)
+  document.getElementById('icon-brand').innerHTML = BRAND_MARKS.map(b => `
+    <div class="group flex flex-col items-center gap-2 p-3 rounded-md border border-gray-200 hover:border-gray-300 hover:bg-gray-50 transition-colors cursor-pointer"
+         onclick="copy('${b.name}')" title="${b.name}">
+      ${b.svg}
+      <span class="text-text-xs text-gray-500 font-mono truncate w-full text-center">${b.name}</span>
+    </div>
+  `).join('');
+
+  // Materialize every <i data-lucide=...> placeholder
+  lucide.createIcons();
+
+  // Wire up the size + stroke + color controls + live spec snippets.
+  // CSS variables on the page container drive `.lucide` size/stroke-width/stroke.
+  // Snippet chips below the controls show current spec in 4 formats (React,
+  // Tailwind, CSS, HTML) and copy on click.
+
+  // Current icon color, null = inherit (default gray). Read by `apply()`.
+  let _iconColor = null;
+
+  // px → Tailwind size class. Falls back to arbitrary value if px doesn't
+  // match a Tailwind step (16, 20, 24, 28, 32, 36, 40, 44, 48).
+  function sizeToTw(px) {
+    const map = { 16:4, 20:5, 24:6, 28:7, 32:8, 36:9, 40:10, 44:11, 48:12 };
+    if (px in map) return 'w-' + map[px] + ' h-' + map[px];
+    return 'w-[' + px + 'px] h-[' + px + 'px]';
+  }
+
+  // Stroke as Tailwind: integer values 0/1/2 have native utilities; others
+  // need an arbitrary value.
+  function strokeToTw(s) {
+    const n = parseFloat(s);
+    if (n === 0 || n === 1 || n === 2) return 'stroke-' + n;
+    return '[stroke-width:' + n + ']';
+  }
+
+  // Cache the current snippet strings so copy handlers can fetch them
+  const _snippets = { react: '', tw: '', css: '', html: '' };
+  window.copySnippet = function(btn, key) {
+    const txt = _snippets[key];
+    if (!txt) return;
+    copy(txt);
+    btn.classList.add('copied');
+    setTimeout(() => btn.classList.remove('copied'), 600);
+  };
+
+  // Copy a single icon as raw SVG markup with current size/stroke/color applied.
+  window.copySvg = function(name, btn) {
+    const card = document.querySelector('[title="' + name + ' (click to copy name)"]');
+    const svg = card && card.querySelector('svg');
+    if (!svg) { showToast('Could not locate SVG'); return; }
+    const clone = svg.cloneNode(true);
+    const size = document.getElementById('icon-size').value;
+    const stroke = document.getElementById('icon-stroke').value;
+    clone.setAttribute('width', size);
+    clone.setAttribute('height', size);
+    clone.setAttribute('stroke-width', stroke);
+    clone.setAttribute('stroke', _iconColor || 'currentColor');
+    clone.removeAttribute('class');
+    const out = clone.outerHTML;
+    copy(out);
+    if (btn) {
+      btn.classList.add('copied');
+      setTimeout(() => btn.classList.remove('copied'), 600);
+    }
+  };
+
+  // Set the icon stroke color. Pass null to reset to currentColor (inherits).
+  window.setIconColor = function(hex) {
+    _iconColor = hex || null;
+    const iconsPage = document.querySelector('[data-page="icons"]');
+    if (_iconColor) iconsPage.style.setProperty('--icon-color', _iconColor);
+    else iconsPage.style.removeProperty('--icon-color');
+
+    // Toggle the .is-active highlight on the right swatch
+    document.querySelectorAll('.color-swatch[data-color]').forEach(b => {
+      b.classList.toggle('is-active', b.dataset.color === _iconColor);
+    });
+    const resetSwatch = document.querySelector('.color-swatch[data-reset]');
+    if (resetSwatch) resetSwatch.classList.toggle('is-active', _iconColor === null);
+
+    // Refresh the live snippets
+    if (typeof window._refreshSnippets === 'function') window._refreshSnippets();
+  };
+
+  (function wireIconControls() {
+    const iconsPage = document.querySelector('[data-page="icons"]');
+    const sizeInput = document.getElementById('icon-size');
+    const strokeInput = document.getElementById('icon-stroke');
+    const sizeValue = document.getElementById('icon-size-value');
+    const strokeValue = document.getElementById('icon-stroke-value');
+    const snipReact = document.getElementById('snip-react');
+    const snipTw    = document.getElementById('snip-tw');
+    const snipCss   = document.getElementById('snip-css');
+    const snipHtml  = document.getElementById('snip-html');
+    if (!iconsPage || !sizeInput || !strokeInput) return;
+
+    function apply() {
+      const sizePx = parseInt(sizeInput.value, 10);
+      const strokeNum = parseFloat(strokeInput.value);
+      iconsPage.style.setProperty('--icon-size', sizePx + 'px');
+      iconsPage.style.setProperty('--icon-stroke', strokeNum);
+      sizeValue.textContent = sizePx + 'px';
+      strokeValue.textContent = strokeNum;
+
+      // Build the spec snippets. Color is only included when set.
+      const twSize = sizeToTw(sizePx);
+      const twStroke = strokeToTw(strokeNum);
+      const color = _iconColor;
+      const reactColorCls = color ? (' text-[' + color + ']') : '';
+      const twColorCls    = color ? (' text-[' + color + ']') : '';
+      const cssColor      = color ? (' color: ' + color + ';') : '';
+      const htmlColorStyle = color ? ('color:' + color + ';') : '';
+
+      _snippets.react = '<ArrowRight className="' + twSize + reactColorCls + '" strokeWidth={' + strokeNum + '} />';
+      _snippets.tw    = twSize + twColorCls + ' ' + twStroke;
+      _snippets.css   = 'width: ' + sizePx + 'px; height: ' + sizePx + 'px;' + cssColor + ' stroke-width: ' + strokeNum + ';';
+      _snippets.html  = '<i data-lucide="arrow-right" class="' + twSize + '" style="' + htmlColorStyle + 'stroke-width:' + strokeNum + '"></i>';
+      snipReact.textContent = _snippets.react;
+      snipTw.textContent    = _snippets.tw;
+      snipCss.textContent   = _snippets.css;
+      snipHtml.textContent  = _snippets.html;
+    }
+    sizeInput.addEventListener('input', apply);
+    strokeInput.addEventListener('input', apply);
+    // Expose so `setIconColor` (defined earlier) can trigger a refresh
+    window._refreshSnippets = apply;
+    apply();
+  })();
+
+  // Search → filter curated when empty, filter all-1500 when typing
+  const _iconSearch    = document.getElementById('icon-search');
+  const _iconSearchCt  = document.getElementById('icon-search-count');
+  const _curatedCard   = document.getElementById('icon-curated-card');
+  const _allCard       = document.getElementById('icon-all-card');
+
+  _iconSearch.addEventListener('input', (e) => {
+    const q = e.target.value.toLowerCase().trim();
+    const cards = _allCard.querySelectorAll('#icon-all > div');
+    if (q === '') {
+      // No query → show both curated AND all-1,982 sections
+      _curatedCard.classList.remove('hidden');
+      _allCard.classList.remove('hidden');
+      cards.forEach(card => card.classList.remove('hidden'));
+      _iconSearchCt.textContent = '';
+      return;
+    }
+    // Active query → hide curated (it's a subset of all), filter the all grid
+    _curatedCard.classList.add('hidden');
+    _allCard.classList.remove('hidden');
+    let matchCount = 0;
+    cards.forEach(card => {
+      const name = (card.getAttribute('title') || '').split(' ')[0];
+      const match = name.toLowerCase().includes(q);
+      card.classList.toggle('hidden', !match);
+      if (match) matchCount++;
+    });
+    _iconSearchCt.textContent = `${matchCount} match${matchCount === 1 ? '' : 'es'}`;
+  });
+
+</script>
+
+</body>
+</html>

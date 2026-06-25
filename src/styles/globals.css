@@ -1,0 +1,72 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Surfaces */
+    --bg-primary: theme(colors.white);
+    --bg-secondary: theme(colors.gray.50);
+    --bg-tertiary: theme(colors.gray.100);
+    --bg-disabled: theme(colors.gray.100);
+    --bg-overlay: theme(colors.gray.900);
+
+    /* Borders */
+    --border-primary: theme(colors.gray.200);
+    --border-secondary: theme(colors.gray.300);
+    --border-disabled: theme(colors.gray.200);
+    --border-brand: theme(colors.brand.300);
+    --border-error: theme(colors.error.300);
+
+    /* Text */
+    --text-primary: theme(colors.gray.900);
+    --text-secondary: theme(colors.gray.700);
+    --text-tertiary: theme(colors.gray.600);
+    --text-quaternary: theme(colors.gray.500);
+    --text-disabled: theme(colors.gray.400);
+    --text-placeholder: theme(colors.gray.500);
+    --text-on-brand: theme(colors.white);
+
+    /* Brand intent */
+    --brand-solid: theme(colors.brand.600);
+    --brand-solid-hover: theme(colors.brand.700);
+    --brand-primary: theme(colors.brand.600);
+    --brand-secondary: theme(colors.brand.500);
+
+    /* Semantic */
+    --error-solid: theme(colors.error.600);
+    --warning-solid: theme(colors.warning.600);
+    --success-solid: theme(colors.success.600);
+  }
+
+  .dark {
+    --bg-primary: theme(colors.gray.950);
+    --bg-secondary: theme(colors.gray.900);
+    --bg-tertiary: theme(colors.gray.800);
+    --border-primary: theme(colors.gray.800);
+    --border-secondary: theme(colors.gray.700);
+    --text-primary: theme(colors.gray.50);
+    --text-secondary: theme(colors.gray.300);
+    --text-tertiary: theme(colors.gray.400);
+    --text-quaternary: theme(colors.gray.500);
+  }
+
+  html,
+  body {
+    background: var(--bg-primary);  /* white — sidebar gets the shadow to delineate it */
+    color: var(--text-primary);
+    font-family: theme(fontFamily.sans);
+    font-feature-settings: "cv11", "ss01"; /* Inter stylistic tweaks Untitled UI uses */
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  /* Untitled UI uses focus rings, not outlines */
+  *:focus { outline: none; }
+}
