@@ -100,9 +100,11 @@ Three artifacts make this design system tangible:
 
 ---
 
-## Live preview URL (fill in after deploy)
+## Live preview URL
 
-> **Production preview:** _https://__________________________________________________________________ _ (fill in after Option 2 deploy)
+> 🔗 **Production preview:** <https://pulse-design-system-cq9rcz2cw-pulse-design-system.vercel.app>
+>
+> No install required — anyone with the link can browse. Auto-redeploys on every `git push` to `main`.
 
 ---
 

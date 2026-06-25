@@ -3,6 +3,12 @@
 > A modern B2B SaaS design system. Powered by **[Scienaptic](https://www.scienaptic.ai)**.
 > React + TypeScript + Tailwind + Lucide. Two parallel deliverables: a static HTML preview site and a React component library.
 
+### 🔗 Live preview — [pulse-design-system.vercel.app](https://pulse-design-system-cq9rcz2cw-pulse-design-system.vercel.app)
+
+No install required. Browse all foundations + components in your browser.
+
+---
+
 **Brand:** `#FF7918` · vibrant tangerine
 **Status:** v0.2.0 · 13 components shipped · 6 foundations · 1,982 icons (Lucide) · 39 gradients
 
