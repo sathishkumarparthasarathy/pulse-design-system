@@ -41,6 +41,14 @@ const button = cva(
           "disabled:bg-gray-100 disabled:border-gray-200 disabled:text-gray-400",
         ].join(" "),
 
+        // PRIMARY GRADIENT — vertical brand-500 → brand-600 · opt-in for hero CTAs
+        "primary-gradient": [
+          "bg-gradient-to-b from-brand-500 to-brand-600 text-white border border-brand-600 shadow-xs",
+          "hover:from-brand-600 hover:to-brand-700 hover:border-brand-700",
+          "focus:shadow-ring-brand",
+          "disabled:bg-none disabled:bg-gray-100 disabled:border-gray-200 disabled:text-gray-400",
+        ].join(" "),
+
         // SECONDARY GRAY — white surface, gray border
         "secondary-gray": [
           "bg-white text-gray-700 border border-gray-300 shadow-xs",

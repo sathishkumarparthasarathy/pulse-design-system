@@ -1136,68 +1136,424 @@ function IconsPage() {
   );
 }
 
+const BTN_SIZES = ["sm", "md", "lg", "xl", "2xl"] as const;
+const BTN_SIZE_LABEL: Record<(typeof BTN_SIZES)[number], string> = {
+  sm: "Small", md: "Medium", lg: "Large", xl: "Extra Large", "2xl": "2XL",
+};
+
+type BtnUsage = { doItems: string[]; dontItems: string[] };
+
+const CheckMini = () => (
+  <svg className="h-3.5 w-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round"><path d="M20 6L9 17l-5-5" /></svg>
+);
+const XMini = () => (
+  <svg className="h-3.5 w-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round"><path d="M18 6L6 18M6 6l12 12" /></svg>
+);
+
+function UsageGuide({ doItems, dontItems }: BtnUsage) {
+  return (
+    <details className="mt-5 group">
+      <summary className="cursor-pointer inline-flex items-center gap-1.5 text-xs font-medium text-gray-600 hover:text-gray-900 select-none list-none [&::-webkit-details-marker]:hidden">
+        <svg className="h-3.5 w-3.5 shrink-0 transition-transform group-open:rotate-90" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"><path d="M9 18l6-6-6-6" /></svg>
+        Usage guidance
+        <span className="text-gray-400 font-normal">· {doItems.length} use · {dontItems.length} avoid</span>
+      </summary>
+      <div className="grid md:grid-cols-2 gap-3 mt-3">
+        <div className="rounded-lg bg-success-25 border border-success-200 px-4 py-3">
+          <div className="flex items-center gap-1.5 text-xs font-semibold text-success-700 mb-2">
+            <CheckMini /> Use when
+          </div>
+          <ul className="space-y-1.5 text-xs text-gray-700 leading-relaxed">
+            {doItems.map((t, i) => (
+              <li key={i} className="flex gap-2">
+                <span className="bg-success-500 mt-1.5 h-1 w-1 rounded-full shrink-0" />
+                <span>{t}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div className="rounded-lg bg-error-25 border border-error-200 px-4 py-3">
+          <div className="flex items-center gap-1.5 text-xs font-semibold text-error-700 mb-2">
+            <XMini /> Avoid when
+          </div>
+          <ul className="space-y-1.5 text-xs text-gray-700 leading-relaxed">
+            {dontItems.map((t, i) => (
+              <li key={i} className="flex gap-2">
+                <span className="bg-error-500 mt-1.5 h-1 w-1 rounded-full shrink-0" />
+                <span>{t}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </details>
+  );
+}
+
+function NumberedSection({ num, title, description, usage, children }: {
+  num: number; title: string; description: string; usage?: BtnUsage; children: React.ReactNode;
+}) {
+  return (
+    <div className="bg-white border border-gray-200 rounded-xl shadow-xs px-6 py-6">
+      <div className="flex items-baseline gap-3 mb-4 pb-3 border-b border-gray-100">
+        <span className="font-mono text-xs font-semibold text-brand-600">{num.toString().padStart(2, "0")}</span>
+        <span className="text-base font-semibold text-gray-900">{title}</span>
+        <span className="text-xs text-gray-500 ml-auto text-right">{description}</span>
+      </div>
+      {children}
+      {usage && <UsageGuide {...usage} />}
+    </div>
+  );
+}
+
+function BtnRow({ children }: { children: React.ReactNode }) {
+  return <div className="flex flex-wrap items-center gap-3">{children}</div>;
+}
+
+function SubGroup({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <div className="mb-4 last:mb-0">
+      <div className="text-xs font-medium text-gray-500 mb-2">{label}</div>
+      <BtnRow>{children}</BtnRow>
+    </div>
+  );
+}
+
+const BTN_USAGE: Record<number, BtnUsage> = {
+  1: {
+    doItems: [
+      "Solid: Save, Submit, Continue in tables, forms, dialogs",
+      "Gradient: hero CTAs on landing / marketing pages only",
+      'One primary per view — reserve for the "go" action',
+    ],
+    dontItems: [
+      "Two primaries side-by-side (they weaken each other)",
+      "Gradient inside data tables or dense forms",
+      "Destructive actions — use destructive-primary instead",
+    ],
+  },
+  2: {
+    doItems: [
+      "Alternate to a primary (Cancel next to Save)",
+      "Toolbar actions with equal weight",
+      "secondary-color inside brand-heavy panels",
+    ],
+    dontItems: [
+      "As the main call-to-action",
+      "Multiple secondary-color in the same row (visual noise)",
+      "Destructive actions — use destructive-secondary",
+    ],
+  },
+  3: {
+    doItems: [
+      "Low-stakes actions in dense tables",
+      "Row-level actions (Edit, Duplicate, More)",
+      "Alongside a primary when hierarchy matters",
+    ],
+    dontItems: [
+      "The single/main affordance in a critical flow",
+      "Destructive actions — use destructive-tertiary",
+      "Places where the user needs high visibility",
+    ],
+  },
+  4: {
+    doItems: [
+      'Inline text actions ("Learn more", "View details")',
+      "Promotional or highlighted secondary paths",
+      "Inside cards/rows as a subtle CTA",
+    ],
+    dontItems: [
+      "Critical or irreversible actions",
+      "Chaining several in a row (looks like navigation)",
+      "When the surrounding text is already brand-colored",
+    ],
+  },
+  5: {
+    doItems: [
+      "Cancel next to a link-color action",
+      "Footer or help-text links",
+      "Skip · Not now · Maybe later flows",
+    ],
+    dontItems: [
+      "Where the action needs to catch attention",
+      "As the confirming action in a form",
+      "Against gray backgrounds (contrast too low)",
+    ],
+  },
+  6: {
+    doItems: [
+      'Create/add flows (Plus + "New project")',
+      "Import/export with recognizable glyphs",
+      "Actions where the icon reinforces the label",
+    ],
+    dontItems: [
+      "Decorative icons unrelated to the action",
+      "Very long labels — icon impact drops",
+      "Two leading icons on the same button",
+    ],
+  },
+  7: {
+    doItems: [
+      'Navigation or progression ("Continue" + arrow)',
+      "Reveal patterns (dropdown chevron, expand)",
+      "External links (arrow-up-right)",
+    ],
+    dontItems: [
+      "Save/Submit — hints at a next step that isn't there",
+      "Destructive actions — trailing arrow implies continuity",
+      "Combining with a leading icon (visually cluttered)",
+    ],
+  },
+  8: {
+    doItems: [
+      "Toolbar controls with universal glyphs (Search, Menu)",
+      "Dense table row actions (Edit, Delete, More)",
+      "When space is limited and meaning is obvious",
+    ],
+    dontItems: [
+      "Without an aria-label (screen readers can't parse)",
+      "Ambiguous glyphs (Gear, Layers) — use a text button",
+      "Destructive icon-only without a confirmation dialog",
+    ],
+  },
+  9: {
+    doItems: [
+      "Async actions that exceed ~200 ms",
+      "Form submissions with API calls",
+      "Bulk operations (Export CSV, Send invites)",
+    ],
+    dontItems: [
+      "Button width shifting between states",
+      'Hiding the label — use "Saving…" not just a spinner',
+      "Loading state that never times out",
+    ],
+  },
+  10: {
+    doItems: [
+      "Action blocked by an unmet requirement",
+      "Paired with helper text explaining why",
+      "On step-forward when required fields are empty",
+    ],
+    dontItems: [
+      "To permanently hide a feature — remove it instead",
+      "Disabled-only feedback without an explanation",
+      "On the primary CTA without a validation hint",
+    ],
+  },
+  11: {
+    doItems: [
+      "Confirming an irreversible action inside a modal",
+      '"Delete permanently" · "Wipe data" · "Erase account"',
+      "Once per confirmation flow, paired with Cancel",
+    ],
+    dontItems: [
+      "As the entry point to a delete flow",
+      "Outside of a confirmation dialog",
+      "For soft deletes — use destructive-secondary",
+    ],
+  },
+  12: {
+    doItems: [
+      "Reversible dangerous actions (Archive, Remove, Unpublish)",
+      "Table row actions where delete is optional",
+      "Entry point that opens a confirm modal",
+    ],
+    dontItems: [
+      "Irreversible actions — use destructive-primary",
+      "Same row as a destructive-primary (mixed signals)",
+      "Where a plain secondary would suffice",
+    ],
+  },
+  13: {
+    doItems: [
+      "Trash icon in every row of a table",
+      "Ghost delete inside a card or list item",
+      "Alongside other ghost row-level actions",
+    ],
+    dontItems: [
+      "As the only path to an irreversible action",
+      "Without a confirmation dialog",
+      'Where the icon alone isn\'t universally read as "delete"',
+    ],
+  },
+};
+
 function ButtonsPage() {
   return (
     <section data-page="buttons">
-      <PageHeader title="Buttons" subtitle="10 hierarchies × 5 sizes · signature shadow-xs · 4px focus rings" />
-      <Card>
-        <CardContent className="space-y-10">
-          <Block title="Hierarchies">
-            <div className="flex flex-wrap gap-3">
-              <Button hierarchy="primary">Primary</Button>
-              <Button hierarchy="secondary-gray">Secondary gray</Button>
-              <Button hierarchy="secondary-color">Secondary color</Button>
-              <Button hierarchy="tertiary-gray">Tertiary gray</Button>
-              <Button hierarchy="tertiary-color">Tertiary color</Button>
-              <Button hierarchy="link-gray">Link gray</Button>
-              <Button hierarchy="link-color">Link color</Button>
-            </div>
-          </Block>
-          <Block title="Destructive">
-            <div className="flex flex-wrap gap-3">
-              <Button hierarchy="destructive-primary" leadingIcon={<Trash />}>Delete project</Button>
-              <Button hierarchy="destructive-secondary" leadingIcon={<Trash />}>Delete project</Button>
-              <Button hierarchy="destructive-tertiary" leadingIcon={<Trash />}>Delete project</Button>
-            </div>
-          </Block>
-          <Block title="Sizes">
-            <div className="flex flex-wrap items-center gap-3">
-              <Button size="sm">Small</Button>
-              <Button size="md">Medium</Button>
-              <Button size="lg">Large</Button>
-              <Button size="xl">Extra Large</Button>
-              <Button size="2xl">2XL</Button>
-            </div>
-          </Block>
-          <Block title="Icon-only">
-            <div className="flex flex-wrap items-center gap-3">
-              <Button iconOnly size="sm" aria-label="Add"><Plus /></Button>
-              <Button iconOnly size="md" aria-label="Add"><Plus /></Button>
-              <Button iconOnly size="lg" aria-label="Add"><Plus /></Button>
-              <Button iconOnly hierarchy="secondary-gray" aria-label="Add"><Plus /></Button>
-              <Button iconOnly hierarchy="tertiary-gray" aria-label="Add"><Plus /></Button>
-              <Button iconOnly hierarchy="destructive-primary" aria-label="Delete"><Trash /></Button>
-            </div>
-          </Block>
-          <Block title="With icons">
-            <div className="flex flex-wrap gap-3">
-              <Button leadingIcon={<Plus />}>New application</Button>
-              <Button hierarchy="secondary-gray" leadingIcon={<Download />}>Export CSV</Button>
-              <Button hierarchy="secondary-gray" leadingIcon={<Upload />}>Import</Button>
+      <PageHeader
+        title="Buttons"
+        subtitle="13 patterns · 10 hierarchies × 5 sizes · leading/trailing icons · loading + disabled · destructive trio"
+      />
+      <div className="space-y-4">
+          {/* 01 · Primary buttons — solid (default) + gradient (opt-in for hero CTAs) */}
+          <NumberedSection num={1} title="Primary buttons" description="Solid for everyday · gradient for hero CTAs" usage={BTN_USAGE[1]}>
+            <SubGroup label="Solid · default for tables, forms, dialogs">
+              {BTN_SIZES.map((s) => (
+                <Button key={s} hierarchy="primary" size={s}>{BTN_SIZE_LABEL[s]}</Button>
+              ))}
+            </SubGroup>
+            <SubGroup label="Gradient · opt-in for hero/landing CTAs · #FF7918 → #E5610A">
+              {BTN_SIZES.map((s) => (
+                <Button key={s} hierarchy="primary-gradient" size={s}>{BTN_SIZE_LABEL[s]}</Button>
+              ))}
+            </SubGroup>
+          </NumberedSection>
+
+          {/* 02 · Secondary buttons */}
+          <NumberedSection num={2} title="Secondary buttons" description="Gray for cancel · brand-tint for on-brand emphasis" usage={BTN_USAGE[2]}>
+            <SubGroup label="Secondary gray">
+              {BTN_SIZES.map((s) => (
+                <Button key={s} hierarchy="secondary-gray" size={s}>{BTN_SIZE_LABEL[s]}</Button>
+              ))}
+            </SubGroup>
+            <SubGroup label="Secondary color">
+              {BTN_SIZES.map((s) => (
+                <Button key={s} hierarchy="secondary-color" size={s}>{BTN_SIZE_LABEL[s]}</Button>
+              ))}
+            </SubGroup>
+          </NumberedSection>
+
+          {/* 03 · Tertiary buttons */}
+          <NumberedSection num={3} title="Tertiary buttons" description="Ghost · low-emphasis actions" usage={BTN_USAGE[3]}>
+            <SubGroup label="Tertiary gray">
+              {BTN_SIZES.map((s) => (
+                <Button key={s} hierarchy="tertiary-gray" size={s}>{BTN_SIZE_LABEL[s]}</Button>
+              ))}
+            </SubGroup>
+            <SubGroup label="Tertiary color">
+              {BTN_SIZES.map((s) => (
+                <Button key={s} hierarchy="tertiary-color" size={s}>{BTN_SIZE_LABEL[s]}</Button>
+              ))}
+            </SubGroup>
+          </NumberedSection>
+
+          {/* 04 · Link color */}
+          <NumberedSection num={4} title="Link color buttons" description="Inline brand-colored text actions" usage={BTN_USAGE[4]}>
+            <BtnRow>
+              {BTN_SIZES.map((s) => (
+                <Button key={s} hierarchy="link-color" size={s}>{BTN_SIZE_LABEL[s]}</Button>
+              ))}
+            </BtnRow>
+          </NumberedSection>
+
+          {/* 05 · Link gray */}
+          <NumberedSection num={5} title="Link gray buttons" description="Inline gray-colored text actions" usage={BTN_USAGE[5]}>
+            <BtnRow>
+              {BTN_SIZES.map((s) => (
+                <Button key={s} hierarchy="link-gray" size={s}>{BTN_SIZE_LABEL[s]}</Button>
+              ))}
+            </BtnRow>
+          </NumberedSection>
+
+          {/* 06 · Icon leading */}
+          <NumberedSection num={6} title="Icon leading buttons" description="Icon on the left · label on the right" usage={BTN_USAGE[6]}>
+            <SubGroup label="All sizes (primary)">
+              {BTN_SIZES.map((s) => (
+                <Button key={s} hierarchy="primary" size={s} leadingIcon={<Plus />}>{BTN_SIZE_LABEL[s]}</Button>
+              ))}
+            </SubGroup>
+            <SubGroup label="Across hierarchies">
+              <Button hierarchy="primary"         leadingIcon={<Plus />}>New application</Button>
+              <Button hierarchy="secondary-gray"  leadingIcon={<Download />}>Export CSV</Button>
               <Button hierarchy="secondary-color" leadingIcon={<Stars01 />}>Run AI Decision</Button>
-              <Button hierarchy="secondary-gray" trailingIcon={<ChevronDown />}>Last 30 days</Button>
-            </div>
-          </Block>
-          <Block title="States">
-            <div className="flex flex-wrap items-center gap-3">
-              <Button>Default</Button>
-              <Button loading>Loading</Button>
-              <Button disabled>Disabled</Button>
-              <Button hierarchy="destructive-primary" loading>Deleting</Button>
-            </div>
-          </Block>
-        </CardContent>
-      </Card>
+              <Button hierarchy="tertiary-gray"   leadingIcon={<ArrowRight />}>Continue</Button>
+              <Button hierarchy="link-color"      leadingIcon={<Plus />}>Add project</Button>
+            </SubGroup>
+          </NumberedSection>
+
+          {/* 07 · Icon trailing */}
+          <NumberedSection num={7} title="Icon trailing buttons" description="Label on the left · icon on the right" usage={BTN_USAGE[7]}>
+            <SubGroup label="All sizes (primary)">
+              {BTN_SIZES.map((s) => (
+                <Button key={s} hierarchy="primary" size={s} trailingIcon={<ArrowRight />}>{BTN_SIZE_LABEL[s]}</Button>
+              ))}
+            </SubGroup>
+            <SubGroup label="Across hierarchies">
+              <Button hierarchy="primary"         trailingIcon={<ArrowRight />}>Continue</Button>
+              <Button hierarchy="secondary-gray"  trailingIcon={<ArrowRight />}>Learn more</Button>
+              <Button hierarchy="secondary-color" trailingIcon={<ArrowRight />}>See details</Button>
+              <Button hierarchy="tertiary-color"  trailingIcon={<ArrowRight />}>Next step</Button>
+              <Button hierarchy="link-color"      trailingIcon={<ArrowRight />}>View report</Button>
+            </SubGroup>
+          </NumberedSection>
+
+          {/* 08 · Icon only */}
+          <NumberedSection num={8} title="Icon only buttons" description="Compact · square · matches size across sm → 2xl" usage={BTN_USAGE[8]}>
+            <SubGroup label="All sizes (primary)">
+              {BTN_SIZES.map((s) => (
+                <Button key={s} hierarchy="primary" size={s} iconOnly aria-label="Add"><Plus /></Button>
+              ))}
+            </SubGroup>
+            <SubGroup label="Across hierarchies">
+              <Button hierarchy="primary"             iconOnly aria-label="Add"><Plus /></Button>
+              <Button hierarchy="secondary-gray"      iconOnly aria-label="Add"><Plus /></Button>
+              <Button hierarchy="secondary-color"     iconOnly aria-label="Run"><Stars01 /></Button>
+              <Button hierarchy="tertiary-gray"       iconOnly aria-label="Add"><Plus /></Button>
+              <Button hierarchy="destructive-primary" iconOnly aria-label="Delete"><Trash /></Button>
+            </SubGroup>
+          </NumberedSection>
+
+          {/* 09 · Loading */}
+          <NumberedSection num={9} title="Loading buttons" description="Spinner replaces the icon · button stays same width" usage={BTN_USAGE[9]}>
+            <SubGroup label="All sizes (primary)">
+              {BTN_SIZES.map((s) => (
+                <Button key={s} hierarchy="primary" size={s} loading>{BTN_SIZE_LABEL[s]}</Button>
+              ))}
+            </SubGroup>
+            <SubGroup label="Across hierarchies">
+              <Button hierarchy="primary"             loading>Saving…</Button>
+              <Button hierarchy="secondary-gray"      loading>Loading…</Button>
+              <Button hierarchy="secondary-color"     loading>Running…</Button>
+              <Button hierarchy="tertiary-gray"       loading>Loading…</Button>
+              <Button hierarchy="destructive-primary" loading>Deleting…</Button>
+            </SubGroup>
+          </NumberedSection>
+
+          {/* 10 · Disabled */}
+          <NumberedSection num={10} title="Disabled buttons" description="Non-interactive · reduced contrast · same layout as enabled" usage={BTN_USAGE[10]}>
+            <SubGroup label="All sizes (primary)">
+              {BTN_SIZES.map((s) => (
+                <Button key={s} hierarchy="primary" size={s} disabled>{BTN_SIZE_LABEL[s]}</Button>
+              ))}
+            </SubGroup>
+            <SubGroup label="Across hierarchies">
+              <Button hierarchy="primary"             disabled>Save</Button>
+              <Button hierarchy="secondary-gray"      disabled>Cancel</Button>
+              <Button hierarchy="secondary-color"     disabled>Continue</Button>
+              <Button hierarchy="tertiary-gray"       disabled>More</Button>
+              <Button hierarchy="destructive-primary" disabled>Delete</Button>
+              <Button hierarchy="link-color"          disabled>Skip</Button>
+            </SubGroup>
+          </NumberedSection>
+
+          {/* 11 · Destructive primary */}
+          <NumberedSection num={11} title="Destructive primary" description="Filled red · irreversible actions like delete" usage={BTN_USAGE[11]}>
+            <BtnRow>
+              {BTN_SIZES.map((s) => (
+                <Button key={s} hierarchy="destructive-primary" size={s}>Delete</Button>
+              ))}
+            </BtnRow>
+          </NumberedSection>
+
+          {/* 12 · Destructive secondary */}
+          <NumberedSection num={12} title="Destructive secondary" description="Outlined red · dangerous but reversible" usage={BTN_USAGE[12]}>
+            <BtnRow>
+              {BTN_SIZES.map((s) => (
+                <Button key={s} hierarchy="destructive-secondary" size={s}>Delete</Button>
+              ))}
+            </BtnRow>
+          </NumberedSection>
+
+          {/* 13 · Destructive tertiary */}
+          <NumberedSection num={13} title="Destructive tertiary" description="Ghost red · low-emphasis destructive action" usage={BTN_USAGE[13]}>
+            <BtnRow>
+              {BTN_SIZES.map((s) => (
+                <Button key={s} hierarchy="destructive-tertiary" size={s}>Delete</Button>
+              ))}
+            </BtnRow>
+          </NumberedSection>
+      </div>
     </section>
   );
 }

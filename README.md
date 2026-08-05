@@ -176,12 +176,33 @@ npm install && npm run dev
 
 ---
 
+## For engineers — using PULSE in your project
+
+👉 **See [`USAGE.md`](./USAGE.md)** — full setup guide with copy-paste examples.
+
+Quick summary: copy `src/tokens/`, `src/components/`, `src/icons/`, and `src/lib/cn.ts` into your project (`shadcn`-style), install ~10 runtime deps (`lucide-react`, `class-variance-authority`, `clsx`, `tailwind-merge`, a few `@radix-ui/*` packages), wire the design tokens into your `tailwind.config.ts`, and import:
+
+```tsx
+import { Button, Avatar, Card } from "@/components/ui";
+import { Mail } from "@/icons";
+
+<Card>
+  <Button hierarchy="primary" leadingIcon={<Mail />}>
+    Send invitation
+  </Button>
+</Card>
+```
+
+That's it. Full setup, dependency list, customization, and FAQ in [`USAGE.md`](./USAGE.md).
+
+---
+
 ## See also
 
-- **`CHANGELOG.md`** — chronological progress journal (each refresh + addition documented)
-- **`SHARING.md`** — how to deploy the preview so non-developers can browse without cloning
-- **`figma-export/FIGMA_SETUP.md`** — 3-step guide to import tokens + components into a Figma file
-- **Live preview** — see `SHARING.md` for the deployed URL (if applicable)
+- **[`USAGE.md`](./USAGE.md)** — how engineers consume PULSE in their projects
+- **[`CHANGELOG.md`](./CHANGELOG.md)** — chronological progress journal
+- **[`SHARING.md`](./SHARING.md)** — deploy / share the preview
+- **[`figma-export/FIGMA_SETUP.md`](./figma-export/FIGMA_SETUP.md)** — import tokens + components into Figma
 
 ---
 

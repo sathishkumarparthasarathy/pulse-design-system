@@ -886,81 +886,525 @@
   <section class="mb-20" data-page="buttons">
     <div class="mb-6">
       <h2 class="text-display-xs font-semibold text-gray-900">Buttons</h2>
-      <p class="text-text-md text-gray-600 mt-1">10 hierarchies × 5 sizes · groups, social, close · signature shadow-xs · 4px focus rings</p>
+      <p class="text-text-md text-gray-600 mt-1">13 patterns · 10 hierarchies × 5 sizes · leading/trailing icons · loading + disabled · destructive trio</p>
     </div>
-    <div class="bg-white border border-gray-200 rounded-xl shadow-xs">
-      <div class="px-6 py-6 space-y-8">
 
+    <!-- Brand shade explorer — decide primary button color -->
+    <div class="bg-gradient-to-br from-brand-25 to-white border-2 border-brand-200 rounded-xl shadow-sm mb-6 overflow-hidden" hidden>
+      <div class="px-6 py-5 border-b border-brand-200 bg-brand-25">
+        <div class="flex items-center gap-2 mb-1">
+          <span class="inline-flex items-center h-5 px-2 text-[10px] font-bold uppercase tracking-wider rounded bg-brand-600 text-white">Design decision</span>
+          <h3 class="text-base font-semibold text-gray-900">Which brand shade should the primary button use?</h3>
+        </div>
+        <p class="text-xs text-gray-600">Your anchor is <span class="font-mono font-semibold text-brand-700">#FF7918</span>. The primary button currently uses a darker sibling for WCAG contrast. Compare below.</p>
+      </div>
+      <div class="px-6 py-6 space-y-6">
+
+        <!-- Option A — current (shipping) -->
         <div>
-          <div class="text-text-xs font-semibold uppercase tracking-wider text-gray-500 mb-3">Hierarchy</div>
-          <div class="flex flex-wrap gap-3">
-            <button class="inline-flex items-center justify-center gap-1.5 h-10 px-4 text-sm font-semibold rounded-md bg-brand-600 text-white border border-brand-600 shadow-xs hover:bg-brand-700">Primary</button>
-            <button class="inline-flex items-center justify-center gap-1.5 h-10 px-4 text-sm font-semibold rounded-md bg-white text-gray-700 border border-gray-300 shadow-xs hover:bg-gray-50">Secondary gray</button>
-            <button class="inline-flex items-center justify-center gap-1.5 h-10 px-4 text-sm font-semibold rounded-md bg-brand-50 text-brand-700 border border-brand-50 shadow-xs hover:bg-brand-100">Secondary color</button>
-            <button class="inline-flex items-center justify-center gap-1.5 h-10 px-4 text-sm font-semibold rounded-md bg-transparent text-gray-600 hover:bg-gray-50">Tertiary gray</button>
-            <button class="inline-flex items-center justify-center gap-1.5 h-10 px-4 text-sm font-semibold rounded-md bg-transparent text-brand-700 hover:bg-brand-50">Tertiary color</button>
-            <button class="inline-flex items-center text-sm font-semibold text-gray-600 hover:text-gray-800">Link gray</button>
-            <button class="inline-flex items-center text-sm font-semibold text-brand-700 hover:text-brand-800">Link color</button>
+          <div class="flex items-baseline justify-between mb-3">
+            <div class="flex items-center gap-3">
+              <span class="inline-flex items-center justify-center h-6 w-6 rounded-full bg-success-600 text-white text-xs font-bold">A</span>
+              <div>
+                <div class="text-sm font-semibold text-gray-900">Current · <span class="font-mono">brand-600 #E5610A</span> + white text</div>
+                <div class="text-xs text-success-700 font-medium">✓ Passes WCAG AA · shipping today</div>
+              </div>
+            </div>
+            <span class="text-[10px] uppercase tracking-wider text-gray-400 font-semibold">Recommended</span>
+          </div>
+          <div class="flex flex-wrap items-center gap-3 pl-9">
+            <button class="inline-flex items-center justify-center gap-1.5 h-9 px-3.5 text-sm font-semibold rounded-md bg-brand-600 text-white border border-brand-600 shadow-xs hover:bg-brand-700">Small</button>
+            <button class="inline-flex items-center justify-center gap-1.5 h-10 px-4 text-sm font-semibold rounded-md bg-brand-600 text-white border border-brand-600 shadow-xs hover:bg-brand-700">Save changes</button>
+            <button class="inline-flex items-center justify-center gap-1.5 h-11 px-[18px] text-base font-semibold rounded-md bg-brand-600 text-white border border-brand-600 shadow-xs hover:bg-brand-700">Continue</button>
+            <button class="inline-flex items-center justify-center gap-1.5 h-12 px-5 text-base font-semibold rounded-md bg-brand-600 text-white border border-brand-600 shadow-xs hover:bg-brand-700">Get started →</button>
           </div>
         </div>
 
+        <!-- Option B — bold brand-forward -->
         <div>
-          <div class="text-text-xs font-semibold uppercase tracking-wider text-gray-500 mb-3">Destructive</div>
-          <div class="flex flex-wrap gap-3">
-            <button class="inline-flex items-center justify-center gap-1.5 h-10 px-4 text-sm font-semibold rounded-md bg-error-600 text-white border border-error-600 shadow-xs hover:bg-error-700">Delete project</button>
-            <button class="inline-flex items-center justify-center gap-1.5 h-10 px-4 text-sm font-semibold rounded-md bg-white text-error-700 border border-error-300 shadow-xs hover:bg-error-50">Delete project</button>
-            <button class="inline-flex items-center justify-center gap-1.5 h-10 px-4 text-sm font-semibold rounded-md bg-transparent text-error-700 hover:bg-error-50">Delete project</button>
+          <div class="flex items-baseline justify-between mb-3">
+            <div class="flex items-center gap-3">
+              <span class="inline-flex items-center justify-center h-6 w-6 rounded-full bg-brand-600 text-white text-xs font-bold">B</span>
+              <div>
+                <div class="text-sm font-semibold text-gray-900">Bold · <span class="font-mono">brand-500 #FF7918</span> + <span class="font-mono">brand-950</span> text</div>
+                <div class="text-xs text-success-700 font-medium">✓ Passes WCAG AA · brighter, more brand-forward</div>
+              </div>
+            </div>
+            <span class="text-[10px] uppercase tracking-wider text-gray-400 font-semibold">Compare</span>
+          </div>
+          <div class="flex flex-wrap items-center gap-3 pl-9">
+            <button class="inline-flex items-center justify-center gap-1.5 h-9 px-3.5 text-sm font-semibold rounded-md bg-brand-500 text-brand-950 border border-brand-500 shadow-xs hover:bg-brand-400">Small</button>
+            <button class="inline-flex items-center justify-center gap-1.5 h-10 px-4 text-sm font-semibold rounded-md bg-brand-500 text-brand-950 border border-brand-500 shadow-xs hover:bg-brand-400">Save changes</button>
+            <button class="inline-flex items-center justify-center gap-1.5 h-11 px-[18px] text-base font-semibold rounded-md bg-brand-500 text-brand-950 border border-brand-500 shadow-xs hover:bg-brand-400">Continue</button>
+            <button class="inline-flex items-center justify-center gap-1.5 h-12 px-5 text-base font-semibold rounded-md bg-brand-500 text-brand-950 border border-brand-500 shadow-xs hover:bg-brand-400">Get started →</button>
           </div>
         </div>
 
+        <!-- Option C — reference, fails WCAG -->
         <div>
-          <div class="text-text-xs font-semibold uppercase tracking-wider text-gray-500 mb-3">Sizes</div>
-          <div class="flex flex-wrap items-center gap-3">
-            <button class="inline-flex items-center justify-center gap-1.5 h-9 px-3.5 text-sm font-semibold rounded-md bg-brand-600 text-white border border-brand-600 shadow-xs hover:bg-brand-700">Small (sm)</button>
-            <button class="inline-flex items-center justify-center gap-1.5 h-10 px-4 text-sm font-semibold rounded-md bg-brand-600 text-white border border-brand-600 shadow-xs hover:bg-brand-700">Medium (md)</button>
-            <button class="inline-flex items-center justify-center gap-1.5 h-11 px-[18px] text-base font-semibold rounded-md bg-brand-600 text-white border border-brand-600 shadow-xs hover:bg-brand-700">Large (lg)</button>
-            <button class="inline-flex items-center justify-center gap-1.5 h-12 px-5 text-base font-semibold rounded-md bg-brand-600 text-white border border-brand-600 shadow-xs hover:bg-brand-700">Extra Large (xl)</button>
-            <button class="inline-flex items-center justify-center gap-1.5 h-[60px] px-7 text-lg font-semibold rounded-md bg-brand-600 text-white border border-brand-600 shadow-xs hover:bg-brand-700">2XL</button>
+          <div class="flex items-baseline justify-between mb-3">
+            <div class="flex items-center gap-3">
+              <span class="inline-flex items-center justify-center h-6 w-6 rounded-full bg-error-600 text-white text-xs font-bold">C</span>
+              <div>
+                <div class="text-sm font-semibold text-gray-900">Reference · <span class="font-mono">brand-500 #FF7918</span> + white text</div>
+                <div class="text-xs text-error-700 font-medium">✗ Fails WCAG AA — shown only for comparison, do not ship</div>
+              </div>
+            </div>
+            <span class="text-[10px] uppercase tracking-wider text-gray-400 font-semibold">Reject</span>
+          </div>
+          <div class="flex flex-wrap items-center gap-3 pl-9">
+            <button class="inline-flex items-center justify-center gap-1.5 h-9 px-3.5 text-sm font-semibold rounded-md bg-brand-500 text-white border border-brand-500 shadow-xs">Small</button>
+            <button class="inline-flex items-center justify-center gap-1.5 h-10 px-4 text-sm font-semibold rounded-md bg-brand-500 text-white border border-brand-500 shadow-xs">Save changes</button>
+            <button class="inline-flex items-center justify-center gap-1.5 h-11 px-[18px] text-base font-semibold rounded-md bg-brand-500 text-white border border-brand-500 shadow-xs">Continue</button>
+            <button class="inline-flex items-center justify-center gap-1.5 h-12 px-5 text-base font-semibold rounded-md bg-brand-500 text-white border border-brand-500 shadow-xs">Get started →</button>
           </div>
         </div>
 
-        <div>
-          <div class="text-text-xs font-semibold uppercase tracking-wider text-gray-500 mb-3">With icons</div>
-          <div class="flex flex-wrap gap-3">
-            <button class="inline-flex items-center justify-center gap-1.5 h-10 px-4 text-sm font-semibold rounded-md bg-brand-600 text-white border border-brand-600 shadow-xs hover:bg-brand-700">
-              <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
-              New application
-            </button>
-            <button class="inline-flex items-center justify-center gap-1.5 h-10 px-4 text-sm font-semibold rounded-md bg-white text-gray-700 border border-gray-300 shadow-xs hover:bg-gray-50">
-              <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-              Export CSV
-            </button>
-            <button class="inline-flex items-center justify-center gap-1.5 h-10 px-4 text-sm font-semibold rounded-md bg-brand-50 text-brand-700 border border-brand-50 shadow-xs hover:bg-brand-100">
-              <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4M13 3l2.5 6.5L22 12l-6.5 2.5L13 21l-2.5-6.5L4 12l6.5-2.5z"/></svg>
-              Run AI Decision
-            </button>
-            <button aria-label="Add" class="inline-flex items-center justify-center h-10 w-10 rounded-md bg-brand-600 text-white border border-brand-600 shadow-xs hover:bg-brand-700">
-              <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
-            </button>
+        <!-- Side-by-side on-page context -->
+        <div class="pt-4 border-t border-brand-100">
+          <div class="text-xs font-semibold text-gray-700 mb-3">In-context — a form CTA</div>
+          <div class="grid md:grid-cols-2 gap-3">
+            <div class="rounded-lg border border-gray-200 bg-gray-50 p-5">
+              <div class="text-[10px] uppercase tracking-wider text-gray-500 font-semibold mb-3">Option A</div>
+              <div class="rounded-md bg-white border border-gray-200 p-4">
+                <div class="text-sm font-semibold text-gray-900 mb-1">Complete your profile</div>
+                <div class="text-xs text-gray-500 mb-3">Add a display name and photo to help teammates find you.</div>
+                <div class="flex gap-2">
+                  <button class="h-9 px-3.5 text-sm font-semibold rounded-md bg-white text-gray-700 border border-gray-300 shadow-xs">Skip</button>
+                  <button class="h-9 px-3.5 text-sm font-semibold rounded-md bg-brand-600 text-white border border-brand-600 shadow-xs">Save profile</button>
+                </div>
+              </div>
+            </div>
+            <div class="rounded-lg border border-gray-200 bg-gray-50 p-5">
+              <div class="text-[10px] uppercase tracking-wider text-gray-500 font-semibold mb-3">Option B</div>
+              <div class="rounded-md bg-white border border-gray-200 p-4">
+                <div class="text-sm font-semibold text-gray-900 mb-1">Complete your profile</div>
+                <div class="text-xs text-gray-500 mb-3">Add a display name and photo to help teammates find you.</div>
+                <div class="flex gap-2">
+                  <button class="h-9 px-3.5 text-sm font-semibold rounded-md bg-white text-gray-700 border border-gray-300 shadow-xs">Skip</button>
+                  <button class="h-9 px-3.5 text-sm font-semibold rounded-md bg-brand-500 text-brand-950 border border-brand-500 shadow-xs">Save profile</button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div>
-          <div class="text-text-xs font-semibold uppercase tracking-wider text-gray-500 mb-3">States</div>
-          <div class="flex flex-wrap gap-3 items-center">
-            <button class="inline-flex items-center justify-center h-10 px-4 text-sm font-semibold rounded-md bg-brand-600 text-white border border-brand-600 shadow-xs">Default</button>
-            <button class="inline-flex items-center justify-center h-10 px-4 text-sm font-semibold rounded-md bg-brand-700 text-white border border-brand-700 shadow-xs">Hover</button>
-            <button class="inline-flex items-center justify-center h-10 px-4 text-sm font-semibold rounded-md bg-brand-600 text-white border border-brand-600 shadow-ring-brand">Focused</button>
-            <button class="inline-flex items-center gap-1.5 h-10 px-4 text-sm font-semibold rounded-md bg-brand-600 text-white border border-brand-600 shadow-xs">
-              <svg class="h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path></svg>
-              Loading
-            </button>
-            <button disabled class="inline-flex items-center justify-center h-10 px-4 text-sm font-semibold rounded-md bg-gray-100 text-gray-400 border border-gray-200 cursor-not-allowed">Disabled</button>
-          </div>
+        <!-- Decision hint -->
+        <div class="rounded-md bg-gray-50 border border-gray-200 px-4 py-3 text-xs text-gray-600 leading-relaxed">
+          <span class="font-semibold text-gray-900">How to decide:</span>
+          Option A is safer for enterprise/regulated buyers — high contrast, calm, professional.
+          Option B is more expressive and matches marketing surfaces — better if your customers are consumer-adjacent SaaS.
+          Both pass WCAG AA. Once you pick, I'll flip <code class="font-mono text-brand-700 bg-white px-1 rounded">brand-600</code> → <code class="font-mono text-brand-700 bg-white px-1 rounded">brand-500 + brand-950</code> in <a href="src/components/Button.tsx" class="text-brand-700 underline">Button.tsx</a> and mirror it across the static preview + React showcase.
         </div>
-
       </div>
     </div>
+
+    <!-- Gradient CTA explorer -->
+    <div class="bg-gradient-to-br from-brand-25 to-white border-2 border-brand-200 rounded-xl shadow-sm mb-6 overflow-hidden" hidden>
+      <div class="px-6 py-5 border-b border-brand-200 bg-brand-25">
+        <div class="flex items-center gap-2 mb-1">
+          <span class="inline-flex items-center h-5 px-2 text-[10px] font-bold uppercase tracking-wider rounded bg-brand-600 text-white">Exploration</span>
+          <h3 class="text-base font-semibold text-gray-900">Gradient primary CTA</h3>
+        </div>
+        <p class="text-xs text-gray-600">Should the primary button use a gradient instead of a solid fill? Compare five options — each still uses your anchor <span class="font-mono font-semibold text-brand-700">#FF7918</span> somewhere in the stops. All pass WCAG AA with white text.</p>
+      </div>
+
+      <div class="px-6 py-6 space-y-6">
+
+        <!-- G0 · Solid baseline -->
+        <div>
+          <div class="flex items-baseline gap-3 mb-3">
+            <span class="inline-flex items-center justify-center h-6 w-6 rounded-full bg-gray-500 text-white text-xs font-bold">0</span>
+            <div>
+              <div class="text-sm font-semibold text-gray-900">Solid · baseline (current)</div>
+              <div class="text-xs text-gray-500">Reference: no gradient · <span class="font-mono">brand-600</span></div>
+            </div>
+          </div>
+          <div class="flex flex-wrap items-center gap-3 pl-9">
+            <button class="inline-flex items-center justify-center h-10 px-4 text-sm font-semibold rounded-md bg-brand-600 text-white border border-brand-600 shadow-xs">Save changes</button>
+            <button class="inline-flex items-center justify-center h-12 px-6 text-base font-semibold rounded-md bg-brand-600 text-white border border-brand-600 shadow-sm">Get started →</button>
+          </div>
+        </div>
+
+        <!-- G1 · Vertical brand — subtle depth -->
+        <div>
+          <div class="flex items-baseline gap-3 mb-3">
+            <span class="inline-flex items-center justify-center h-6 w-6 rounded-full bg-brand-600 text-white text-xs font-bold">1</span>
+            <div>
+              <div class="text-sm font-semibold text-gray-900">Vertical brand · subtle depth</div>
+              <div class="text-xs text-gray-500"><span class="font-mono">linear-gradient(180deg, #FF7918 → #E5610A)</span> · light top, warm bottom</div>
+            </div>
+          </div>
+          <div class="flex flex-wrap items-center gap-3 pl-9">
+            <button class="inline-flex items-center justify-center h-10 px-4 text-sm font-semibold rounded-md text-white border shadow-xs hover:brightness-95 transition" style="background: linear-gradient(180deg, #FF7918 0%, #E5610A 100%); border-color: #C55206;">Save changes</button>
+            <button class="inline-flex items-center justify-center h-12 px-6 text-base font-semibold rounded-md text-white border shadow-sm hover:brightness-95 transition" style="background: linear-gradient(180deg, #FF7918 0%, #E5610A 100%); border-color: #C55206;">Get started →</button>
+          </div>
+        </div>
+
+        <!-- G2 · Diagonal warm — energetic -->
+        <div>
+          <div class="flex items-baseline gap-3 mb-3">
+            <span class="inline-flex items-center justify-center h-6 w-6 rounded-full bg-brand-500 text-brand-950 text-xs font-bold">2</span>
+            <div>
+              <div class="text-sm font-semibold text-gray-900">Diagonal warm · energetic</div>
+              <div class="text-xs text-gray-500"><span class="font-mono">linear-gradient(135deg, #FFA168 → #BB4D08)</span> · light corner → deep corner</div>
+            </div>
+          </div>
+          <div class="flex flex-wrap items-center gap-3 pl-9">
+            <button class="inline-flex items-center justify-center h-10 px-4 text-sm font-semibold rounded-md text-white border shadow-xs hover:brightness-95 transition" style="background: linear-gradient(135deg, #FFA168 0%, #BB4D08 100%); border-color: #91380B;">Save changes</button>
+            <button class="inline-flex items-center justify-center h-12 px-6 text-base font-semibold rounded-md text-white border shadow-sm hover:brightness-95 transition" style="background: linear-gradient(135deg, #FFA168 0%, #BB4D08 100%); border-color: #91380B;">Get started →</button>
+          </div>
+        </div>
+
+        <!-- G3 · Deep brand — dramatic -->
+        <div>
+          <div class="flex items-baseline gap-3 mb-3">
+            <span class="inline-flex items-center justify-center h-6 w-6 rounded-full bg-brand-700 text-white text-xs font-bold">3</span>
+            <div>
+              <div class="text-sm font-semibold text-gray-900">Deep brand · dramatic</div>
+              <div class="text-xs text-gray-500"><span class="font-mono">linear-gradient(135deg, #FF7918 → #6D2D0E)</span> · your anchor → deep espresso</div>
+            </div>
+          </div>
+          <div class="flex flex-wrap items-center gap-3 pl-9">
+            <button class="inline-flex items-center justify-center h-10 px-4 text-sm font-semibold rounded-md text-white border shadow-xs hover:brightness-95 transition" style="background: linear-gradient(135deg, #FF7918 0%, #6D2D0E 100%); border-color: #4A1F0A;">Save changes</button>
+            <button class="inline-flex items-center justify-center h-12 px-6 text-base font-semibold rounded-md text-white border shadow-sm hover:brightness-95 transition" style="background: linear-gradient(135deg, #FF7918 0%, #6D2D0E 100%); border-color: #4A1F0A;">Get started →</button>
+          </div>
+        </div>
+
+        <!-- G4 · Sunset — brand → warm neighbor -->
+        <div>
+          <div class="flex items-baseline gap-3 mb-3">
+            <span class="inline-flex items-center justify-center h-6 w-6 rounded-full text-white text-xs font-bold" style="background: linear-gradient(135deg, #FF7918 0%, #D92D20 100%);">4</span>
+            <div>
+              <div class="text-sm font-semibold text-gray-900">Sunset · brand → red-orange</div>
+              <div class="text-xs text-gray-500"><span class="font-mono">linear-gradient(90deg, #FF7918 → #D92D20)</span> · bolder, marketing energy</div>
+            </div>
+          </div>
+          <div class="flex flex-wrap items-center gap-3 pl-9">
+            <button class="inline-flex items-center justify-center h-10 px-4 text-sm font-semibold rounded-md text-white border shadow-xs hover:brightness-95 transition" style="background: linear-gradient(90deg, #FF7918 0%, #D92D20 100%); border-color: #B42318;">Save changes</button>
+            <button class="inline-flex items-center justify-center h-12 px-6 text-base font-semibold rounded-md text-white border shadow-sm hover:brightness-95 transition" style="background: linear-gradient(90deg, #FF7918 0%, #D92D20 100%); border-color: #B42318;">Get started →</button>
+          </div>
+        </div>
+
+        <!-- G5 · Glossy — inner highlight over solid brand -->
+        <div>
+          <div class="flex items-baseline gap-3 mb-3">
+            <span class="inline-flex items-center justify-center h-6 w-6 rounded-full text-white text-xs font-bold" style="background: linear-gradient(180deg, rgba(255,255,255,0.4) 0%, transparent 60%), #FF7918;">5</span>
+            <div>
+              <div class="text-sm font-semibold text-gray-900">Glossy · inner top highlight</div>
+              <div class="text-xs text-gray-500"><span class="font-mono">rgba(255,255,255,0.18) top-fade over #FF7918</span> · Apple/Stripe polish</div>
+            </div>
+          </div>
+          <div class="flex flex-wrap items-center gap-3 pl-9">
+            <button class="inline-flex items-center justify-center h-10 px-4 text-sm font-semibold rounded-md text-white border shadow-xs hover:brightness-95 transition" style="background: linear-gradient(180deg, rgba(255,255,255,0.22) 0%, rgba(255,255,255,0) 60%), #FF7918; border-color: #C55206; box-shadow: inset 0 1px 0 rgba(255,255,255,0.25), 0 1px 2px rgba(0,0,0,0.05);">Save changes</button>
+            <button class="inline-flex items-center justify-center h-12 px-6 text-base font-semibold rounded-md text-white border shadow-sm hover:brightness-95 transition" style="background: linear-gradient(180deg, rgba(255,255,255,0.22) 0%, rgba(255,255,255,0) 60%), #FF7918; border-color: #C55206; box-shadow: inset 0 1px 0 rgba(255,255,255,0.3), 0 2px 6px rgba(0,0,0,0.08);">Get started →</button>
+          </div>
+        </div>
+
+        <!-- In-context comparison -->
+        <div class="pt-4 border-t border-brand-100">
+          <div class="text-xs font-semibold text-gray-700 mb-3">In-context — hero CTA on a landing page</div>
+          <div class="grid md:grid-cols-3 gap-3">
+            <div class="rounded-lg border border-gray-200 bg-gradient-to-br from-gray-50 to-white p-5">
+              <div class="text-[10px] uppercase tracking-wider text-gray-500 font-semibold mb-3">0 · Solid</div>
+              <div class="text-sm font-semibold text-gray-900 mb-1">Ship faster with PULSE.</div>
+              <div class="text-xs text-gray-500 mb-4">The B2B design system your team already knows.</div>
+              <button class="inline-flex items-center gap-2 h-11 px-5 text-sm font-semibold rounded-md bg-brand-600 text-white shadow-xs">Start free trial →</button>
+            </div>
+            <div class="rounded-lg border border-gray-200 bg-gradient-to-br from-gray-50 to-white p-5">
+              <div class="text-[10px] uppercase tracking-wider text-gray-500 font-semibold mb-3">1 · Vertical</div>
+              <div class="text-sm font-semibold text-gray-900 mb-1">Ship faster with PULSE.</div>
+              <div class="text-xs text-gray-500 mb-4">The B2B design system your team already knows.</div>
+              <button class="inline-flex items-center gap-2 h-11 px-5 text-sm font-semibold rounded-md text-white shadow-xs" style="background: linear-gradient(180deg, #FF7918 0%, #E5610A 100%);">Start free trial →</button>
+            </div>
+            <div class="rounded-lg border border-gray-200 bg-gradient-to-br from-gray-50 to-white p-5">
+              <div class="text-[10px] uppercase tracking-wider text-gray-500 font-semibold mb-3">3 · Deep</div>
+              <div class="text-sm font-semibold text-gray-900 mb-1">Ship faster with PULSE.</div>
+              <div class="text-xs text-gray-500 mb-4">The B2B design system your team already knows.</div>
+              <button class="inline-flex items-center gap-2 h-11 px-5 text-sm font-semibold rounded-md text-white shadow-xs" style="background: linear-gradient(135deg, #FF7918 0%, #6D2D0E 100%);">Start free trial →</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Decision hint -->
+        <div class="rounded-md bg-gray-50 border border-gray-200 px-4 py-3 text-xs text-gray-600 leading-relaxed">
+          <span class="font-semibold text-gray-900">How to decide:</span>
+          Reserve gradients for the <em>hero CTA</em> and marketing surfaces only — inline buttons on dense screens (tables, forms) still want solids for consistency.
+          <span class="font-semibold text-gray-900 block mt-2">Recommendation:</span>
+          Option <span class="font-semibold text-brand-700">1 (Vertical brand)</span> is the safest for a design system — subtle, uses your exact anchor, matches how enterprise SaaS (Linear, Stripe, Vercel) does it.
+          Option <span class="font-semibold text-brand-700">5 (Glossy)</span> is the most polished but reads as more consumer/premium.
+          <span class="font-semibold text-brand-700">3 (Deep)</span> reads as most brand-forward without feeling loud.
+          Once you pick, I can add a <code class="font-mono text-brand-700 bg-white px-1 rounded">hierarchy="primary-gradient"</code> variant to <a href="src/components/Button.tsx" class="text-brand-700 underline">Button.tsx</a> — keeps solid as the default and lets you opt-in per CTA.
+        </div>
+      </div>
+    </div>
+
+    <!-- Shadow explorer -->
+    <div class="bg-gradient-to-br from-brand-25 to-white border-2 border-brand-200 rounded-xl shadow-sm mb-6 overflow-hidden" hidden>
+      <div class="px-6 py-5 border-b border-brand-200 bg-brand-25">
+        <div class="flex items-center gap-2 mb-1">
+          <span class="inline-flex items-center h-5 px-2 text-[10px] font-bold uppercase tracking-wider rounded bg-brand-600 text-white">Exploration</span>
+          <h3 class="text-base font-semibold text-gray-900">Soft shadow options for buttons</h3>
+        </div>
+        <p class="text-xs text-gray-600">Same button, same colors — only the shadow changes. Compare at rest and hover.</p>
+      </div>
+
+      <div class="px-6 py-6 space-y-6">
+        <!-- 5 shadow options, same button per row -->
+
+        <!-- 0 · Current xs -->
+        <div class="grid md:grid-cols-[220px_1fr] gap-4 items-center">
+          <div>
+            <div class="flex items-center gap-2 mb-1">
+              <span class="inline-flex items-center justify-center h-6 w-6 rounded-full bg-gray-500 text-white text-xs font-bold">0</span>
+              <span class="text-sm font-semibold text-gray-900">shadow-xs</span>
+              <span class="text-[10px] uppercase tracking-wider text-gray-500 font-semibold ml-auto">Current</span>
+            </div>
+            <div class="text-[11px] text-gray-500 leading-relaxed">1px separator · no real depth · disappears against gray bg</div>
+          </div>
+          <div class="flex flex-wrap items-center gap-3 py-4 px-5 rounded-md bg-gray-50 border border-gray-100">
+            <button class="inline-flex items-center justify-center h-10 px-4 text-sm font-semibold rounded-md bg-brand-600 text-white" style="box-shadow: 0 1px 2px 0 rgba(16,24,40,0.05);">Save changes</button>
+            <button class="inline-flex items-center justify-center h-11 px-5 text-base font-semibold rounded-md text-white" style="background: linear-gradient(180deg, #FF7918 0%, #E5610A 100%); box-shadow: 0 1px 2px 0 rgba(16,24,40,0.05);">Get started →</button>
+          </div>
+        </div>
+
+        <!-- 1 · shadow-sm — soft depth -->
+        <div class="grid md:grid-cols-[220px_1fr] gap-4 items-center">
+          <div>
+            <div class="flex items-center gap-2 mb-1">
+              <span class="inline-flex items-center justify-center h-6 w-6 rounded-full bg-success-600 text-white text-xs font-bold">1</span>
+              <span class="text-sm font-semibold text-gray-900">shadow-sm</span>
+              <span class="text-[10px] uppercase tracking-wider text-success-700 font-semibold ml-auto">Balanced</span>
+            </div>
+            <div class="text-[11px] text-gray-500 leading-relaxed">Two-layer soft depth · grounded but not lifted · Linear-style</div>
+          </div>
+          <div class="flex flex-wrap items-center gap-3 py-4 px-5 rounded-md bg-gray-50 border border-gray-100">
+            <button class="inline-flex items-center justify-center h-10 px-4 text-sm font-semibold rounded-md bg-brand-600 text-white" style="box-shadow: 0 1px 2px 0 rgba(16,24,40,0.06), 0 1px 3px 0 rgba(16,24,40,0.10);">Save changes</button>
+            <button class="inline-flex items-center justify-center h-11 px-5 text-base font-semibold rounded-md text-white" style="background: linear-gradient(180deg, #FF7918 0%, #E5610A 100%); box-shadow: 0 1px 2px 0 rgba(16,24,40,0.06), 0 1px 3px 0 rgba(16,24,40,0.10);">Get started →</button>
+          </div>
+        </div>
+
+        <!-- 2 · shadow-md — lifted -->
+        <div class="grid md:grid-cols-[220px_1fr] gap-4 items-center">
+          <div>
+            <div class="flex items-center gap-2 mb-1">
+              <span class="inline-flex items-center justify-center h-6 w-6 rounded-full bg-brand-600 text-white text-xs font-bold">2</span>
+              <span class="text-sm font-semibold text-gray-900">shadow-md</span>
+              <span class="text-[10px] uppercase tracking-wider text-gray-500 font-semibold ml-auto">Lifted</span>
+            </div>
+            <div class="text-[11px] text-gray-500 leading-relaxed">Real elevation · button feels floating · matches card level</div>
+          </div>
+          <div class="flex flex-wrap items-center gap-3 py-4 px-5 rounded-md bg-gray-50 border border-gray-100">
+            <button class="inline-flex items-center justify-center h-10 px-4 text-sm font-semibold rounded-md bg-brand-600 text-white" style="box-shadow: 0 2px 4px -2px rgba(16,24,40,0.06), 0 4px 8px -2px rgba(16,24,40,0.10);">Save changes</button>
+            <button class="inline-flex items-center justify-center h-11 px-5 text-base font-semibold rounded-md text-white" style="background: linear-gradient(180deg, #FF7918 0%, #E5610A 100%); box-shadow: 0 2px 4px -2px rgba(16,24,40,0.06), 0 4px 8px -2px rgba(16,24,40,0.10);">Get started →</button>
+          </div>
+        </div>
+
+        <!-- 3 · Brand-tinted soft -->
+        <div class="grid md:grid-cols-[220px_1fr] gap-4 items-center">
+          <div>
+            <div class="flex items-center gap-2 mb-1">
+              <span class="inline-flex items-center justify-center h-6 w-6 rounded-full text-white text-xs font-bold" style="background: #E5610A;">3</span>
+              <span class="text-sm font-semibold text-gray-900">Brand-tinted</span>
+              <span class="text-[10px] uppercase tracking-wider text-brand-700 font-semibold ml-auto">Warm</span>
+            </div>
+            <div class="text-[11px] text-gray-500 leading-relaxed">Warm orange-tinted drop · on-brand emphasis · Stripe/Vercel look</div>
+          </div>
+          <div class="flex flex-wrap items-center gap-3 py-4 px-5 rounded-md bg-gray-50 border border-gray-100">
+            <button class="inline-flex items-center justify-center h-10 px-4 text-sm font-semibold rounded-md bg-brand-600 text-white" style="box-shadow: 0 2px 4px -2px rgba(255,121,24,0.20), 0 4px 12px -2px rgba(255,121,24,0.28);">Save changes</button>
+            <button class="inline-flex items-center justify-center h-11 px-5 text-base font-semibold rounded-md text-white" style="background: linear-gradient(180deg, #FF7918 0%, #E5610A 100%); box-shadow: 0 2px 4px -2px rgba(255,121,24,0.20), 0 4px 12px -2px rgba(255,121,24,0.28);">Get started →</button>
+          </div>
+        </div>
+
+        <!-- 4 · Hover-glow -->
+        <div class="grid md:grid-cols-[220px_1fr] gap-4 items-start">
+          <div>
+            <div class="flex items-center gap-2 mb-1">
+              <span class="inline-flex items-center justify-center h-6 w-6 rounded-full bg-brand-500 text-brand-950 text-xs font-bold">4</span>
+              <span class="text-sm font-semibold text-gray-900">Hover-glow</span>
+              <span class="text-[10px] uppercase tracking-wider text-gray-500 font-semibold ml-auto">Interactive</span>
+            </div>
+            <div class="text-[11px] text-gray-500 leading-relaxed">Rest: subtle · Hover: warm brand glow · hover any button →</div>
+          </div>
+          <div class="flex flex-wrap items-center gap-3 py-4 px-5 rounded-md bg-gray-50 border border-gray-100">
+            <button
+              class="inline-flex items-center justify-center h-10 px-4 text-sm font-semibold rounded-md bg-brand-600 text-white transition-shadow duration-200"
+              style="box-shadow: 0 1px 2px 0 rgba(16,24,40,0.05);"
+              onmouseover="this.style.boxShadow='0 4px 12px -2px rgba(255,121,24,0.35), 0 0 24px 0 rgba(255,121,24,0.25)'"
+              onmouseout="this.style.boxShadow='0 1px 2px 0 rgba(16,24,40,0.05)'"
+            >Save changes</button>
+            <button
+              class="inline-flex items-center justify-center h-11 px-5 text-base font-semibold rounded-md text-white transition-shadow duration-200"
+              style="background: linear-gradient(180deg, #FF7918 0%, #E5610A 100%); box-shadow: 0 1px 2px 0 rgba(16,24,40,0.05);"
+              onmouseover="this.style.boxShadow='0 4px 12px -2px rgba(255,121,24,0.35), 0 0 24px 0 rgba(255,121,24,0.25)'"
+              onmouseout="this.style.boxShadow='0 1px 2px 0 rgba(16,24,40,0.05)'"
+            >Get started →</button>
+          </div>
+        </div>
+
+        <!-- In-context CTA cards -->
+        <div class="pt-4 border-t border-brand-100">
+          <div class="text-xs font-semibold text-gray-700 mb-3">In-context — hero CTA on a page</div>
+          <div class="grid md:grid-cols-3 gap-3">
+            <div class="rounded-lg border border-gray-200 bg-white p-5">
+              <div class="text-[10px] uppercase tracking-wider text-gray-500 font-semibold mb-3">0 · Current (xs)</div>
+              <div class="text-sm font-semibold text-gray-900 mb-1">Ready to ship?</div>
+              <div class="text-xs text-gray-500 mb-4">Get started in under 60 seconds.</div>
+              <button class="inline-flex items-center gap-2 h-11 px-5 text-sm font-semibold rounded-md text-white" style="background: linear-gradient(180deg, #FF7918 0%, #E5610A 100%); box-shadow: 0 1px 2px 0 rgba(16,24,40,0.05);">Start free trial →</button>
+            </div>
+            <div class="rounded-lg border border-gray-200 bg-white p-5">
+              <div class="text-[10px] uppercase tracking-wider text-gray-500 font-semibold mb-3">1 · Soft (sm)</div>
+              <div class="text-sm font-semibold text-gray-900 mb-1">Ready to ship?</div>
+              <div class="text-xs text-gray-500 mb-4">Get started in under 60 seconds.</div>
+              <button class="inline-flex items-center gap-2 h-11 px-5 text-sm font-semibold rounded-md text-white" style="background: linear-gradient(180deg, #FF7918 0%, #E5610A 100%); box-shadow: 0 1px 2px 0 rgba(16,24,40,0.06), 0 1px 3px 0 rgba(16,24,40,0.10);">Start free trial →</button>
+            </div>
+            <div class="rounded-lg border border-gray-200 bg-white p-5">
+              <div class="text-[10px] uppercase tracking-wider text-gray-500 font-semibold mb-3">3 · Brand-tinted</div>
+              <div class="text-sm font-semibold text-gray-900 mb-1">Ready to ship?</div>
+              <div class="text-xs text-gray-500 mb-4">Get started in under 60 seconds.</div>
+              <button class="inline-flex items-center gap-2 h-11 px-5 text-sm font-semibold rounded-md text-white" style="background: linear-gradient(180deg, #FF7918 0%, #E5610A 100%); box-shadow: 0 2px 4px -2px rgba(255,121,24,0.20), 0 4px 12px -2px rgba(255,121,24,0.28);">Start free trial →</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Decision hint -->
+        <div class="rounded-md bg-gray-50 border border-gray-200 px-4 py-3 text-xs text-gray-600 leading-relaxed">
+          <span class="font-semibold text-gray-900">Recommendation:</span>
+          <span class="font-semibold text-brand-700">1 (shadow-sm)</span> as the new default for all filled buttons — grounded, matches your card shadow, works on both white and gray backgrounds.
+          Pair it with <span class="font-semibold text-brand-700">4 (hover-glow)</span> so hover feels tactile.
+          Save <span class="font-semibold text-brand-700">3 (brand-tinted)</span> for gradient hero CTAs only — it competes with content on data-dense pages.
+          Skip <span class="font-semibold text-brand-700">2 (shadow-md)</span> — too much elevation for inline actions.
+        </div>
+      </div>
+    </div>
+
+    <!-- Gradient angle explorer -->
+    <div class="bg-gradient-to-br from-brand-25 to-white border-2 border-brand-200 rounded-xl shadow-sm mb-6 overflow-hidden" hidden>
+      <div class="px-6 py-5 border-b border-brand-200 bg-brand-25">
+        <div class="flex items-center gap-2 mb-1">
+          <span class="inline-flex items-center h-5 px-2 text-[10px] font-bold uppercase tracking-wider rounded bg-brand-600 text-white">Exploration</span>
+          <h3 class="text-base font-semibold text-gray-900">Which gradient angle should <code class="font-mono text-brand-700 bg-white px-1.5 py-0.5 rounded text-xs">primary-gradient</code> use?</h3>
+        </div>
+        <p class="text-xs text-gray-600">Same colors (<span class="font-mono font-semibold text-brand-700">#FF7918 → #E5610A</span>) — only the angle changes. Compare at button + hero CTA scale below.</p>
+      </div>
+
+      <div class="px-6 py-6 space-y-6">
+        <!-- Angle grid — 4 options in a 2-column layout -->
+        <div class="grid md:grid-cols-2 gap-6">
+
+          <!-- A · 180° Vertical (current) -->
+          <div class="space-y-3">
+            <div class="flex items-baseline gap-3">
+              <span class="inline-flex items-center justify-center h-6 w-6 rounded-full bg-success-600 text-white text-xs font-bold">A</span>
+              <div class="flex-1">
+                <div class="text-sm font-semibold text-gray-900">180° · Vertical <span class="text-xs text-success-700 font-medium ml-1">(current)</span></div>
+                <div class="text-[11px] text-gray-500 font-mono">linear-gradient(180deg, #FF7918 0%, #E5610A 100%)</div>
+              </div>
+            </div>
+            <div class="pl-9 space-y-3">
+              <div class="flex flex-wrap items-center gap-2 whitespace-nowrap">
+                <button class="inline-flex items-center justify-center h-10 px-4 text-sm font-semibold rounded-md text-white shadow-xs" style="background: linear-gradient(180deg, #FF7918 0%, #E5610A 100%);">Save changes</button>
+                <button class="inline-flex items-center justify-center h-11 px-5 text-base font-semibold rounded-md text-white shadow-sm" style="background: linear-gradient(180deg, #FF7918 0%, #E5610A 100%);">Get started →</button>
+              </div>
+              <div class="h-16 rounded-md" style="background: linear-gradient(180deg, #FF7918 0%, #E5610A 100%);"></div>
+              <div class="text-[11px] text-gray-500 leading-relaxed">Reads as: subtle depth · lit-from-above · the Stripe / Linear default</div>
+            </div>
+          </div>
+
+          <!-- B · 135° Diagonal -->
+          <div class="space-y-3">
+            <div class="flex items-baseline gap-3">
+              <span class="inline-flex items-center justify-center h-6 w-6 rounded-full bg-brand-600 text-white text-xs font-bold">B</span>
+              <div class="flex-1">
+                <div class="text-sm font-semibold text-gray-900">135° · Diagonal</div>
+                <div class="text-[11px] text-gray-500 font-mono">linear-gradient(135deg, #FF7918 0%, #E5610A 100%)</div>
+              </div>
+            </div>
+            <div class="pl-9 space-y-3">
+              <div class="flex flex-wrap items-center gap-2 whitespace-nowrap">
+                <button class="inline-flex items-center justify-center h-10 px-4 text-sm font-semibold rounded-md text-white shadow-xs" style="background: linear-gradient(135deg, #FF7918 0%, #E5610A 100%);">Save changes</button>
+                <button class="inline-flex items-center justify-center h-11 px-5 text-base font-semibold rounded-md text-white shadow-sm" style="background: linear-gradient(135deg, #FF7918 0%, #E5610A 100%);">Get started →</button>
+              </div>
+              <div class="h-16 rounded-md" style="background: linear-gradient(135deg, #FF7918 0%, #E5610A 100%);"></div>
+              <div class="text-[11px] text-gray-500 leading-relaxed">Reads as: dynamic · directional energy · the AI/SaaS marketing default</div>
+            </div>
+          </div>
+
+          <!-- C · 90° Horizontal -->
+          <div class="space-y-3">
+            <div class="flex items-baseline gap-3">
+              <span class="inline-flex items-center justify-center h-6 w-6 rounded-full bg-brand-500 text-brand-950 text-xs font-bold">C</span>
+              <div class="flex-1">
+                <div class="text-sm font-semibold text-gray-900">90° · Horizontal</div>
+                <div class="text-[11px] text-gray-500 font-mono">linear-gradient(90deg, #FF7918 0%, #E5610A 100%)</div>
+              </div>
+            </div>
+            <div class="pl-9 space-y-3">
+              <div class="flex flex-wrap items-center gap-2 whitespace-nowrap">
+                <button class="inline-flex items-center justify-center h-10 px-4 text-sm font-semibold rounded-md text-white shadow-xs" style="background: linear-gradient(90deg, #FF7918 0%, #E5610A 100%);">Save changes</button>
+                <button class="inline-flex items-center justify-center h-11 px-5 text-base font-semibold rounded-md text-white shadow-sm" style="background: linear-gradient(90deg, #FF7918 0%, #E5610A 100%);">Get started →</button>
+              </div>
+              <div class="h-16 rounded-md" style="background: linear-gradient(90deg, #FF7918 0%, #E5610A 100%);"></div>
+              <div class="text-[11px] text-gray-500 leading-relaxed">Reads as: banner-like · directional · works on wide CTAs</div>
+            </div>
+          </div>
+
+          <!-- D · 160° Near-vertical (subtle tilt) -->
+          <div class="space-y-3">
+            <div class="flex items-baseline gap-3">
+              <span class="inline-flex items-center justify-center h-6 w-6 rounded-full bg-brand-700 text-white text-xs font-bold">D</span>
+              <div class="flex-1">
+                <div class="text-sm font-semibold text-gray-900">160° · Near-vertical tilt</div>
+                <div class="text-[11px] text-gray-500 font-mono">linear-gradient(160deg, #FF7918 0%, #E5610A 100%)</div>
+              </div>
+            </div>
+            <div class="pl-9 space-y-3">
+              <div class="flex flex-wrap items-center gap-2 whitespace-nowrap">
+                <button class="inline-flex items-center justify-center h-10 px-4 text-sm font-semibold rounded-md text-white shadow-xs" style="background: linear-gradient(160deg, #FF7918 0%, #E5610A 100%);">Save changes</button>
+                <button class="inline-flex items-center justify-center h-11 px-5 text-base font-semibold rounded-md text-white shadow-sm" style="background: linear-gradient(160deg, #FF7918 0%, #E5610A 100%);">Get started →</button>
+              </div>
+              <div class="h-16 rounded-md" style="background: linear-gradient(160deg, #FF7918 0%, #E5610A 100%);"></div>
+              <div class="text-[11px] text-gray-500 leading-relaxed">Reads as: mostly vertical with a hint of motion · a compromise between A & B</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Side-by-side same button same size for direct compare -->
+        <div class="pt-4 border-t border-brand-100">
+          <div class="text-xs font-semibold text-gray-700 mb-3">Direct side-by-side · same button, same size</div>
+          <div class="flex flex-wrap items-center gap-3">
+            <div class="flex flex-col items-center gap-2">
+              <button class="inline-flex items-center justify-center h-12 px-6 text-base font-semibold rounded-md text-white shadow-sm" style="background: linear-gradient(180deg, #FF7918 0%, #E5610A 100%);">Get started</button>
+              <span class="text-[10px] uppercase tracking-wider text-gray-500 font-semibold">A · 180°</span>
+            </div>
+            <div class="flex flex-col items-center gap-2">
+              <button class="inline-flex items-center justify-center h-12 px-6 text-base font-semibold rounded-md text-white shadow-sm" style="background: linear-gradient(135deg, #FF7918 0%, #E5610A 100%);">Get started</button>
+              <span class="text-[10px] uppercase tracking-wider text-gray-500 font-semibold">B · 135°</span>
+            </div>
+            <div class="flex flex-col items-center gap-2">
+              <button class="inline-flex items-center justify-center h-12 px-6 text-base font-semibold rounded-md text-white shadow-sm" style="background: linear-gradient(90deg, #FF7918 0%, #E5610A 100%);">Get started</button>
+              <span class="text-[10px] uppercase tracking-wider text-gray-500 font-semibold">C · 90°</span>
+            </div>
+            <div class="flex flex-col items-center gap-2">
+              <button class="inline-flex items-center justify-center h-12 px-6 text-base font-semibold rounded-md text-white shadow-sm" style="background: linear-gradient(160deg, #FF7918 0%, #E5610A 100%);">Get started</button>
+              <span class="text-[10px] uppercase tracking-wider text-gray-500 font-semibold">D · 160°</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Decision hint -->
+        <div class="rounded-md bg-gray-50 border border-gray-200 px-4 py-3 text-xs text-gray-600 leading-relaxed">
+          <span class="font-semibold text-gray-900">Quick guide:</span>
+          <span class="font-semibold text-brand-700">A (180°)</span> = calm, professional, "trust me" · what Stripe/Linear use.
+          <span class="font-semibold text-brand-700">B (135°)</span> = the loudest — dynamic, catches the eye · common on AI landing pages.
+          <span class="font-semibold text-brand-700">C (90°)</span> = feels like a banner or ad slot — good for wide CTAs, less good for compact ones.
+          <span class="font-semibold text-brand-700">D (160°)</span> = a subtle tilt on the vertical — feels alive but not loud.
+          Tell me which one and I'll bake it into <a href="src/components/Button.tsx" class="text-brand-700 underline">Button.tsx</a>.
+        </div>
+      </div>
+    </div>
+
+    <div id="btn-sections" class="space-y-4"></div>
   </section>
 
   <!-- BUTTON GROUPS -->
@@ -2635,6 +3079,419 @@
       Sign in with ${LABELS[p]}
     </button>
   `).join('');
+
+  // ============================================================
+  // Buttons page — 13 numbered sections mirroring the taxonomy engineers use
+  // ============================================================
+
+  const BTN_BASE = 'inline-flex items-center justify-center gap-1.5 font-semibold rounded-md transition-colors focus-visible:outline-none';
+
+  const HIER = {
+    'primary':               'bg-brand-600 text-white border border-brand-600 shadow-xs hover:bg-brand-700',
+    'primary-gradient':      'bg-gradient-to-b from-brand-500 to-brand-600 text-white border border-brand-600 shadow-xs hover:from-brand-600 hover:to-brand-700 hover:border-brand-700',
+    'secondary-gray':        'bg-white text-gray-700 border border-gray-300 shadow-xs hover:bg-gray-50',
+    'secondary-color':       'bg-brand-50 text-brand-700 border border-brand-50 shadow-xs hover:bg-brand-100',
+    'tertiary-gray':         'bg-transparent text-gray-600 hover:bg-gray-50',
+    'tertiary-color':        'bg-transparent text-brand-700 hover:bg-brand-50',
+    'destructive-primary':   'bg-error-600 text-white border border-error-600 shadow-xs hover:bg-error-700',
+    'destructive-secondary': 'bg-white text-error-700 border border-error-300 shadow-xs hover:bg-error-50',
+    'destructive-tertiary':  'bg-transparent text-error-700 hover:bg-error-50',
+  };
+
+  const DIS_FILLED = 'bg-gray-100 text-gray-400 border border-gray-200 shadow-none cursor-not-allowed';
+  const DIS_OUTLINED = 'bg-white text-gray-400 border border-gray-200 shadow-none cursor-not-allowed';
+  const DIS_GHOST = 'bg-transparent text-gray-400 cursor-not-allowed';
+  const DIS_MAP = {
+    'primary': DIS_FILLED, 'destructive-primary': DIS_FILLED,
+    'secondary-gray': DIS_OUTLINED, 'secondary-color': DIS_OUTLINED, 'destructive-secondary': DIS_OUTLINED,
+    'tertiary-gray': DIS_GHOST, 'tertiary-color': DIS_GHOST, 'destructive-tertiary': DIS_GHOST,
+    'link-gray': DIS_GHOST, 'link-color': DIS_GHOST,
+  };
+
+  const SIZE = {
+    sm:    'h-9 px-3.5 text-sm',
+    md:    'h-10 px-4 text-sm',
+    lg:    'h-11 px-[18px] text-base',
+    xl:    'h-12 px-5 text-base',
+    '2xl': 'h-[60px] px-7 text-lg',
+  };
+  const SIZE_ICON = {
+    sm: 'h-9 w-9 p-0', md: 'h-10 w-10 p-0', lg: 'h-11 w-11 p-0',
+    xl: 'h-12 w-12 p-0', '2xl': 'h-[60px] w-[60px] p-0',
+  };
+  const LINK_SIZE = { sm: 'text-sm', md: 'text-sm', lg: 'text-base', xl: 'text-base', '2xl': 'text-lg' };
+
+  // Reusable SVG icons for button demos
+  const BTN_ICON = {
+    plus:    '<svg class="h-5 w-5 shrink-0" fill="none" stroke="currentColor" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"/></svg>',
+    arrow:   '<svg class="h-5 w-5 shrink-0" fill="none" stroke="currentColor" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M5 12h14m0 0l-6-6m6 6l-6 6"/></svg>',
+    download:'<svg class="h-5 w-5 shrink-0" fill="none" stroke="currentColor" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>',
+    sparkles:'<svg class="h-5 w-5 shrink-0" fill="none" stroke="currentColor" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M5 3v4M3 5h4M6 17v4m-2-2h4M13 3l2.5 6.5L22 12l-6.5 2.5L13 21l-2.5-6.5L4 12l6.5-2.5z"/></svg>',
+    trash:   '<svg class="h-5 w-5 shrink-0" fill="none" stroke="currentColor" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M3 6h18m-2 0v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2M10 11v6M14 11v6"/></svg>',
+    spinner: '<svg class="h-4 w-4 shrink-0 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"/></svg>',
+  };
+
+  // Regular button (any hierarchy except link-*)
+  function btn({ hier, size = 'md', label = '', leading, trailing, iconOnly, loading, disabled }) {
+    const hierCls = disabled ? DIS_MAP[hier] : HIER[hier];
+    const sizeCls = iconOnly ? SIZE_ICON[size] : SIZE[size];
+    const cls = `${BTN_BASE} ${sizeCls} ${hierCls}`;
+    let content;
+    if (iconOnly) {
+      content = BTN_ICON[leading || 'plus'];
+    } else if (loading) {
+      content = `${BTN_ICON.spinner}<span>${label}</span>`;
+    } else {
+      content = `${leading ? BTN_ICON[leading] : ''}<span>${label}</span>${trailing ? BTN_ICON[trailing] : ''}`;
+    }
+    return `<button type="button" ${disabled ? 'disabled' : ''} class="${cls}">${content}</button>`;
+  }
+
+  // Link-style button (no bg, no border, no shadow — just text)
+  function linkBtn({ color = 'color', size = 'md', label = '', leading, trailing, disabled }) {
+    const isDisabled = disabled;
+    const colorCls = isDisabled
+      ? 'text-gray-400 cursor-not-allowed'
+      : (color === 'color' ? 'text-brand-700 hover:text-brand-800' : 'text-gray-600 hover:text-gray-800');
+    const cls = `inline-flex items-center gap-1.5 font-semibold ${LINK_SIZE[size]} ${colorCls} hover:underline underline-offset-2`;
+    const content = `${leading ? BTN_ICON[leading] : ''}<span>${label}</span>${trailing ? BTN_ICON[trailing] : ''}`;
+    return `<button type="button" ${isDisabled ? 'disabled' : ''} class="${cls}">${content}</button>`;
+  }
+
+  // Section header + body + optional usage guide — each rendered as its own card
+  function btnSection(num, title, description, body, usage) {
+    const padded = num.toString().padStart(2, '0');
+    return `
+      <div class="bg-white border border-gray-200 rounded-xl shadow-xs px-6 py-6">
+        <div class="flex items-baseline gap-3 mb-4 pb-3 border-b border-gray-100">
+          <span class="font-mono text-xs font-semibold text-brand-600">${padded}</span>
+          <span class="text-base font-semibold text-gray-900">${title}</span>
+          <span class="text-xs text-gray-500 ml-auto text-right">${description}</span>
+        </div>
+        ${body}
+        ${usage ? usageBlock(usage) : ''}
+      </div>
+    `;
+  }
+
+  // Wrap buttons in a flex row
+  function btnRow(html) {
+    return `<div class="flex flex-wrap items-center gap-3">${html}</div>`;
+  }
+
+  // Sub-group within a section (small header + row)
+  function btnSubgroup(label, html) {
+    return `<div class="mb-4 last:mb-0"><div class="text-xs font-medium text-gray-500 mb-2">${label}</div>${btnRow(html)}</div>`;
+  }
+
+  // Usage guide — "Use when" / "Avoid when" two-column
+  const CHECK_SVG = '<svg class="h-3.5 w-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>';
+  const X_SVG = '<svg class="h-3.5 w-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>';
+
+  const CHEVRON_SVG = '<svg class="h-3.5 w-3.5 shrink-0 transition-transform group-open:rotate-90" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>';
+
+  function usageBlock({ doItems, dontItems }) {
+    const li = (items, dotColor) => items.map(t =>
+      `<li class="flex gap-2"><span class="${dotColor} mt-1.5 h-1 w-1 rounded-full shrink-0"></span><span>${t}</span></li>`
+    ).join('');
+    return `
+      <details class="mt-5 group">
+        <summary class="cursor-pointer inline-flex items-center gap-1.5 text-xs font-medium text-gray-600 hover:text-gray-900 select-none list-none [&::-webkit-details-marker]:hidden">
+          ${CHEVRON_SVG}
+          Usage guidance
+          <span class="text-gray-400 font-normal">· ${doItems.length} use · ${dontItems.length} avoid</span>
+        </summary>
+        <div class="grid md:grid-cols-2 gap-3 mt-3">
+          <div class="rounded-lg bg-success-25 border border-success-200 px-4 py-3">
+            <div class="flex items-center gap-1.5 text-xs font-semibold text-success-700 mb-2">${CHECK_SVG} Use when</div>
+            <ul class="space-y-1.5 text-xs text-gray-700 leading-relaxed">${li(doItems, 'bg-success-500')}</ul>
+          </div>
+          <div class="rounded-lg bg-error-25 border border-error-200 px-4 py-3">
+            <div class="flex items-center gap-1.5 text-xs font-semibold text-error-700 mb-2">${X_SVG} Avoid when</div>
+            <ul class="space-y-1.5 text-xs text-gray-700 leading-relaxed">${li(dontItems, 'bg-error-500')}</ul>
+          </div>
+        </div>
+      </details>
+    `;
+  }
+
+  // Usage content per section — keep each item under ~10 words
+  const BTN_USAGE = {
+    1: {
+      doItems: [
+        'Solid: Save, Submit, Continue in tables, forms, dialogs',
+        'Gradient: hero CTAs on landing / marketing pages only',
+        'One primary per view — reserve for the "go" action',
+      ],
+      dontItems: [
+        'Two primaries side-by-side (they weaken each other)',
+        'Gradient inside data tables or dense forms',
+        'Destructive actions — use destructive-primary instead',
+      ],
+    },
+    2: {
+      doItems: [
+        'Alternate to a primary (Cancel next to Save)',
+        'Toolbar actions with equal weight',
+        'secondary-color inside brand-heavy panels',
+      ],
+      dontItems: [
+        'As the main call-to-action',
+        'Multiple secondary-color in the same row (visual noise)',
+        'Destructive actions — use destructive-secondary',
+      ],
+    },
+    3: {
+      doItems: [
+        'Low-stakes actions in dense tables',
+        'Row-level actions (Edit, Duplicate, More)',
+        'Alongside a primary when hierarchy matters',
+      ],
+      dontItems: [
+        'The single/main affordance in a critical flow',
+        'Destructive actions — use destructive-tertiary',
+        'Places where the user needs high visibility',
+      ],
+    },
+    4: {
+      doItems: [
+        'Inline text actions ("Learn more", "View details")',
+        'Promotional or highlighted secondary paths',
+        'Inside cards/rows as a subtle CTA',
+      ],
+      dontItems: [
+        'Critical or irreversible actions',
+        'Chaining several in a row (looks like navigation)',
+        'When the surrounding text is already brand-colored',
+      ],
+    },
+    5: {
+      doItems: [
+        'Cancel next to a link-color action',
+        'Footer or help-text links',
+        'Skip · Not now · Maybe later flows',
+      ],
+      dontItems: [
+        'Where the action needs to catch attention',
+        'As the confirming action in a form',
+        'Against gray backgrounds (contrast too low)',
+      ],
+    },
+    6: {
+      doItems: [
+        'Create/add flows (Plus + "New project")',
+        'Import/export with recognizable glyphs',
+        'Actions where the icon reinforces the label',
+      ],
+      dontItems: [
+        'Decorative icons unrelated to the action',
+        'Very long labels — icon impact drops',
+        'Two leading icons on the same button',
+      ],
+    },
+    7: {
+      doItems: [
+        'Navigation or progression ("Continue" + arrow)',
+        'Reveal patterns (dropdown chevron, expand)',
+        'External links (arrow-up-right)',
+      ],
+      dontItems: [
+        'Save/Submit — hints at a next step that isn\'t there',
+        'Destructive actions — trailing arrow implies continuity',
+        'Combining with a leading icon (visually cluttered)',
+      ],
+    },
+    8: {
+      doItems: [
+        'Toolbar controls with universal glyphs (Search, Menu)',
+        'Dense table row actions (Edit, Delete, More)',
+        'When space is limited and meaning is obvious',
+      ],
+      dontItems: [
+        'Without an aria-label (screen readers can\'t parse)',
+        'Ambiguous glyphs (Gear, Layers) — use a text button',
+        'Destructive icon-only without a confirmation dialog',
+      ],
+    },
+    9: {
+      doItems: [
+        'Async actions that exceed ~200 ms',
+        'Form submissions with API calls',
+        'Bulk operations (Export CSV, Send invites)',
+      ],
+      dontItems: [
+        'Button width shifting between states',
+        'Hiding the label — use "Saving…" not just a spinner',
+        'Loading state that never times out',
+      ],
+    },
+    10: {
+      doItems: [
+        'Action blocked by an unmet requirement',
+        'Paired with helper text explaining why',
+        'On step-forward when required fields are empty',
+      ],
+      dontItems: [
+        'To permanently hide a feature — remove it instead',
+        'Disabled-only feedback without an explanation',
+        'On the primary CTA without a validation hint',
+      ],
+    },
+    11: {
+      doItems: [
+        'Confirming an irreversible action inside a modal',
+        '"Delete permanently" · "Wipe data" · "Erase account"',
+        'Once per confirmation flow, paired with Cancel',
+      ],
+      dontItems: [
+        'As the entry point to a delete flow',
+        'Outside of a confirmation dialog',
+        'For soft deletes — use destructive-secondary',
+      ],
+    },
+    12: {
+      doItems: [
+        'Reversible dangerous actions (Archive, Remove, Unpublish)',
+        'Table row actions where delete is optional',
+        'Entry point that opens a confirm modal',
+      ],
+      dontItems: [
+        'Irreversible actions — use destructive-primary',
+        'Same row as a destructive-primary (mixed signals)',
+        'Where a plain secondary would suffice',
+      ],
+    },
+    13: {
+      doItems: [
+        'Trash icon in every row of a table',
+        'Ghost delete inside a card or list item',
+        'Alongside other ghost row-level actions',
+      ],
+      dontItems: [
+        'As the only path to an irreversible action',
+        'Without a confirmation dialog',
+        'Where the icon alone isn\'t universally read as "delete"',
+      ],
+    },
+  };
+
+  const SIZES_ALL = ['sm', 'md', 'lg', 'xl', '2xl'];
+  const SIZE_LABEL = { sm: 'Small', md: 'Medium', lg: 'Large', xl: 'Extra Large', '2xl': '2XL' };
+
+  const btnSectionsHtml = [
+    // 01 · Primary buttons — solid (default) + gradient (opt-in for hero CTAs)
+    btnSection(1, 'Primary buttons', 'Solid for everyday · gradient for hero CTAs',
+      btnSubgroup('Solid · default for tables, forms, dialogs',
+        SIZES_ALL.map(s => btn({ hier: 'primary', size: s, label: SIZE_LABEL[s] })).join('')) +
+      btnSubgroup('Gradient · opt-in for hero/landing CTAs · <span class="font-mono text-brand-700">#FF7918 → #E5610A</span>',
+        SIZES_ALL.map(s => btn({ hier: 'primary-gradient', size: s, label: SIZE_LABEL[s] })).join('')),
+      BTN_USAGE[1]),
+
+    // 02 · Secondary buttons — two flavors, each across sizes
+    btnSection(2, 'Secondary buttons', 'Gray for cancel · brand-tint for on-brand emphasis',
+      btnSubgroup('Secondary gray', SIZES_ALL.map(s => btn({ hier: 'secondary-gray', size: s, label: SIZE_LABEL[s] })).join('')) +
+      btnSubgroup('Secondary color', SIZES_ALL.map(s => btn({ hier: 'secondary-color', size: s, label: SIZE_LABEL[s] })).join('')),
+      BTN_USAGE[2]),
+
+    // 03 · Tertiary buttons — ghost variants
+    btnSection(3, 'Tertiary buttons', 'Ghost · low-emphasis actions',
+      btnSubgroup('Tertiary gray', SIZES_ALL.map(s => btn({ hier: 'tertiary-gray', size: s, label: SIZE_LABEL[s] })).join('')) +
+      btnSubgroup('Tertiary color', SIZES_ALL.map(s => btn({ hier: 'tertiary-color', size: s, label: SIZE_LABEL[s] })).join('')),
+      BTN_USAGE[3]),
+
+    // 04 · Link color
+    btnSection(4, 'Link color buttons', 'Inline brand-colored text actions',
+      btnRow(SIZES_ALL.map(s => linkBtn({ color: 'color', size: s, label: SIZE_LABEL[s] })).join('')),
+      BTN_USAGE[4]),
+
+    // 05 · Link gray
+    btnSection(5, 'Link gray buttons', 'Inline gray-colored text actions',
+      btnRow(SIZES_ALL.map(s => linkBtn({ color: 'gray', size: s, label: SIZE_LABEL[s] })).join('')),
+      BTN_USAGE[5]),
+
+    // 06 · Icon leading — sizes + hierarchies
+    btnSection(6, 'Icon leading buttons', 'Icon on the left · label on the right',
+      btnSubgroup('All sizes (primary)',
+        SIZES_ALL.map(s => btn({ hier: 'primary', size: s, label: SIZE_LABEL[s], leading: 'plus' })).join('')) +
+      btnSubgroup('Across hierarchies',
+        btn({ hier: 'primary',          size: 'md', label: 'New application', leading: 'plus' }) +
+        btn({ hier: 'secondary-gray',   size: 'md', label: 'Export CSV',      leading: 'download' }) +
+        btn({ hier: 'secondary-color',  size: 'md', label: 'Run AI Decision', leading: 'sparkles' }) +
+        btn({ hier: 'tertiary-gray',    size: 'md', label: 'Continue',        leading: 'arrow' }) +
+        linkBtn({ color: 'color',       size: 'md', label: 'Add project',     leading: 'plus' })
+      ),
+      BTN_USAGE[6]),
+
+    // 07 · Icon trailing — sizes + hierarchies
+    btnSection(7, 'Icon trailing buttons', 'Label on the left · icon on the right',
+      btnSubgroup('All sizes (primary)',
+        SIZES_ALL.map(s => btn({ hier: 'primary', size: s, label: SIZE_LABEL[s], trailing: 'arrow' })).join('')) +
+      btnSubgroup('Across hierarchies',
+        btn({ hier: 'primary',         size: 'md', label: 'Continue',     trailing: 'arrow' }) +
+        btn({ hier: 'secondary-gray',  size: 'md', label: 'Learn more',   trailing: 'arrow' }) +
+        btn({ hier: 'secondary-color', size: 'md', label: 'See details',  trailing: 'arrow' }) +
+        btn({ hier: 'tertiary-color',  size: 'md', label: 'Next step',    trailing: 'arrow' }) +
+        linkBtn({ color: 'color',      size: 'md', label: 'View report',  trailing: 'arrow' })
+      ),
+      BTN_USAGE[7]),
+
+    // 08 · Icon only — sizes + hierarchies
+    btnSection(8, 'Icon only buttons', 'Compact · square · matches size across sm → 2xl',
+      btnSubgroup('All sizes (primary)',
+        SIZES_ALL.map(s => btn({ hier: 'primary', size: s, iconOnly: true, leading: 'plus' })).join('')) +
+      btnSubgroup('Across hierarchies',
+        btn({ hier: 'primary',              size: 'md', iconOnly: true, leading: 'plus' }) +
+        btn({ hier: 'secondary-gray',       size: 'md', iconOnly: true, leading: 'plus' }) +
+        btn({ hier: 'secondary-color',      size: 'md', iconOnly: true, leading: 'sparkles' }) +
+        btn({ hier: 'tertiary-gray',        size: 'md', iconOnly: true, leading: 'plus' }) +
+        btn({ hier: 'destructive-primary',  size: 'md', iconOnly: true, leading: 'trash' })
+      ),
+      BTN_USAGE[8]),
+
+    // 09 · Loading — sizes + hierarchies
+    btnSection(9, 'Loading buttons', 'Spinner replaces the icon · button stays same width',
+      btnSubgroup('All sizes (primary)',
+        SIZES_ALL.map(s => btn({ hier: 'primary', size: s, label: SIZE_LABEL[s], loading: true })).join('')) +
+      btnSubgroup('Across hierarchies',
+        btn({ hier: 'primary',              size: 'md', label: 'Saving…',   loading: true }) +
+        btn({ hier: 'secondary-gray',       size: 'md', label: 'Loading…',  loading: true }) +
+        btn({ hier: 'secondary-color',      size: 'md', label: 'Running…',  loading: true }) +
+        btn({ hier: 'tertiary-gray',        size: 'md', label: 'Loading…',  loading: true }) +
+        btn({ hier: 'destructive-primary',  size: 'md', label: 'Deleting…', loading: true })
+      ),
+      BTN_USAGE[9]),
+
+    // 10 · Disabled — sizes + hierarchies
+    btnSection(10, 'Disabled buttons', 'Non-interactive · reduced contrast · same layout as enabled',
+      btnSubgroup('All sizes (primary)',
+        SIZES_ALL.map(s => btn({ hier: 'primary', size: s, label: SIZE_LABEL[s], disabled: true })).join('')) +
+      btnSubgroup('Across hierarchies',
+        btn({ hier: 'primary',              size: 'md', label: 'Save',      disabled: true }) +
+        btn({ hier: 'secondary-gray',       size: 'md', label: 'Cancel',    disabled: true }) +
+        btn({ hier: 'secondary-color',      size: 'md', label: 'Continue',  disabled: true }) +
+        btn({ hier: 'tertiary-gray',        size: 'md', label: 'More',      disabled: true }) +
+        btn({ hier: 'destructive-primary',  size: 'md', label: 'Delete',    disabled: true }) +
+        linkBtn({ color: 'color',           size: 'md', label: 'Skip',      disabled: true })
+      ),
+      BTN_USAGE[10]),
+
+    // 11 · Destructive primary
+    btnSection(11, 'Destructive primary', 'Filled red · irreversible actions like delete',
+      btnRow(SIZES_ALL.map(s => btn({ hier: 'destructive-primary', size: s, label: 'Delete' })).join('')),
+      BTN_USAGE[11]),
+
+    // 12 · Destructive secondary
+    btnSection(12, 'Destructive secondary', 'Outlined red · dangerous but reversible',
+      btnRow(SIZES_ALL.map(s => btn({ hier: 'destructive-secondary', size: s, label: 'Delete' })).join('')),
+      BTN_USAGE[12]),
+
+    // 13 · Destructive tertiary
+    btnSection(13, 'Destructive tertiary', 'Ghost red · low-emphasis destructive action',
+      btnRow(SIZES_ALL.map(s => btn({ hier: 'destructive-tertiary', size: s, label: 'Delete' })).join('')),
+      BTN_USAGE[13]),
+  ].join('');
+
+  document.getElementById('btn-sections').innerHTML = btnSectionsHtml;
 
   // ============================================================
   // Badge Groups
