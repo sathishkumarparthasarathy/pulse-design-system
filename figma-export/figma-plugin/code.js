@@ -75,63 +75,210 @@ function autoFrame(name, direction, opts = {}) {
 }
 
 /* ─── Button ──────────────────────────────────────────────────────── */
+// Vertical gradient #FF7918 (top) → #E5610A (bottom) for primary-gradient variant
+function gradientBrandVertical() {
+  const top = hexToRgb("#FF7918");
+  const bot = hexToRgb("#E5610A");
+  return [{
+    type: "GRADIENT_LINEAR",
+    gradientTransform: [[0, 1, 0], [-1, 0, 1]],
+    gradientStops: [
+      { color: { r: top.r, g: top.g, b: top.b, a: 1 }, position: 0 },
+      { color: { r: bot.r, g: bot.g, b: bot.b, a: 1 }, position: 1 },
+    ],
+  }];
+}
+
+// isLink=true → no fill/border, no shadow, text-only styling (link-* variants)
+// isFilled → shadow-xs on filled variants
 const BUTTON_HIERARCHIES = [
-  { id: "primary",          fill: COLORS.brand[600], text: COLORS.white,       stroke: COLORS.brand[600] },
-  { id: "secondary-gray",   fill: COLORS.white,      text: COLORS.gray[700],   stroke: COLORS.gray[300] },
-  { id: "secondary-color",  fill: COLORS.brand[50],  text: COLORS.brand[700],  stroke: COLORS.brand[50] },
-  { id: "tertiary-gray",    fill: null,              text: COLORS.gray[600],   stroke: null },
-  { id: "tertiary-color",   fill: null,              text: COLORS.brand[700],  stroke: null },
-  { id: "destructive-primary",   fill: COLORS.error[600], text: COLORS.white,        stroke: COLORS.error[600] },
-  { id: "destructive-secondary", fill: COLORS.white,      text: COLORS.error[700],   stroke: COLORS.error[300] },
-  { id: "destructive-tertiary",  fill: null,              text: COLORS.error[700],   stroke: null },
-];
-const BUTTON_SIZES = [
-  { id: "sm", h: 36, px: 14, fs: 14 },
-  { id: "md", h: 40, px: 16, fs: 14 },
-  { id: "lg", h: 44, px: 18, fs: 16 },
-  { id: "xl", h: 48, px: 20, fs: 16 },
+  { id: "primary",               fill: COLORS.brand[600],  text: COLORS.white,       stroke: COLORS.brand[600] },
+  { id: "primary-gradient",      fillPaint: gradientBrandVertical, text: COLORS.white, stroke: COLORS.brand[600] },
+  { id: "secondary-gray",        fill: COLORS.white,       text: COLORS.gray[700],   stroke: COLORS.gray[300] },
+  { id: "secondary-color",       fill: COLORS.brand[50],   text: COLORS.brand[700],  stroke: COLORS.brand[50] },
+  { id: "tertiary-gray",         fill: null,               text: COLORS.gray[600],   stroke: null },
+  { id: "tertiary-color",        fill: null,               text: COLORS.brand[700],  stroke: null },
+  { id: "link-color",            fill: null,               text: COLORS.brand[700],  stroke: null, isLink: true },
+  { id: "link-gray",             fill: null,               text: COLORS.gray[600],   stroke: null, isLink: true },
+  { id: "destructive-primary",   fill: COLORS.error[600],  text: COLORS.white,       stroke: COLORS.error[600] },
+  { id: "destructive-secondary", fill: COLORS.white,       text: COLORS.error[700],  stroke: COLORS.error[300] },
+  { id: "destructive-tertiary",  fill: null,               text: COLORS.error[700],  stroke: null },
 ];
 
+// Sizes matching src/components/Button.tsx — sm 36 · md 40 · lg 44 · xl 48 · 2xl 60
+const BUTTON_SIZES = [
+  { id: "sm",  h: 36, px: 14, fs: 14 },
+  { id: "md",  h: 40, px: 16, fs: 14 },
+  { id: "lg",  h: 44, px: 18, fs: 16 },
+  { id: "xl",  h: 48, px: 20, fs: 16 },
+  { id: "2xl", h: 60, px: 28, fs: 18 },
+];
+
+// Base icon component — a "swappable" placeholder that shows a Plus.
+// Designers click the button's Leading icon / Trailing icon property in Figma
+// and pick any icon component from their file (Lucide, brand marks, custom, etc.)
+function createIconBaseComponent() {
+  const cmp = figma.createComponent();
+  cmp.name = "Button / Icon (placeholder)";
+  cmp.description = "Swap this instance to change the icon inside a Button. Designed to be replaced.";
+  cmp.layoutMode = "HORIZONTAL";
+  cmp.primaryAxisAlignItems = "CENTER";
+  cmp.counterAxisAlignItems = "CENTER";
+  cmp.primaryAxisSizingMode = "FIXED";
+  cmp.counterAxisSizingMode = "FIXED";
+  cmp.paddingLeft = 0; cmp.paddingRight = 0;
+  cmp.paddingTop = 0; cmp.paddingBottom = 0;
+  cmp.itemSpacing = 0;
+  cmp.fills = [];
+  cmp.cornerRadius = 0;
+  cmp.resize(20, 20);
+
+  // A gray Plus glyph as the visual — signals "swap me for a real icon"
+  const plusSvg = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#697586" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v16m8-8H4"/></svg>';
+  const plus = figma.createNodeFromSvg(plusSvg);
+  plus.name = "glyph";
+  plus.resize(20, 20);
+  cmp.appendChild(plus);
+
+  return cmp;
+}
+
+// Instance of the base icon, sized per button size, hidden by default
+function createIconInstance(baseIcon, name, size) {
+  const inst = baseIcon.createInstance();
+  inst.name = name;
+  inst.resize(size, size);
+  inst.visible = false;
+  return inst;
+}
+
+// Loading spinner placeholder — ring shape (kept as separate frame, toggled via Loading boolean)
+function createSpinnerSlot(name, size, color) {
+  const f = figma.createFrame();
+  f.name = name;
+  f.resize(size, size);
+  f.cornerRadius = size / 2;
+  f.fills = [];
+  f.strokes = solid(color, 0.85);
+  f.strokeWeight = Math.max(1.5, size / 10);
+  f.dashPattern = [size * 0.55, size * 0.55];
+  f.strokeAlign = "CENTER";
+  return f;
+}
+
 async function buildButtonSet(parent) {
+  // Step 1 — create the base Icon Placeholder component (used by INSTANCE_SWAP)
+  const iconBase = createIconBaseComponent();
+  parent.appendChild(iconBase);
+
+  // Step 2 — build all 55 button variants, each with instances of the base icon
   const variants = [];
   for (const h of BUTTON_HIERARCHIES) {
     for (const s of BUTTON_SIZES) {
-      const node = autoFrame(`hierarchy=${h.id}, size=${s.id}`, "HORIZONTAL", {
-        gap: 8, px: s.px, py: 0, radius: 8,
-        fill: h.fill, stroke: h.stroke,
-        shadow: (h.fill && !h.id.startsWith("tertiary")) ? SHADOW_XS : undefined,
-      });
-      node.resize(120, s.h);  // initial size — auto-layout will hug content
-      node.primaryAxisSizingMode = "AUTO";
-      node.counterAxisSizingMode = "FIXED";  // lock height to s.h
-      node.resize(node.width, s.h);
-      const label = text("Button", { size: s.fs, weight: "Semi Bold", color: h.text });
-      node.appendChild(label);
       const cmp = figma.createComponent();
-      cmp.name = node.name;
+      cmp.name = `Hierarchy=${h.id}, Size=${s.id}`;
       cmp.layoutMode = "HORIZONTAL";
+      cmp.primaryAxisAlignItems = "CENTER";
+      cmp.counterAxisAlignItems = "CENTER";
       cmp.primaryAxisSizingMode = "AUTO";
-      cmp.counterAxisSizingMode = "AUTO";
-      cmp.paddingLeft = s.px; cmp.paddingRight = s.px;
-      cmp.cornerRadius = 8;
-      if (h.fill) cmp.fills = solid(h.fill);
-      if (h.stroke) { cmp.strokes = solid(h.stroke); cmp.strokeWeight = 1; cmp.strokeAlign = "INSIDE"; }
-      if (h.fill && !h.id.startsWith("tertiary")) cmp.effects = SHADOW_XS;
-      const labelClone = label.clone();
-      cmp.appendChild(labelClone);
-      cmp.resize(cmp.width || 120, s.h);
       cmp.counterAxisSizingMode = "FIXED";
-      node.remove();
+      cmp.paddingLeft = h.isLink ? 0 : s.px;
+      cmp.paddingRight = h.isLink ? 0 : s.px;
+      cmp.paddingTop = 0; cmp.paddingBottom = 0;
+      cmp.itemSpacing = 6;
+      cmp.cornerRadius = h.isLink ? 0 : 6;
+
+      // Fill: solid, gradient, or none
+      if (h.fillPaint) {
+        cmp.fills = h.fillPaint();
+      } else if (h.fill) {
+        cmp.fills = solid(h.fill);
+      } else {
+        cmp.fills = [];
+      }
+
+      // Border on gray/color secondary + destructive secondary — not on tertiary/link
+      if (h.stroke) {
+        cmp.strokes = solid(h.stroke);
+        cmp.strokeWeight = 1;
+        cmp.strokeAlign = "INSIDE";
+      }
+
+      // Shadow on filled non-tertiary non-link variants
+      const hasFill = !!(h.fill || h.fillPaint);
+      if (hasFill && !h.id.startsWith("tertiary") && !h.isLink) {
+        cmp.effects = SHADOW_XS;
+      }
+
+      // Layer order (auto-layout, left-to-right):
+      //   1. leading-icon (INSTANCE of iconBase, hidden by default)
+      //   2. spinner (hidden by default — designer replaces leading-icon visually when Loading=true)
+      //   3. label (text)
+      //   4. trailing-icon (INSTANCE of iconBase, hidden by default)
+      const iconSize = s.fs === 18 ? 24 : 20; // 24px icon for 2xl, otherwise 20px
+
+      const leadingIcon = createIconInstance(iconBase, "leading-icon", iconSize);
+      cmp.appendChild(leadingIcon);
+
+      const spinner = createSpinnerSlot("spinner", iconSize, h.text);
+      spinner.visible = false;
+      cmp.appendChild(spinner);
+
+      const label = text("Button", { size: s.fs, weight: "Semi Bold", color: h.text });
+      label.name = "label";
+      cmp.appendChild(label);
+
+      const trailingIcon = createIconInstance(iconBase, "trailing-icon", iconSize);
+      cmp.appendChild(trailingIcon);
+
+      cmp.resize(cmp.width || 100, s.h);
       variants.push(cmp);
     }
   }
+
+  // Step 3 — combine into variant set
   const set = figma.combineAsVariants(variants, parent);
   set.name = "Button";
+  set.description = "PULSE Button · 11 hierarchies × 5 sizes · properties: Label, Show/pick Leading & Trailing icon, Loading";
   set.layoutMode = "VERTICAL";
-  set.itemSpacing = 12;
-  set.paddingTop = 24; set.paddingBottom = 24; set.paddingLeft = 24; set.paddingRight = 24;
+  set.primaryAxisSizingMode = "AUTO";
+  set.counterAxisSizingMode = "AUTO";
+  set.itemSpacing = 16;
+  set.paddingTop = 32; set.paddingBottom = 32; set.paddingLeft = 32; set.paddingRight = 32;
   set.fills = solid(COLORS.gray[50]);
-  set.cornerRadius = 12;
+  set.cornerRadius = 16;
+  set.strokes = solid(COLORS.gray[200]);
+  set.strokeWeight = 1;
+
+  /* ─── Component properties — shared across all 55 variants ─── */
+  const labelProp         = set.addComponentProperty("Label",              "TEXT",          "Button");
+  const showLeadingProp   = set.addComponentProperty("Show leading icon",  "BOOLEAN",       false);
+  const leadingSwapProp   = set.addComponentProperty("Leading icon",       "INSTANCE_SWAP", iconBase.id);
+  const showTrailingProp  = set.addComponentProperty("Show trailing icon", "BOOLEAN",       false);
+  const trailingSwapProp  = set.addComponentProperty("Trailing icon",      "INSTANCE_SWAP", iconBase.id);
+  const loadingProp       = set.addComponentProperty("Loading",            "BOOLEAN",       false);
+
+  // Bind each variant's layers to the shared properties
+  for (const variant of variants) {
+    for (const child of variant.children) {
+      if (child.name === "label") {
+        child.componentPropertyReferences = { characters: labelProp };
+      } else if (child.name === "leading-icon") {
+        child.componentPropertyReferences = {
+          visible: showLeadingProp,
+          mainComponent: leadingSwapProp,
+        };
+      } else if (child.name === "trailing-icon") {
+        child.componentPropertyReferences = {
+          visible: showTrailingProp,
+          mainComponent: trailingSwapProp,
+        };
+      } else if (child.name === "spinner") {
+        child.componentPropertyReferences = { visible: loadingProp };
+      }
+    }
+  }
+
   return set;
 }
 

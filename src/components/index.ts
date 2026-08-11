@@ -28,5 +28,22 @@ export type { CardProps } from "./Card";
 export { Avatar, AvatarGroup, AvatarProfile } from "./Avatar";
 export type { AvatarProps, AvatarGroupProps, AvatarProfileProps, AvatarSize, AvatarShape, AvatarStatus } from "./Avatar";
 
+export {
+  Tooltip,
+  TooltipProvider,
+  TooltipRoot,
+  TooltipTrigger,
+  TooltipContent,
+  TooltipArrow,
+  TooltipRich,
+} from "./Tooltip";
+export type {
+  TooltipProps,
+  TooltipContentProps,
+  TooltipRichProps,
+  TooltipVariant,
+  TooltipSize,
+} from "./Tooltip";
+
 // Icons
 export * from "../icons";

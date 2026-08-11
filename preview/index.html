@@ -292,35 +292,73 @@
   .group:hover .icon-svg-btn { opacity: 1; }
   .icon-svg-btn:hover { background: #FF7918; color: #FFFFFF; border-color: #FF7918; }
   .icon-svg-btn.copied { background: #10B981; color: #FFFFFF; border-color: #059669; opacity: 1; }
+
+  /* ─── Preview | Code tab switcher ─── */
+  .tab-btn { color: #697586; }               /* gray-500 */
+  .tab-btn.is-active { background: #F3F4F6; color: #101828; }  /* gray-100 bg, gray-900 text */
+  .tab-btn:not(.is-active):hover { color: #364152; }
+
+  /* ─── Syntax highlighting (JSX/TSX) ─── */
+  .hl-string   { color: #86EFAC; }  /* green-300 */
+  .hl-tag      { color: #F87171; }  /* red-400 */
+  .hl-keyword  { color: #C084FC; }  /* purple-400 */
+  .hl-attr     { color: #FBBF24; }  /* amber-400 */
+  .hl-brace    { color: #94A3B8; }  /* slate-400 */
+  .hl-comment  { color: #6B7280; font-style: italic; }  /* gray-500 */
 </style>
 </head>
 <body class="bg-white text-gray-900">
 
-<!-- Header -->
-<!-- Top header removed — brand identity now lives in the sidebar. -->
+<!-- ============================================================
+     TOP NAV BAR — animate-ui / shadcn style
+============================================================ -->
+<header class="sticky top-0 z-40 h-14 bg-white/85 backdrop-blur border-b border-gray-200 flex items-center px-4 lg:px-6">
+  <!-- Logo + brand mark -->
+  <a href="#overview" data-nav-top="overview" class="flex items-center gap-2 mr-6 shrink-0">
+    <img src="assets/scienaptic-logo.png" alt="Scienaptic" class="h-6 w-auto" />
+    <span class="text-sm font-semibold text-gray-900 tracking-tight">PULSE</span>
+  </a>
+
+  <!-- Middle nav -->
+  <nav class="hidden md:flex items-center gap-0.5 text-sm">
+    <a href="#overview"  data-nav-top="overview"    class="topnav-link px-3 py-1.5 rounded-md font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-colors">Docs</a>
+    <a href="#buttons"   data-nav-top="components" class="topnav-link px-3 py-1.5 rounded-md font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-colors">Components</a>
+    <a href="#colors"    data-nav-top="foundations" class="topnav-link px-3 py-1.5 rounded-md font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-colors">Foundations</a>
+    <a href="#icons"     data-nav-top="icons"       class="topnav-link px-3 py-1.5 rounded-md font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-colors">Icons</a>
+  </nav>
+
+  <!-- Right cluster -->
+  <div class="ml-auto flex items-center gap-2">
+    <!-- Search mockup (⌘K) -->
+    <div class="hidden md:flex items-center gap-2 h-8 pl-2.5 pr-1.5 rounded-md border border-gray-200 bg-white text-gray-500 text-xs w-64 cursor-not-allowed select-none" title="Search coming soon">
+      <svg class="h-3.5 w-3.5 shrink-0 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+      <span>Search components...</span>
+      <span class="ml-auto flex items-center gap-0.5 shrink-0">
+        <kbd class="inline-flex items-center justify-center h-5 min-w-[20px] px-1 rounded text-[10px] font-mono font-medium bg-gray-100 text-gray-600 border border-gray-200">⌘</kbd>
+        <kbd class="inline-flex items-center justify-center h-5 min-w-[20px] px-1 rounded text-[10px] font-mono font-medium bg-gray-100 text-gray-600 border border-gray-200">K</kbd>
+      </span>
+    </div>
+
+    <!-- GitHub -->
+    <a href="https://github.com/sathishkumarparthasarathy/pulse-design-system" target="_blank" rel="noopener" class="h-8 px-2.5 flex items-center gap-1.5 text-xs font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50 rounded-md border border-gray-200 transition-colors">
+      <svg class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M12 .3a12 12 0 00-3.79 23.4c.6.11.82-.26.82-.58v-2.03c-3.34.73-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.08-.74.08-.72.08-.72 1.2.08 1.83 1.24 1.83 1.24 1.07 1.83 2.81 1.3 3.5.99.11-.77.42-1.3.76-1.6-2.67-.31-5.48-1.33-5.48-5.93 0-1.31.47-2.38 1.24-3.22-.14-.31-.54-1.52.11-3.17 0 0 1-.32 3.3 1.23a11.5 11.5 0 016 0c2.29-1.55 3.3-1.23 3.3-1.23.65 1.65.25 2.86.12 3.17a4.65 4.65 0 011.23 3.22c0 4.61-2.81 5.61-5.49 5.91.43.37.81 1.1.81 2.22v3.29c0 .32.22.7.82.58A12 12 0 0012 .3" clip-rule="evenodd"/></svg>
+      <span class="hidden sm:inline">GitHub</span>
+    </a>
+  </div>
+</header>
 
 <div class="flex">
 
   <!-- ============================================================
        SIDEBAR
   ============================================================ -->
-  <aside class="w-[260px] shrink-0 bg-white flex flex-col sticky top-0 h-screen z-10"
-         style="box-shadow: 4px 0 16px -2px rgba(16, 24, 40, 0.06), 1px 0 0 0 rgba(16, 24, 40, 0.05);">
-
-    <!-- Brand mark · scienaptic wordmark + PULSE Design System caption -->
-    <div class="px-[18px] pt-6 pb-4">
-      <img src="assets/scienaptic-logo.png" alt="Scienaptic" class="h-7 w-auto block" />
-      <div class="mt-3 pt-3 border-t border-gray-100">
-        <div class="text-base font-bold text-gray-900 tracking-tight leading-tight">PULSE</div>
-        <div class="text-[11px] text-gray-500 leading-tight mt-1 uppercase tracking-wider font-medium">Design System</div>
-      </div>
-    </div>
+  <aside class="w-[260px] shrink-0 bg-white flex flex-col sticky top-14 h-[calc(100vh-56px)] z-10 border-r border-gray-100/70">
 
     <!-- Search -->
-    <div class="px-4">
+    <div class="px-4 pt-5 pb-3">
       <div class="sidebar-search">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7.5"/><path d="M21 21l-4.35-4.35"/></svg>
-        <input type="search" placeholder="Search here" oninput="filterNav(this.value)" />
+        <input type="search" placeholder="Search components..." oninput="filterNav(this.value)" />
       </div>
     </div>
 
@@ -403,10 +441,14 @@
         <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>
         Cards
       </div>
+      <div class="nav-link" data-nav="tooltips">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+        Tooltips
+      </div>
     </nav>
 
     <!-- User profile pinned to bottom -->
-    <div class="border-t border-gray-200 p-3 shrink-0">
+    <div class="border-t border-gray-100 p-3 shrink-0">
       <div class="sidebar-user">
         <img src="https://i.pravatar.cc/120?img=14" alt="" class="h-8 w-8 rounded-full shrink-0 object-cover" />
         <div class="flex-1 min-w-0">
@@ -455,7 +497,7 @@
   <!-- COLOR FOUNDATIONS -->
   <section class="mb-20" data-page="colors">
     <div class="mb-6">
-      <h2 class="text-display-xs font-semibold text-gray-900">Colors</h2>
+      <h2 class="text-display-md font-semibold text-gray-900 tracking-tight">Colors</h2>
       <p class="text-text-md text-gray-600 mt-1">12-step scales anchored on the new brand <code class="font-mono text-brand-700 bg-brand-50 px-1.5 py-0.5 rounded">#FF7918</code> · click any shade to copy its hex</p>
     </div>
 
@@ -549,7 +591,7 @@
   <!-- GRADIENTS -->
   <section class="mb-20" data-page="gradients">
     <div class="mb-6">
-      <h2 class="text-display-xs font-semibold text-gray-900">Gradients</h2>
+      <h2 class="text-display-md font-semibold text-gray-900 tracking-tight">Gradients</h2>
       <p class="text-text-md text-gray-600 mt-1">Brand, multi-color, mesh, radial &amp; conic · click any to copy the CSS</p>
     </div>
 
@@ -604,7 +646,7 @@
   <!-- SHADOWS & BLURS -->
   <section class="mb-20" data-page="shadows-blurs">
     <div class="mb-8">
-      <h2 class="text-display-xs font-semibold text-gray-900">Shadows &amp; blurs</h2>
+      <h2 class="text-display-md font-semibold text-gray-900 tracking-tight">Shadows &amp; blurs</h2>
       <p class="text-text-md text-gray-600 mt-1">8 elevation levels · 4 inner · 5 colored glows · 5 focus rings · 8 blurs · click any to copy CSS</p>
     </div>
 
@@ -674,7 +716,7 @@
   <!-- SPACING & GRIDS -->
   <section class="mb-20" data-page="spacing-grids">
     <div class="mb-8">
-      <h2 class="text-display-xs font-semibold text-gray-900">Spacing &amp; grids</h2>
+      <h2 class="text-display-md font-semibold text-gray-900 tracking-tight">Spacing &amp; grids</h2>
       <p class="text-text-md text-gray-600 mt-1">4px base unit · 23-step scale · 11-step radius · 12-column grid · 8 container widths</p>
     </div>
 
@@ -827,7 +869,7 @@
   <!-- TYPOGRAPHY -->
   <section class="mb-20" data-page="typography">
     <div class="mb-8">
-      <h2 class="text-display-xs font-semibold text-gray-900">Typography</h2>
+      <h2 class="text-display-md font-semibold text-gray-900 tracking-tight">Typography</h2>
       <p class="text-text-md text-gray-600 mt-1">Inter · Display + Text scales · 4 weights · -2% letter-spacing on display</p>
     </div>
 
@@ -885,8 +927,8 @@
   <!-- BUTTONS -->
   <section class="mb-20" data-page="buttons">
     <div class="mb-6">
-      <h2 class="text-display-xs font-semibold text-gray-900">Buttons</h2>
-      <p class="text-text-md text-gray-600 mt-1">13 patterns · 10 hierarchies × 5 sizes · leading/trailing icons · loading + disabled · destructive trio</p>
+      <h2 class="text-display-md font-semibold text-gray-900 tracking-tight">Buttons</h2>
+      <p class="text-text-md text-gray-600 mt-1">Interactive playground · pick hierarchy · size · icon · state · code updates live</p>
     </div>
 
     <!-- Brand shade explorer — decide primary button color -->
@@ -1410,7 +1452,7 @@
   <!-- BUTTON GROUPS -->
   <section class="mb-20" data-page="button-group">
     <div class="mb-6">
-      <h2 class="text-display-xs font-semibold text-gray-900">Button group</h2>
+      <h2 class="text-display-md font-semibold text-gray-900 tracking-tight">Button group</h2>
       <p class="text-text-md text-gray-600 mt-1">Joined / segmented buttons — for view toggles, filters, date ranges</p>
     </div>
     <div class="bg-white border border-gray-200 rounded-xl shadow-xs">
@@ -1488,7 +1530,7 @@
   <!-- SOCIAL BUTTONS -->
   <section class="mb-20" data-page="social-buttons">
     <div class="mb-6">
-      <h2 class="text-display-xs font-semibold text-gray-900">Social buttons</h2>
+      <h2 class="text-display-md font-semibold text-gray-900 tracking-tight">Social buttons</h2>
       <p class="text-text-md text-gray-600 mt-1">For OAuth sign-in flows · brand icons preserved in color</p>
     </div>
     <div class="bg-white border border-gray-200 rounded-xl shadow-xs">
@@ -1508,7 +1550,7 @@
   <!-- CLOSE BUTTONS -->
   <section class="mb-20" data-page="close-button">
     <div class="mb-6">
-      <h2 class="text-display-xs font-semibold text-gray-900">Close button</h2>
+      <h2 class="text-display-md font-semibold text-gray-900 tracking-tight">Close button</h2>
       <p class="text-text-md text-gray-600 mt-1">Dedicated X for modals, drawers, toasts, dismissible badges</p>
     </div>
     <div class="bg-white border border-gray-200 rounded-xl shadow-xs">
@@ -1539,7 +1581,7 @@
   <!-- AVATARS -->
   <section class="mb-20" data-page="avatars">
     <div class="mb-8">
-      <h2 class="text-display-xs font-semibold text-gray-900">Avatars</h2>
+      <h2 class="text-display-md font-semibold text-gray-900 tracking-tight">Avatars</h2>
       <p class="text-text-md text-gray-600 mt-1">7 sizes · 3-tier fallback (image → initials → icon) · status dots · groups · profile</p>
     </div>
 
@@ -1601,7 +1643,7 @@
   <!-- BADGES -->
   <section class="mb-20" data-page="badges">
     <div class="mb-6">
-      <h2 class="text-display-xs font-semibold text-gray-900">Badges</h2>
+      <h2 class="text-display-md font-semibold text-gray-900 tracking-tight">Badges</h2>
       <p class="text-text-md text-gray-600 mt-1">4 variants × 10 tones × 3 sizes</p>
     </div>
     <div class="bg-white border border-gray-200 rounded-xl shadow-xs">
@@ -1629,7 +1671,7 @@
   <!-- STATUS PILLS -->
   <section class="mb-20" data-page="status-pills">
     <div class="mb-6">
-      <h2 class="text-display-xs font-semibold text-gray-900">Status pills</h2>
+      <h2 class="text-display-md font-semibold text-gray-900 tracking-tight">Status pills</h2>
       <p class="text-text-md text-gray-600 mt-1">Modern variant (white surface, colored dot) — Untitled UI signature</p>
     </div>
     <div class="bg-white border border-gray-200 rounded-xl shadow-xs">
@@ -1655,7 +1697,7 @@
   <!-- INPUTS -->
   <section class="mb-20" data-page="forms">
     <div class="mb-6">
-      <h2 class="text-display-xs font-semibold text-gray-900">Forms & inputs</h2>
+      <h2 class="text-display-md font-semibold text-gray-900 tracking-tight">Forms & inputs</h2>
       <p class="text-text-md text-gray-600 mt-1">Untitled UI: shadow-xs ring, brand focus ring, addons, hint icons</p>
     </div>
     <div class="bg-white border border-gray-200 rounded-xl shadow-xs">
@@ -1714,7 +1756,7 @@
   <!-- BADGE GROUPS -->
   <section class="mb-20" data-page="badge-groups">
     <div class="mb-6">
-      <h2 class="text-display-xs font-semibold text-gray-900">Badge groups</h2>
+      <h2 class="text-display-md font-semibold text-gray-900 tracking-tight">Badge groups</h2>
       <p class="text-text-md text-gray-600 mt-1">Composite badge with leading pill + trailing message · perfect for announcement banners & inline CTAs</p>
     </div>
     <div class="bg-white border border-gray-200 rounded-xl shadow-xs">
@@ -1763,7 +1805,7 @@
   <!-- ICONS -->
   <section class="mb-20" data-page="icons">
     <div class="mb-6">
-      <h2 class="text-display-xs font-semibold text-gray-900">Icons</h2>
+      <h2 class="text-display-md font-semibold text-gray-900 tracking-tight">Icons</h2>
       <p class="text-text-md text-gray-600 mt-1">Lucide (MIT) · <span id="icon-total-count">1500+</span> icons · 2px stroke · 24×24 · click any to copy its name</p>
     </div>
 
@@ -1884,7 +1926,7 @@
   <!-- CARDS -->
   <section class="mb-20" data-page="cards">
     <div class="mb-6">
-      <h2 class="text-display-xs font-semibold text-gray-900">Cards</h2>
+      <h2 class="text-display-md font-semibold text-gray-900 tracking-tight">Cards</h2>
       <p class="text-text-md text-gray-600 mt-1">Untitled UI radius-xl (12px) · shadow-xs default · composable Header / Content / Footer</p>
     </div>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -1957,6 +1999,15 @@
       </div>
 
     </div>
+  </section>
+
+  <!-- TOOLTIPS -->
+  <section class="mb-20" data-page="tooltips">
+    <div class="mb-6">
+      <h2 class="text-display-md font-semibold text-gray-900 tracking-tight">Tooltips</h2>
+      <p class="text-text-md text-gray-600 mt-1">7 patterns · dark + light · 4 positions · rich mode with title / description / shortcut · Radix-backed</p>
+    </div>
+    <div id="tt-sections" class="space-y-4"></div>
   </section>
 
 </main>
@@ -2071,15 +2122,26 @@
       items.push({ id: h.id, text: h.textContent.trim(), level: 'h2' });
     });
 
-    // Sub-section labels — these are card headers like "CORE", "PRIMITIVES", etc.
+    // Numbered card sections (Buttons, Tooltips) — each card has data-toc-title="01 · Title"
+    const numberedCards = Array.from(page.querySelectorAll('[data-toc-title]'));
+    numberedCards.forEach(el => {
+      const t = el.getAttribute('data-toc-title');
+      if (!t) return;
+      // Element already has an id (added by btnSection)
+      if (!el.id) el.id = 'sub-' + slug(t);
+      items.push({ id: el.id, text: t, level: 'h3' });
+    });
+
+    // Sub-section labels — legacy uppercase chip headers on other pages (Colors, Icons, etc.)
     const subSels = '.text-text-xs.font-semibold.uppercase.tracking-wider, .text-xs.font-semibold.uppercase.tracking-wider';
     const subEls = Array.from(page.querySelectorAll(subSels));
     subEls.forEach((el, i) => {
       // Skip empty / icon-only labels
       const t = el.textContent.trim();
       if (!t) return;
+      // Skip if already included by numbered-card scan
+      if (el.closest('[data-toc-title]')) return;
       // Skip the swatch-row mini-headers inside categorized grids (they're nested deep)
-      // We want only the top-level card section labels — those sit directly inside a card body or header
       const isCardLevel = el.closest('.border-b') || el.parentElement?.classList.contains('mb-3') === false;
       if (!isCardLevel) return;
       if (!el.id) el.id = 'sub-' + slug(t) + '-' + i;
@@ -3161,10 +3223,12 @@
   // Section header + body + optional usage guide — each rendered as its own card
   function btnSection(num, title, description, body, usage) {
     const padded = num.toString().padStart(2, '0');
+    const slug = String(title).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+    const id = `sec-${padded}-${slug}`;
     return `
-      <div class="bg-white border border-gray-200 rounded-xl shadow-xs px-6 py-6">
+      <div id="${id}" data-toc-title="${padded} · ${title}" class="bg-white border border-gray-200 rounded-xl shadow-xs px-6 py-6 scroll-mt-24">
         <div class="flex items-baseline gap-3 mb-4 pb-3 border-b border-gray-100">
-          <span class="font-mono text-xs font-semibold text-brand-600">${padded}</span>
+          <span class="font-mono text-xs font-semibold text-gray-400">${padded}</span>
           <span class="text-base font-semibold text-gray-900">${title}</span>
           <span class="text-xs text-gray-500 ml-auto text-right">${description}</span>
         </div>
@@ -3182,6 +3246,235 @@
   // Sub-group within a section (small header + row)
   function btnSubgroup(label, html) {
     return `<div class="mb-4 last:mb-0"><div class="text-xs font-medium text-gray-500 mb-2">${label}</div>${btnRow(html)}</div>`;
+  }
+
+  // ─── JSX/TSX syntax highlighter · single-pass state-machine tokenizer ───
+  // Input is HTML-escaped source (& → &amp;, < → &lt;, > → &gt;)
+  const HL_KEYWORDS = new Set(['import', 'from', 'export', 'const', 'let', 'var', 'return', 'function', 'if', 'else', 'default', 'as', 'type']);
+
+  function highlightJSX(s) {
+    const out = [];
+    const push = (cls, text) => cls ? out.push(`<span class="hl-${cls}">${text}</span>`) : out.push(text);
+    let i = 0;
+    while (i < s.length) {
+      // Line comment
+      if (s.startsWith('//', i)) {
+        const end = s.indexOf('\n', i);
+        const stop = end === -1 ? s.length : end;
+        push('comment', s.slice(i, stop));
+        i = stop;
+        continue;
+      }
+      // Double-quoted string
+      if (s[i] === '"') {
+        const end = s.indexOf('"', i + 1);
+        const stop = end === -1 ? s.length : end + 1;
+        push('string', s.slice(i, stop));
+        i = stop;
+        continue;
+      }
+      // JSX close: &lt;/Tag
+      if (s.startsWith('&lt;/', i)) {
+        push(null, '&lt;/');
+        i += 5;
+        const m = s.slice(i).match(/^([A-Za-z][A-Za-z0-9]*)/);
+        if (m) { push('tag', m[1]); i += m[1].length; }
+        continue;
+      }
+      // JSX open: &lt;Tag
+      if (s.startsWith('&lt;', i)) {
+        push(null, '&lt;');
+        i += 4;
+        const m = s.slice(i).match(/^([A-Za-z][A-Za-z0-9]*)/);
+        if (m) { push('tag', m[1]); i += m[1].length; }
+        continue;
+      }
+      // JSX close bracket: &gt;
+      if (s.startsWith('&gt;', i)) { push(null, '&gt;'); i += 4; continue; }
+      // Expression braces
+      if (s[i] === '{' || s[i] === '}') { push('brace', s[i]); i++; continue; }
+      // Identifier / word
+      const m = s.slice(i).match(/^([a-zA-Z_][a-zA-Z0-9_]*)/);
+      if (m) {
+        const word = m[1];
+        if (HL_KEYWORDS.has(word)) {
+          push('keyword', word);
+        } else if (s[i + word.length] === '=') {
+          push('attr', word);
+        } else {
+          push(null, word);
+        }
+        i += word.length;
+        continue;
+      }
+      // Anything else — single character
+      push(null, s[i]);
+      i++;
+    }
+    return out.join('');
+  }
+
+  // ─── Copy Code snippet block — dark themed, click to copy, syntax highlighted ───
+  function codeBlock(code, filename = 'example.tsx') {
+    const escaped = code.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    const highlighted = highlightJSX(escaped);
+    return `
+      <div class="code-block rounded-b-lg overflow-hidden bg-gray-950">
+        <div class="flex items-center justify-between px-3 py-2 border-b border-gray-800">
+          <div class="flex items-center gap-2 text-gray-400 text-xs font-mono">
+            <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V9z"/><path d="M13 2v7h7"/></svg>
+            ${filename}
+          </div>
+          <button type="button" class="copy-code-btn text-xs text-gray-400 hover:text-white flex items-center gap-1.5 transition-colors">
+            <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+              <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"></path>
+            </svg>
+            <span class="copy-label">Copy</span>
+          </button>
+        </div>
+        <pre class="px-4 py-4 text-xs text-gray-100 font-mono overflow-x-auto leading-relaxed"><code data-raw="${escaped.replace(/"/g, '&quot;')}">${highlighted}</code></pre>
+      </div>
+    `;
+  }
+
+  // ─── Interactive variant switcher (pill row) ───
+  function pillGroup({ label, values, current, key }) {
+    return `
+      <div class="inline-flex items-center gap-2">
+        <span class="text-[10px] uppercase tracking-wider font-semibold text-gray-500">${label}</span>
+        <div class="inline-flex p-0.5 gap-0.5 bg-gray-100 rounded-md">
+          ${values.map(v => `
+            <button type="button"
+              data-variant-key="${key}"
+              data-variant-value="${v.value}"
+              class="variant-pill px-2 py-0.5 text-[11px] font-mono font-medium rounded transition-colors ${v.value === current ? 'bg-white shadow-sm text-gray-900' : 'text-gray-500 hover:text-gray-800'}">${v.label}</button>
+          `).join('')}
+        </div>
+      </div>
+    `;
+  }
+
+  // ─── Interactive Button section — one preview, variant pills change everything ───
+  function interactiveButtonSection({ num, title, description, defaults, options, buttonLabel = 'Save changes', filename = 'button.tsx', usage, source }) {
+    const padded = num.toString().padStart(2, '0');
+    const slug = String(title).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+    const id = `sec-${padded}-${slug}`;
+
+    const initialPreview = btn({ hier: defaults.hierarchy, size: defaults.size, label: buttonLabel });
+    const initialCode = `<Button hierarchy="${defaults.hierarchy}" size="${defaults.size}">${buttonLabel}</Button>`;
+
+    const switcherHtml = options.map(opt => pillGroup({
+      label: opt.label,
+      values: opt.values,
+      current: defaults[opt.key],
+      key: opt.key,
+    })).join('<span class="w-px h-4 bg-gray-200 mx-1"></span>');
+
+    const sourceHtml = source ? `
+      <div class="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-gray-500">
+        <span class="inline-flex items-center gap-1.5"><span class="font-medium text-gray-700">Source:</span>
+          <a href="https://github.com/sathishkumarparthasarathy/pulse-design-system/blob/main/${source.file}" target="_blank" rel="noopener" class="text-brand-700 hover:text-brand-800 font-medium inline-flex items-center gap-1">${source.file}
+            <svg class="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M17 7H8M17 7v9"/></svg>
+          </a>
+        </span>
+        <span class="text-gray-300">·</span>
+        <span class="inline-flex items-center gap-1.5"><span class="font-medium text-gray-700">Install:</span>
+          <code class="font-mono bg-gray-100 text-gray-700 px-2 py-0.5 rounded text-[11px]">${source.install}</code>
+        </span>
+      </div>
+    ` : '';
+
+    return `
+      <div id="${id}"
+           data-toc-title="${padded} · ${title}"
+           data-variant-section="button"
+           data-button-label="${buttonLabel}"
+           data-current-hierarchy="${defaults.hierarchy}"
+           data-current-size="${defaults.size}"
+           class="bg-white border border-gray-200 rounded-xl shadow-xs px-6 py-6 scroll-mt-24">
+
+        <div class="flex items-baseline gap-3 mb-4 pb-3 border-b border-gray-100">
+          <span class="font-mono text-xs font-semibold text-gray-400">${padded}</span>
+          <span class="text-base font-semibold text-gray-900">${title}</span>
+          <span class="text-xs text-gray-500 ml-auto text-right">${description}</span>
+        </div>
+
+        <div class="preview-code-tabs rounded-lg border border-gray-200 overflow-hidden bg-white">
+          <div class="flex flex-wrap items-center justify-between gap-3 border-b border-gray-200 bg-gray-50 px-3 py-2">
+            <div class="inline-flex items-center gap-0.5 p-0.5 bg-white border border-gray-200 rounded-md">
+              <button type="button" class="tab-btn is-active px-2.5 py-1 text-xs font-semibold rounded flex items-center gap-1.5 transition-colors" data-tab="preview">
+                <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                Preview
+              </button>
+              <button type="button" class="tab-btn px-2.5 py-1 text-xs font-semibold rounded flex items-center gap-1.5 transition-colors" data-tab="code">
+                <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg>
+                Code
+              </button>
+            </div>
+            <div class="flex flex-wrap items-center gap-3">${switcherHtml}</div>
+          </div>
+          <div class="tab-content-preview">
+            <div class="px-6 py-16 flex items-center justify-center bg-gray-50/30" data-variant-preview>${initialPreview}</div>
+          </div>
+          <div class="tab-content-code hidden" data-variant-code data-variant-filename="${filename}">${codeBlock(initialCode, filename)}</div>
+        </div>
+
+        ${sourceHtml}
+        ${usage ? usageBlock(usage) : ''}
+      </div>
+    `;
+  }
+
+  // ─── Preview | Code tab wrapper · toggles between live component and source ───
+  let _tabIdCounter = 0;
+  function previewCodeTabs({ preview, code, filename = 'example.tsx' }) {
+    const id = `pct-${++_tabIdCounter}`;
+    return `
+      <div class="preview-code-tabs mt-3 rounded-lg border border-gray-200 overflow-hidden bg-white" data-tabs-id="${id}">
+        <div class="flex items-center justify-between border-b border-gray-200 bg-gray-50 px-3 py-2">
+          <div class="inline-flex items-center gap-0.5 p-0.5 bg-white border border-gray-200 rounded-md">
+            <button type="button" class="tab-btn is-active px-2.5 py-1 text-xs font-semibold rounded flex items-center gap-1.5 transition-colors" data-tab="preview">
+              <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              Preview
+            </button>
+            <button type="button" class="tab-btn px-2.5 py-1 text-xs font-semibold rounded flex items-center gap-1.5 transition-colors" data-tab="code">
+              <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg>
+              Code
+            </button>
+          </div>
+        </div>
+        <div class="tab-content-preview">
+          <div class="px-6 py-8">${preview}</div>
+        </div>
+        <div class="tab-content-code hidden">
+          ${codeBlock(code, filename)}
+        </div>
+      </div>
+    `;
+  }
+
+  // ─── Source-file link + install command · shown at the top of a section ───
+  function sourceRibbon({ file, install }) {
+    const url = `https://github.com/sathishkumarparthasarathy/pulse-design-system/blob/main/${file}`;
+    return `
+      <div class="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-gray-500 mb-4 pb-3 border-b border-gray-100">
+        <span class="inline-flex items-center gap-1.5">
+          <svg class="h-3.5 w-3.5 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V9z"/><path d="M13 2v7h7"/></svg>
+          Source
+        </span>
+        <a href="${url}" target="_blank" rel="noopener" class="text-brand-700 hover:text-brand-800 font-medium inline-flex items-center gap-1">
+          ${file}
+          <svg class="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M17 7H8M17 7v9"/></svg>
+        </a>
+        <span class="text-gray-300">·</span>
+        <span class="inline-flex items-center gap-1.5">
+          <svg class="h-3.5 w-3.5 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17l6-6-6-6M12 19h8"/></svg>
+          Install
+        </span>
+        <code class="font-mono bg-gray-100 text-gray-700 px-2 py-0.5 rounded text-[11px] leading-relaxed">${install}</code>
+      </div>
+    `;
   }
 
   // Usage guide — "Use when" / "Avoid when" two-column
@@ -3378,120 +3671,530 @@
   const SIZES_ALL = ['sm', 'md', 'lg', 'xl', '2xl'];
   const SIZE_LABEL = { sm: 'Small', md: 'Medium', lg: 'Large', xl: 'Extra Large', '2xl': '2XL' };
 
+  // ─── Unified Button Playground · single card, all variants via pills ───
+  const HIERARCHIES = [
+    { group: 'Primary' },
+    { value: 'primary',              label: 'Primary' },
+    { value: 'primary-gradient',     label: 'Primary gradient' },
+    { group: 'Secondary' },
+    { value: 'secondary-gray',       label: 'Secondary gray' },
+    { value: 'secondary-color',      label: 'Secondary color' },
+    { group: 'Tertiary' },
+    { value: 'tertiary-gray',        label: 'Tertiary gray' },
+    { value: 'tertiary-color',       label: 'Tertiary color' },
+    { group: 'Link' },
+    { value: 'link-color',           label: 'Link color' },
+    { value: 'link-gray',            label: 'Link gray' },
+    { group: 'Destructive' },
+    { value: 'destructive-primary',  label: 'Destructive primary' },
+    { value: 'destructive-secondary',label: 'Destructive secondary' },
+    { value: 'destructive-tertiary', label: 'Destructive tertiary' },
+  ];
+  const PG_SIZES = SIZES_ALL.map(s => ({ value: s, label: s }));
+  const PG_ICONS = [
+    { value: 'none',     label: 'None' },
+    { value: 'leading',  label: 'Leading' },
+    { value: 'trailing', label: 'Trailing' },
+    { value: 'only',     label: 'Icon only' },
+  ];
+  const PG_STATES = [
+    { value: 'default',  label: 'Default' },
+    { value: 'loading',  label: 'Loading' },
+    { value: 'disabled', label: 'Disabled' },
+  ];
+
+  function pgPillRow(label, key, current, values) {
+    return `
+      <div class="grid grid-cols-[90px_1fr] items-start gap-4 py-2">
+        <div class="text-[11px] font-semibold text-gray-500 uppercase tracking-wider pt-1.5">${label}</div>
+        <div class="flex flex-wrap gap-1">
+          ${values.map(v => `
+            <button type="button"
+              data-variant-key="${key}"
+              data-variant-value="${v.value}"
+              class="pg-pill variant-pill px-2.5 py-1 text-xs font-medium rounded-md border transition-colors ${v.value === current
+                ? 'bg-gray-900 text-white border-gray-900'
+                : 'bg-white text-gray-700 border-gray-200 hover:border-gray-300 hover:bg-gray-50'}">${v.label}</button>
+          `).join('')}
+        </div>
+      </div>
+    `;
+  }
+
+  // ─── Dropdown row (uses <details> for native open/close) ───
+  function pgDropdownRow(label, key, current, values, minWidth = 220) {
+    const flatValues = values.filter(v => v.value);
+    const currentEntry = flatValues.find(v => v.value === current) || flatValues[0];
+    const currentLabel = currentEntry?.label || '';
+
+    const optionsHtml = values.map(v => {
+      if (v.group) {
+        // Group header divider
+        return `<div class="px-3 pt-2 pb-1 text-[10px] uppercase tracking-wider text-gray-400 font-semibold">${v.group}</div>`;
+      }
+      const active = v.value === current;
+      const check = active
+        ? '<svg class="h-3.5 w-3.5 text-brand-600 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>'
+        : '<span class="w-3.5"></span>';
+      return `
+        <button type="button"
+          data-variant-key="${key}"
+          data-variant-value="${v.value}"
+          data-variant-label="${v.label}"
+          class="pg-dd-option variant-pill w-full text-left px-3 py-1.5 text-xs font-medium hover:bg-gray-50 flex items-center justify-between gap-3 ${active ? 'text-gray-900 bg-gray-50' : 'text-gray-700'}">
+          <span>${v.label}</span>
+          ${check}
+        </button>`;
+    }).join('');
+
+    return `
+      <div class="grid grid-cols-[90px_1fr] items-start gap-4 py-2">
+        <div class="text-[11px] font-semibold text-gray-500 uppercase tracking-wider pt-1.5">${label}</div>
+        <div>
+          <details class="pg-dropdown relative inline-block" data-variant-key="${key}">
+            <summary class="list-none [&::-webkit-details-marker]:hidden cursor-pointer flex items-center gap-2 h-8 px-3 text-xs font-medium bg-white border border-gray-200 rounded-md hover:border-gray-300 hover:bg-gray-50 transition-colors" style="min-width:${minWidth}px">
+              <span class="pg-dd-label flex-1 text-left text-gray-900">${currentLabel}</span>
+              <svg class="h-3.5 w-3.5 text-gray-500 shrink-0 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+            </summary>
+            <div class="absolute top-full left-0 mt-1 min-w-full bg-white border border-gray-200 rounded-md shadow-lg z-20 py-1">
+              ${optionsHtml}
+            </div>
+          </details>
+        </div>
+      </div>
+    `;
+  }
+
+  function renderPlaygroundButton(state) {
+    const isLink = state.hierarchy === 'link-color' || state.hierarchy === 'link-gray';
+    if (isLink) {
+      return linkBtn({
+        color: state.hierarchy === 'link-color' ? 'color' : 'gray',
+        size: state.size,
+        label: state.label,
+        leading:  state.icon === 'leading'  ? 'plus'  : undefined,
+        trailing: state.icon === 'trailing' ? 'arrow' : undefined,
+        disabled: state.state === 'disabled',
+      });
+    }
+    const iconName = state.icon === 'leading' || state.icon === 'only' ? 'plus'
+      : state.icon === 'trailing' ? 'arrow' : undefined;
+    return btn({
+      hier:     state.hierarchy,
+      size:     state.size,
+      label:    state.icon === 'only' ? '' : state.label,
+      leading:  state.icon === 'leading' || state.icon === 'only' ? iconName : undefined,
+      trailing: state.icon === 'trailing' ? 'arrow' : undefined,
+      iconOnly: state.icon === 'only',
+      loading:  state.state === 'loading',
+      disabled: state.state === 'disabled',
+    });
+  }
+
+  function renderPlaygroundCode(state) {
+    const props = [`hierarchy="${state.hierarchy}"`];
+    if (state.size !== 'md')      props.push(`size="${state.size}"`);
+    if (state.state === 'loading') props.push('loading');
+    if (state.state === 'disabled') props.push('disabled');
+    if (state.icon === 'leading')  props.push('leadingIcon={<Plus />}');
+    if (state.icon === 'trailing') props.push('trailingIcon={<ArrowRight />}');
+    if (state.icon === 'only')     props.push('iconOnly aria-label="Add"');
+    const body = state.icon === 'only' ? '<Plus />' : state.label;
+    return `<Button ${props.join(' ')}>${body}</Button>`;
+  }
+
+  function buttonPlayground() {
+    const defaults = { hierarchy: 'primary', size: 'md', icon: 'none', state: 'default', label: 'Save changes' };
+    const previewHtml = renderPlaygroundButton(defaults);
+    const codeStr = renderPlaygroundCode(defaults);
+
+    return `
+      <div id="button-playground"
+           data-variant-section="button"
+           data-current-hierarchy="${defaults.hierarchy}"
+           data-current-size="${defaults.size}"
+           data-current-icon="${defaults.icon}"
+           data-current-state="${defaults.state}"
+           data-button-label="${defaults.label}"
+           class="bg-white border border-gray-200 rounded-xl shadow-xs scroll-mt-24">
+
+        <!-- Toolbar row -->
+        <div class="flex items-center justify-between gap-3 border-b border-gray-200 bg-gray-50 px-4 py-3">
+          <div class="inline-flex items-center gap-0.5 p-0.5 bg-white border border-gray-200 rounded-md">
+            <button type="button" class="tab-btn is-active px-2.5 py-1 text-xs font-semibold rounded flex items-center gap-1.5 transition-colors" data-tab="preview">
+              <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              Preview
+            </button>
+            <button type="button" class="tab-btn px-2.5 py-1 text-xs font-semibold rounded flex items-center gap-1.5 transition-colors" data-tab="code">
+              <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg>
+              Code
+            </button>
+          </div>
+          <div class="flex items-center gap-2">
+            <label class="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Label</label>
+            <input type="text" data-variant-input="label" value="${defaults.label}"
+              class="h-8 px-2.5 text-xs border border-gray-200 rounded-md w-40 bg-white focus:outline-none focus:border-brand-400 focus:ring-2 focus:ring-brand-100" />
+          </div>
+        </div>
+
+        <div class="preview-code-tabs">
+          <div class="tab-content-preview">
+            <div class="px-6 py-24 flex items-center justify-center bg-gray-50/30" data-variant-preview>${previewHtml}</div>
+          </div>
+          <div class="tab-content-code hidden" data-variant-code data-variant-filename="button.tsx">${codeBlock(codeStr, 'button.tsx')}</div>
+        </div>
+
+        <!-- Controls -->
+        <div class="border-t border-gray-100 px-4 pb-4 pt-2 divide-y divide-gray-100">
+          ${pgDropdownRow('Hierarchy', 'hierarchy', defaults.hierarchy, HIERARCHIES, 240)}
+          ${pgPillRow('Size',      'size',      defaults.size,      PG_SIZES)}
+          ${pgDropdownRow('Icon',   'icon',      defaults.icon,      PG_ICONS, 160)}
+          ${pgPillRow('State',     'state',     defaults.state,     PG_STATES)}
+        </div>
+      </div>
+    `;
+  }
+
   const btnSectionsHtml = [
-    // 01 · Primary buttons — solid (default) + gradient (opt-in for hero CTAs)
-    btnSection(1, 'Primary buttons', 'Solid for everyday · gradient for hero CTAs',
-      btnSubgroup('Solid · default for tables, forms, dialogs',
-        SIZES_ALL.map(s => btn({ hier: 'primary', size: s, label: SIZE_LABEL[s] })).join('')) +
-      btnSubgroup('Gradient · opt-in for hero/landing CTAs · <span class="font-mono text-brand-700">#FF7918 → #E5610A</span>',
-        SIZES_ALL.map(s => btn({ hier: 'primary-gradient', size: s, label: SIZE_LABEL[s] })).join('')),
-      BTN_USAGE[1]),
+    buttonPlayground(),
+    // Source + install ribbon under the playground
+    `<div class="bg-white border border-gray-200 rounded-xl shadow-xs px-6 py-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-gray-500">
+      <span class="inline-flex items-center gap-1.5"><span class="font-medium text-gray-700">Source:</span>
+        <a href="https://github.com/sathishkumarparthasarathy/pulse-design-system/blob/main/src/components/Button.tsx" target="_blank" rel="noopener" class="text-brand-700 hover:text-brand-800 font-medium inline-flex items-center gap-1">src/components/Button.tsx
+          <svg class="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M17 7H8M17 7v9"/></svg>
+        </a>
+      </span>
+      <span class="text-gray-300">·</span>
+      <span class="inline-flex items-center gap-1.5"><span class="font-medium text-gray-700">Install:</span>
+        <code class="font-mono bg-gray-100 text-gray-700 px-2 py-0.5 rounded text-[11px]">npm i class-variance-authority @radix-ui/react-slot clsx tailwind-merge</code>
+      </span>
+    </div>`,
+    // Combined usage guidance for the whole Button component
+    `<div class="bg-white border border-gray-200 rounded-xl shadow-xs px-6 py-6" data-toc-title="Usage guidance" id="button-usage">
+      <div class="flex items-baseline gap-3 mb-4 pb-3 border-b border-gray-100">
+        <span class="text-base font-semibold text-gray-900">Usage guidance</span>
+        <span class="text-xs text-gray-500 ml-auto text-right">When to use each hierarchy · when to avoid</span>
+      </div>
+      ${usageBlock({
+        doItems: [
+          'Primary (solid) for the main "go" action in tables, forms, dialogs',
+          'Primary (gradient) for hero CTAs on landing / marketing pages',
+          'Secondary as the alternate to a primary (Cancel next to Save)',
+          'Tertiary for low-stakes row actions in dense tables',
+          'Link color / Link gray for inline text actions',
+          'Destructive (primary / secondary / tertiary) for delete flows — escalate severity based on reversibility',
+        ],
+        dontItems: [
+          'Two primaries side-by-side (they weaken each other)',
+          'Gradient inside data tables or dense forms (visual noise)',
+          'Icon-only without an aria-label (breaks screen readers)',
+          'Destructive-primary as the entry point to a delete flow (use secondary/tertiary destructive there)',
+          "Trailing arrow on Save/Submit (implies a next step that isn't there)",
+          'Two leading icons on the same button',
+        ],
+      })}
+    </div>`,
 
-    // 02 · Secondary buttons — two flavors, each across sizes
-    btnSection(2, 'Secondary buttons', 'Gray for cancel · brand-tint for on-brand emphasis',
-      btnSubgroup('Secondary gray', SIZES_ALL.map(s => btn({ hier: 'secondary-gray', size: s, label: SIZE_LABEL[s] })).join('')) +
-      btnSubgroup('Secondary color', SIZES_ALL.map(s => btn({ hier: 'secondary-color', size: s, label: SIZE_LABEL[s] })).join('')),
-      BTN_USAGE[2]),
-
-    // 03 · Tertiary buttons — ghost variants
-    btnSection(3, 'Tertiary buttons', 'Ghost · low-emphasis actions',
-      btnSubgroup('Tertiary gray', SIZES_ALL.map(s => btn({ hier: 'tertiary-gray', size: s, label: SIZE_LABEL[s] })).join('')) +
-      btnSubgroup('Tertiary color', SIZES_ALL.map(s => btn({ hier: 'tertiary-color', size: s, label: SIZE_LABEL[s] })).join('')),
-      BTN_USAGE[3]),
-
-    // 04 · Link color
-    btnSection(4, 'Link color buttons', 'Inline brand-colored text actions',
-      btnRow(SIZES_ALL.map(s => linkBtn({ color: 'color', size: s, label: SIZE_LABEL[s] })).join('')),
-      BTN_USAGE[4]),
-
-    // 05 · Link gray
-    btnSection(5, 'Link gray buttons', 'Inline gray-colored text actions',
-      btnRow(SIZES_ALL.map(s => linkBtn({ color: 'gray', size: s, label: SIZE_LABEL[s] })).join('')),
-      BTN_USAGE[5]),
-
-    // 06 · Icon leading — sizes + hierarchies
-    btnSection(6, 'Icon leading buttons', 'Icon on the left · label on the right',
-      btnSubgroup('All sizes (primary)',
-        SIZES_ALL.map(s => btn({ hier: 'primary', size: s, label: SIZE_LABEL[s], leading: 'plus' })).join('')) +
-      btnSubgroup('Across hierarchies',
-        btn({ hier: 'primary',          size: 'md', label: 'New application', leading: 'plus' }) +
-        btn({ hier: 'secondary-gray',   size: 'md', label: 'Export CSV',      leading: 'download' }) +
-        btn({ hier: 'secondary-color',  size: 'md', label: 'Run AI Decision', leading: 'sparkles' }) +
-        btn({ hier: 'tertiary-gray',    size: 'md', label: 'Continue',        leading: 'arrow' }) +
-        linkBtn({ color: 'color',       size: 'md', label: 'Add project',     leading: 'plus' })
-      ),
-      BTN_USAGE[6]),
-
-    // 07 · Icon trailing — sizes + hierarchies
-    btnSection(7, 'Icon trailing buttons', 'Label on the left · icon on the right',
-      btnSubgroup('All sizes (primary)',
-        SIZES_ALL.map(s => btn({ hier: 'primary', size: s, label: SIZE_LABEL[s], trailing: 'arrow' })).join('')) +
-      btnSubgroup('Across hierarchies',
-        btn({ hier: 'primary',         size: 'md', label: 'Continue',     trailing: 'arrow' }) +
-        btn({ hier: 'secondary-gray',  size: 'md', label: 'Learn more',   trailing: 'arrow' }) +
-        btn({ hier: 'secondary-color', size: 'md', label: 'See details',  trailing: 'arrow' }) +
-        btn({ hier: 'tertiary-color',  size: 'md', label: 'Next step',    trailing: 'arrow' }) +
-        linkBtn({ color: 'color',      size: 'md', label: 'View report',  trailing: 'arrow' })
-      ),
-      BTN_USAGE[7]),
-
-    // 08 · Icon only — sizes + hierarchies
-    btnSection(8, 'Icon only buttons', 'Compact · square · matches size across sm → 2xl',
-      btnSubgroup('All sizes (primary)',
-        SIZES_ALL.map(s => btn({ hier: 'primary', size: s, iconOnly: true, leading: 'plus' })).join('')) +
-      btnSubgroup('Across hierarchies',
-        btn({ hier: 'primary',              size: 'md', iconOnly: true, leading: 'plus' }) +
-        btn({ hier: 'secondary-gray',       size: 'md', iconOnly: true, leading: 'plus' }) +
-        btn({ hier: 'secondary-color',      size: 'md', iconOnly: true, leading: 'sparkles' }) +
-        btn({ hier: 'tertiary-gray',        size: 'md', iconOnly: true, leading: 'plus' }) +
-        btn({ hier: 'destructive-primary',  size: 'md', iconOnly: true, leading: 'trash' })
-      ),
-      BTN_USAGE[8]),
-
-    // 09 · Loading — sizes + hierarchies
-    btnSection(9, 'Loading buttons', 'Spinner replaces the icon · button stays same width',
-      btnSubgroup('All sizes (primary)',
-        SIZES_ALL.map(s => btn({ hier: 'primary', size: s, label: SIZE_LABEL[s], loading: true })).join('')) +
-      btnSubgroup('Across hierarchies',
-        btn({ hier: 'primary',              size: 'md', label: 'Saving…',   loading: true }) +
-        btn({ hier: 'secondary-gray',       size: 'md', label: 'Loading…',  loading: true }) +
-        btn({ hier: 'secondary-color',      size: 'md', label: 'Running…',  loading: true }) +
-        btn({ hier: 'tertiary-gray',        size: 'md', label: 'Loading…',  loading: true }) +
-        btn({ hier: 'destructive-primary',  size: 'md', label: 'Deleting…', loading: true })
-      ),
-      BTN_USAGE[9]),
-
-    // 10 · Disabled — sizes + hierarchies
-    btnSection(10, 'Disabled buttons', 'Non-interactive · reduced contrast · same layout as enabled',
-      btnSubgroup('All sizes (primary)',
-        SIZES_ALL.map(s => btn({ hier: 'primary', size: s, label: SIZE_LABEL[s], disabled: true })).join('')) +
-      btnSubgroup('Across hierarchies',
-        btn({ hier: 'primary',              size: 'md', label: 'Save',      disabled: true }) +
-        btn({ hier: 'secondary-gray',       size: 'md', label: 'Cancel',    disabled: true }) +
-        btn({ hier: 'secondary-color',      size: 'md', label: 'Continue',  disabled: true }) +
-        btn({ hier: 'tertiary-gray',        size: 'md', label: 'More',      disabled: true }) +
-        btn({ hier: 'destructive-primary',  size: 'md', label: 'Delete',    disabled: true }) +
-        linkBtn({ color: 'color',           size: 'md', label: 'Skip',      disabled: true })
-      ),
-      BTN_USAGE[10]),
-
-    // 11 · Destructive primary
-    btnSection(11, 'Destructive primary', 'Filled red · irreversible actions like delete',
-      btnRow(SIZES_ALL.map(s => btn({ hier: 'destructive-primary', size: s, label: 'Delete' })).join('')),
-      BTN_USAGE[11]),
-
-    // 12 · Destructive secondary
-    btnSection(12, 'Destructive secondary', 'Outlined red · dangerous but reversible',
-      btnRow(SIZES_ALL.map(s => btn({ hier: 'destructive-secondary', size: s, label: 'Delete' })).join('')),
-      BTN_USAGE[12]),
-
-    // 13 · Destructive tertiary
-    btnSection(13, 'Destructive tertiary', 'Ghost red · low-emphasis destructive action',
-      btnRow(SIZES_ALL.map(s => btn({ hier: 'destructive-tertiary', size: s, label: 'Delete' })).join('')),
-      BTN_USAGE[13]),
   ].join('');
 
   document.getElementById('btn-sections').innerHTML = btnSectionsHtml;
+
+  // ─── Copy-to-clipboard for code blocks (event delegation) ───
+  document.addEventListener('click', async (e) => {
+    const btn = e.target.closest('.copy-code-btn');
+    if (!btn) return;
+    const block = btn.closest('.code-block');
+    const code = block?.querySelector('code');
+    if (!code) return;
+    // Prefer the raw (un-highlighted) source stored in data-raw; fall back to textContent
+    const raw = code.getAttribute('data-raw');
+    const decoded = raw
+      ? raw.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&').replace(/&quot;/g, '"')
+      : (code.textContent || '');
+    try {
+      await navigator.clipboard.writeText(decoded);
+      const label = btn.querySelector('.copy-label');
+      if (label) {
+        const orig = label.textContent;
+        label.textContent = 'Copied!';
+        btn.classList.add('text-green-400');
+        setTimeout(() => {
+          label.textContent = orig;
+          btn.classList.remove('text-green-400');
+        }, 1500);
+      }
+    } catch (err) {
+      console.error('Copy failed:', err);
+    }
+  });
+
+  // ─── Preview | Code tab switching (event delegation) ───
+  document.addEventListener('click', (e) => {
+    const tabBtn = e.target.closest('.tab-btn');
+    if (!tabBtn) return;
+    // Ignore variant pills that happen to share .tab-btn styling if any — they use .variant-pill
+    if (tabBtn.classList.contains('variant-pill')) return;
+    const wrapper = tabBtn.closest('.preview-code-tabs');
+    if (!wrapper) return;
+    const target = tabBtn.dataset.tab;
+    if (!target) return;
+    wrapper.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('is-active', b.dataset.tab === target));
+    wrapper.querySelector('.tab-content-preview').classList.toggle('hidden', target !== 'preview');
+    wrapper.querySelector('.tab-content-code').classList.toggle('hidden', target !== 'code');
+  });
+
+  // ─── Read all state from data-attrs on the section ───
+  function readVariantState(section) {
+    return {
+      hierarchy: section.dataset.currentHierarchy || 'primary',
+      size:      section.dataset.currentSize      || 'md',
+      icon:      section.dataset.currentIcon      || 'none',
+      state:     section.dataset.currentState     || 'default',
+      label:     section.dataset.buttonLabel      || 'Save changes',
+    };
+  }
+
+  function rerenderVariantSection(section) {
+    const state = readVariantState(section);
+    const previewEl = section.querySelector('[data-variant-preview]');
+    if (previewEl) previewEl.innerHTML = renderPlaygroundButton(state);
+    const codeHost = section.querySelector('[data-variant-code]');
+    if (codeHost) {
+      const filename = codeHost.dataset.variantFilename || 'button.tsx';
+      codeHost.innerHTML = codeBlock(renderPlaygroundCode(state), filename);
+    }
+  }
+
+  // ─── Variant switching (event delegation) — handles both pills and dropdown options ───
+  document.addEventListener('click', (e) => {
+    const pill = e.target.closest('.variant-pill');
+    if (!pill) return;
+    const section = pill.closest('[data-variant-section="button"]');
+    if (!section) return;
+
+    const key = pill.dataset.variantKey;
+    const val = pill.dataset.variantValue;
+    section.setAttribute(`data-current-${key}`, val);
+
+    // Update PILL visuals within the same key group — dark active / light inactive
+    section.querySelectorAll(`.pg-pill[data-variant-key="${key}"]`).forEach(p => {
+      const active = p.dataset.variantValue === val;
+      p.classList.toggle('bg-gray-900',    active);
+      p.classList.toggle('text-white',     active);
+      p.classList.toggle('border-gray-900', active);
+      p.classList.toggle('bg-white',        !active);
+      p.classList.toggle('text-gray-700',   !active);
+      p.classList.toggle('border-gray-200', !active);
+    });
+
+    // If clicked inside a DROPDOWN option: update label + close dropdown + re-decorate options
+    const dd = pill.closest('.pg-dropdown');
+    if (dd && pill.classList.contains('pg-dd-option')) {
+      const labelSpan = dd.querySelector('.pg-dd-label');
+      if (labelSpan) labelSpan.textContent = pill.dataset.variantLabel || val;
+      dd.querySelectorAll('.pg-dd-option').forEach(opt => {
+        const active = opt.dataset.variantValue === val;
+        opt.classList.toggle('bg-gray-50',   active);
+        opt.classList.toggle('text-gray-900', active);
+        opt.classList.toggle('text-gray-700', !active);
+        // Rebuild the check icon slot
+        const iconSlot = opt.querySelector('svg, span.w-3\\.5');
+        if (iconSlot) {
+          if (active) {
+            iconSlot.outerHTML = '<svg class="h-3.5 w-3.5 text-brand-600 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>';
+          } else {
+            iconSlot.outerHTML = '<span class="w-3.5"></span>';
+          }
+        }
+      });
+      dd.removeAttribute('open');
+    }
+
+    rerenderVariantSection(section);
+  });
+
+  // ─── Label input · updates the button label live ───
+  document.addEventListener('input', (e) => {
+    const input = e.target.closest('input[data-variant-input="label"]');
+    if (!input) return;
+    const section = input.closest('[data-variant-section="button"]');
+    if (!section) return;
+    section.dataset.buttonLabel = input.value || 'Save changes';
+    rerenderVariantSection(section);
+  });
+
+  // ============================================================
+  // Tooltips — rendered "pinned open" since Radix needs React
+  // ============================================================
+
+  // side: 'top' | 'bottom' | 'left' | 'right'
+  // variant: 'dark' | 'light'
+  // size: 'sm' | 'md'
+  function tt({ trigger, content, side = 'top', variant = 'dark', size = 'md', arrow = true }) {
+    const bg = variant === 'light'
+      ? 'bg-white text-gray-900 border border-gray-200'
+      : 'bg-gray-900 text-white';
+    const pad = size === 'sm' ? 'px-2 py-1' : 'px-2.5 py-1.5';
+    const pos = {
+      top:    'bottom-full left-1/2 -translate-x-1/2 mb-2',
+      bottom: 'top-full left-1/2 -translate-x-1/2 mt-2',
+      left:   'right-full top-1/2 -translate-y-1/2 mr-2',
+      right:  'left-full top-1/2 -translate-y-1/2 ml-2',
+    }[side];
+    const arrowColor = variant === 'light' ? '#ffffff' : '#101828';
+    const arrowStyle = {
+      top:    `top:100%;left:50%;transform:translateX(-50%);border-width:5px 5px 0 5px;border-color:${arrowColor} transparent transparent transparent;`,
+      bottom: `bottom:100%;left:50%;transform:translateX(-50%);border-width:0 5px 5px 5px;border-color:transparent transparent ${arrowColor} transparent;`,
+      left:   `left:100%;top:50%;transform:translateY(-50%);border-width:5px 0 5px 5px;border-color:transparent transparent transparent ${arrowColor};`,
+      right:  `right:100%;top:50%;transform:translateY(-50%);border-width:5px 5px 5px 0;border-color:transparent ${arrowColor} transparent transparent;`,
+    }[side];
+    const arrowHtml = arrow ? `<div class="absolute w-0 h-0" style="${arrowStyle}"></div>` : '';
+    return `<div class="relative inline-block">
+      ${trigger}
+      <div class="absolute ${pos} whitespace-nowrap z-10 pointer-events-none">
+        <div class="relative ${bg} ${pad} rounded-md text-xs font-medium shadow-md">
+          ${content}
+          ${arrowHtml}
+        </div>
+      </div>
+    </div>`;
+  }
+
+  function ttBox(html) {
+    return `<div class="relative min-h-[140px] flex flex-wrap items-center justify-center gap-x-16 gap-y-14 px-6 py-14 bg-gray-50 border border-gray-100 rounded-lg">
+      <div class="absolute top-2 right-3 text-[10px] uppercase tracking-wider text-gray-400 font-semibold">Tooltips pinned open · hover in the React showcase for real behavior</div>
+      ${html}
+    </div>`;
+  }
+
+  // Simple <kbd> chip for shortcut demos
+  function kbd(char, variant = 'dark') {
+    const cls = variant === 'light'
+      ? 'bg-gray-100 text-gray-600 border border-gray-200'
+      : 'bg-gray-800 text-gray-300 border border-gray-700';
+    return `<kbd class="inline-flex items-center justify-center h-4 min-w-[16px] px-1 rounded text-[10px] font-mono font-medium ${cls}">${char}</kbd>`;
+  }
+
+  function richContent({ title, description, shortcut, variant = 'dark' }) {
+    const descColor = variant === 'light' ? 'text-gray-600' : 'text-gray-300';
+    const shortcutHtml = shortcut
+      ? `<div class="flex items-center gap-0.5 shrink-0">${shortcut.map(k => kbd(k, variant)).join('')}</div>`
+      : '';
+    return `
+      <div class="flex flex-col gap-1 max-w-[240px] whitespace-normal">
+        <div class="flex items-start justify-between gap-3">
+          <div class="text-xs font-semibold leading-tight">${title}</div>
+          ${shortcutHtml}
+        </div>
+        ${description ? `<div class="text-xs leading-relaxed ${descColor}">${description}</div>` : ''}
+      </div>
+    `;
+  }
+
+  // Sample trigger snippets — small buttons that host the tooltip
+  const trigBtn = (label) => `<button class="inline-flex items-center justify-center h-10 px-4 text-sm font-semibold rounded-md bg-white text-gray-700 border border-gray-300 shadow-xs">${label}</button>`;
+  const trigBtnSm = (label) => `<button class="inline-flex items-center justify-center h-9 px-3.5 text-sm font-semibold rounded-md bg-white text-gray-700 border border-gray-300 shadow-xs">${label}</button>`;
+  const trigBtnPrimary = (label) => `<button class="inline-flex items-center justify-center h-10 px-4 text-sm font-semibold rounded-md bg-brand-600 text-white border border-brand-600 shadow-xs">${label}</button>`;
+  const trigIconOnly = (svg) => `<button class="inline-flex items-center justify-center h-10 w-10 rounded-md bg-white text-gray-700 border border-gray-300 shadow-xs">${svg}</button>`;
+
+  const TT_USAGE = {
+    doItems: [
+      'Explain the purpose of an icon-only button',
+      'Reveal a keyboard shortcut or hidden detail',
+      'Add a short label to a non-obvious control',
+    ],
+    dontItems: [
+      'Convey critical or must-see information',
+      'Hide primary content that should always be visible',
+      'On mobile touch devices (there\'s no reliable hover)',
+    ],
+  };
+
+  const ttSections = [
+    // 01 · Basic
+    btnSection(1, 'Basic tooltip', 'Hover to reveal · single-line hint',
+      ttBox(
+        tt({ trigger: trigBtn('Save'), content: 'Save your changes' }) +
+        tt({ trigger: trigIconOnly('<svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v16m8-8H4"/></svg>'), content: 'Duplicate record' }) +
+        tt({ trigger: `<span class="inline-flex items-center gap-1 text-xs text-gray-600 border-b border-dotted border-gray-400 cursor-help">Approval rate <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></span>`, content: 'Learn more about this metric' })
+      ),
+      TT_USAGE),
+
+    // 02 · Positions
+    btnSection(2, 'Positions', 'side · top · bottom · left · right',
+      ttBox(
+        tt({ trigger: trigBtnSm('Top'),    content: 'Appears on top',    side: 'top' }) +
+        tt({ trigger: trigBtnSm('Bottom'), content: 'Appears on bottom', side: 'bottom' }) +
+        tt({ trigger: trigBtnSm('Left'),   content: 'Appears on left',   side: 'left' }) +
+        tt({ trigger: trigBtnSm('Right'),  content: 'Appears on right',  side: 'right' })
+      )),
+
+    // 03 · Variants
+    btnSection(3, 'Variants', 'Dark for content · light for marketing / airy surfaces',
+      btnSubgroup('Dark (default)',
+        ttBox(
+          tt({ trigger: trigBtn('Hover me'), content: 'Dark tooltip on gray-900', variant: 'dark' }) +
+          tt({ trigger: trigBtnPrimary('Save'), content: 'Also dark', variant: 'dark' })
+        )) +
+      btnSubgroup('Light',
+        ttBox(
+          tt({ trigger: trigBtn('Hover me'), content: 'Light tooltip with border + shadow', variant: 'light' }) +
+          tt({ trigger: trigBtnPrimary('Save'), content: 'Also light', variant: 'light' })
+        ))),
+
+    // 04 · Sizes
+    btnSection(4, 'Sizes', 'sm · compact · md · default',
+      ttBox(
+        tt({ trigger: trigBtnSm('sm'), content: 'Small tooltip', size: 'sm' }) +
+        tt({ trigger: trigBtn('md'),   content: 'Medium tooltip (default)', size: 'md' })
+      )),
+
+    // 05 · Arrow toggle
+    btnSection(5, 'Arrow', 'On by default · turn off for a floating pill look',
+      ttBox(
+        tt({ trigger: trigBtn('With arrow'), content: 'With arrow (default)', arrow: true }) +
+        tt({ trigger: trigBtn('No arrow'),   content: 'No arrow — free-floating', arrow: false })
+      )),
+
+    // 06 · Rich content
+    btnSection(6, 'Rich content', 'Title · optional description · optional shortcut chips',
+      btnSubgroup('Title + description',
+        ttBox(
+          tt({ trigger: trigBtnPrimary('Save'), content: richContent({ title: 'Save changes', description: 'Persists to draft. You can still discard before publishing.' }) }) +
+          tt({ trigger: trigBtn('Refresh'), content: richContent({ title: 'Auto-refresh disabled', description: 'Click to enable live updates every 30 seconds.', variant: 'light' }), variant: 'light' })
+        )) +
+      btnSubgroup('With keyboard shortcut',
+        ttBox(
+          tt({ trigger: trigBtnPrimary('Save'), content: richContent({ title: 'Save changes', shortcut: ['⌘', 'S'] }) }) +
+          tt({ trigger: trigBtn('Search'),      content: richContent({ title: 'Search', description: 'Find files, actions, or people', shortcut: ['⌘', 'K'] }) }) +
+          tt({ trigger: `<button class="inline-flex items-center justify-center h-10 w-10 rounded-md bg-white text-error-700 border border-error-300 shadow-xs"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18m-2 0v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2M10 11v6M14 11v6"/></svg></button>`, content: richContent({ title: 'Delete', description: 'Permanently removes this record. This cannot be undone.', shortcut: ['⇧', '⌫'], variant: 'light' }), variant: 'light' })
+        ))),
+
+    // 07 · In-context
+    btnSection(7, 'In-context', 'Real UI · icon-only toolbar · metric explainer · disabled action',
+      ttBox(
+        // Editor toolbar
+        `<div class="inline-flex items-center gap-0.5 p-1 bg-white rounded-md border border-gray-200 shadow-xs">
+          ${tt({ trigger: `<button class="h-8 w-8 flex items-center justify-center rounded text-gray-600 hover:bg-gray-50 text-sm font-bold">B</button>`, content: 'Bold', size: 'sm' })}
+          ${tt({ trigger: `<button class="h-8 w-8 flex items-center justify-center rounded text-gray-600 hover:bg-gray-50 text-sm italic">I</button>`, content: 'Italic', size: 'sm' })}
+          ${tt({ trigger: `<button class="h-8 w-8 flex items-center justify-center rounded text-gray-600 hover:bg-gray-50 text-sm underline">U</button>`, content: 'Underline', size: 'sm' })}
+          <div class="w-px h-5 bg-gray-200 mx-1"></div>
+          ${tt({ trigger: `<button class="h-8 w-8 flex items-center justify-center rounded text-gray-600 hover:bg-gray-50"><svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 007.07 0l4-4a5 5 0 00-7.07-7.07l-1.5 1.5M14 11a5 5 0 00-7.07 0l-4 4a5 5 0 007.07 7.07l1.5-1.5"/></svg></button>`, content: 'Add link', size: 'sm' })}
+        </div>` +
+        // Metric explainer
+        tt({
+          trigger: `<span class="inline-flex items-center gap-1 text-sm text-gray-700 border-b border-dotted border-gray-400 cursor-help">Threshold <svg class="h-3.5 w-3.5 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></span>`,
+          content: richContent({ title: 'Auto-approve threshold', description: 'Applications scoring above this value skip manual review and go straight to funding.' })
+        }) +
+        // Disabled with explanation
+        tt({
+          trigger: `<button class="inline-flex items-center justify-center h-10 px-4 text-sm font-semibold rounded-md bg-white text-gray-400 border border-gray-200 shadow-none cursor-not-allowed">Delete</button>`,
+          content: 'You need admin permission to delete this record'
+        })
+      )),
+  ].join('');
+
+  document.getElementById('tt-sections').innerHTML = ttSections;
 
   // ============================================================
   // Badge Groups
@@ -3808,6 +4511,60 @@
     });
     _iconSearchCt.textContent = `${matchCount} match${matchCount === 1 ? '' : 'es'}`;
   });
+
+  // ============================================================
+  // Prev / Next component navigation — injected at the bottom of every page
+  // ============================================================
+  (() => {
+    const PAGE_ORDER = [
+      { id: 'overview',       label: 'Overview' },
+      { id: 'colors',         label: 'Colors' },
+      { id: 'gradients',      label: 'Gradients' },
+      { id: 'shadows-blurs',  label: 'Shadows & blurs' },
+      { id: 'spacing-grids',  label: 'Spacing & grids' },
+      { id: 'typography',     label: 'Typography' },
+      { id: 'icons',          label: 'Icons' },
+      { id: 'buttons',        label: 'Buttons' },
+      { id: 'button-group',   label: 'Button group' },
+      { id: 'social-buttons', label: 'Social buttons' },
+      { id: 'close-button',   label: 'Close button' },
+      { id: 'avatars',        label: 'Avatars' },
+      { id: 'badges',         label: 'Badges' },
+      { id: 'badge-groups',   label: 'Badge groups' },
+      { id: 'status-pills',   label: 'Status pills' },
+      { id: 'forms',          label: 'Forms & inputs' },
+      { id: 'cards',          label: 'Cards' },
+      { id: 'tooltips',       label: 'Tooltips' },
+    ];
+
+    const CARD_BASE = 'group flex items-center gap-3 p-4 rounded-lg border border-gray-200 hover:border-gray-300 hover:bg-gray-50 transition-colors no-underline';
+
+    function makeCard(target, direction) {
+      if (!target) {
+        return `<div></div>`;
+      }
+      const arrow = direction === 'prev'
+        ? '<svg class="h-4 w-4 text-gray-400 group-hover:text-brand-600 transition-colors shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5m0 0l6-6m-6 6l6 6"/></svg>'
+        : '<svg class="h-4 w-4 text-gray-400 group-hover:text-brand-600 transition-colors shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m0 0l-6-6m6 6l-6 6"/></svg>';
+      const dirLabel = direction === 'prev' ? 'Previous' : 'Next';
+      const align = direction === 'prev' ? 'text-left' : 'text-right';
+      const content = direction === 'prev'
+        ? `${arrow}<div class="${align} min-w-0"><div class="text-[11px] uppercase tracking-wider text-gray-500 font-semibold">${dirLabel}</div><div class="text-sm font-semibold text-gray-900 group-hover:text-brand-700 transition-colors truncate">${target.label}</div></div>`
+        : `<div class="${align} min-w-0 ml-auto"><div class="text-[11px] uppercase tracking-wider text-gray-500 font-semibold">${dirLabel}</div><div class="text-sm font-semibold text-gray-900 group-hover:text-brand-700 transition-colors truncate">${target.label}</div></div>${arrow}`;
+      return `<a href="#${target.id}" class="${CARD_BASE}">${content}</a>`;
+    }
+
+    PAGE_ORDER.forEach((page, i) => {
+      const section = document.querySelector(`section[data-page="${page.id}"]`);
+      if (!section) return;
+      const prev = i > 0 ? PAGE_ORDER[i - 1] : null;
+      const next = i < PAGE_ORDER.length - 1 ? PAGE_ORDER[i + 1] : null;
+      const nav = document.createElement('div');
+      nav.className = 'mt-12 pt-8 border-t border-gray-100 grid grid-cols-2 gap-4';
+      nav.innerHTML = makeCard(prev, 'prev') + makeCard(next, 'next');
+      section.appendChild(nav);
+    });
+  })();
 
 </script>
 

@@ -90,11 +90,28 @@ Programmatic scaffolding — runs the Plugin API to create Button, Badge, Avatar
 ### What it creates
 | Component | Variants |
 |-----------|----------|
-| **Button** | 8 hierarchies × 4 sizes = **32 variants** (Primary, Secondary gray, Secondary color, Tertiary gray, Tertiary color, Destructive primary/secondary/tertiary × sm/md/lg/xl) |
+| **Button** | 11 hierarchies × 5 sizes = **55 variants** — Primary · Primary gradient (`#FF7918 → #E5610A`) · Secondary gray · Secondary color · Tertiary gray · Tertiary color · Link color · Link gray · Destructive primary/secondary/tertiary × sm/md/lg/xl/2xl |
 | **Badge** | 7 tones (gray, brand, error, warning, success, info, ai) |
 | **Avatar** | 6 sizes (xs → 2xl) |
 | **Input** | 1 default (320×40 with placeholder) |
 | **Card** | 1 default (with header + divider + content) |
+
+The Button component set matches exactly what's in `src/components/Button.tsx` — same 11 hierarchies, same 5 sizes, same corner radius (`rounded-md` = 6px), same shadow (`shadow-xs`). Primary gradient uses a linear 180° gradient from `#FF7918` at the top to `#E5610A` at the bottom.
+
+**Component properties** on the Button set (shown in Figma's right panel when any Button instance is selected):
+
+| Property | Type | What it does |
+|---|---|---|
+| **Hierarchy** | Variant (11) | Primary · Primary gradient · Secondary gray · Secondary color · Tertiary gray · Tertiary color · Link color · Link gray · Destructive primary/secondary/tertiary |
+| **Size** | Variant (5) | sm · md · lg · xl · 2xl |
+| **Label** | Text | Type any text — the button label updates live |
+| **Show leading icon** | Boolean | Toggle the leading icon on/off |
+| **Leading icon** | Instance swap | Click to pick any icon component in your file (Lucide, brand marks, custom) |
+| **Show trailing icon** | Boolean | Toggle the trailing icon on/off |
+| **Trailing icon** | Instance swap | Click to pick any icon component in your file |
+| **Loading** | Boolean | Show a spinner ring in place of the leading icon |
+
+The plugin also creates a base **`Button / Icon (placeholder)`** component next to the Button set. It's a gray Plus placeholder — designers swap it via the "Leading icon" / "Trailing icon" instance-swap dropdown in the right panel. Once you've imported Lucide icons (Step 2), pick any of those from the swap picker.
 
 **Plus 47 gradient paint styles** organized into folders:
 
@@ -128,9 +145,10 @@ Click any Button instance → in the right panel you'll see variant dropdowns fo
 
 These need a designer pass to complete the system:
 
-- **Composed components** — BadgeGroup, AvatarGroup, AvatarProfile, ButtonGroup, SocialButton, CloseButton, StatusPill. Build by composing the base instances with auto-layout.
+- **Composed components** — BadgeGroup, AvatarGroup, AvatarProfile, ButtonGroup, SocialButton, CloseButton, StatusPill, Tooltip. Build by composing the base instances with auto-layout.
+- **Button icon slots** — the plugin creates each variant with a label only. To use icons: drop a Lucide icon inside the button instance, set the auto-layout order (leading vs trailing). For "Icon only" buttons, hide the label. Icons: Plus (add), ArrowRight (continue), Download (export), Trash (delete), Sparkles (AI).
+- **Button states** — the plugin creates "default" state only. For **Disabled**, override the fills to `gray-100 / gray-400` on the individual instance. For **Loading**, swap the leading icon for a spinning circle. These can also be built as separate boolean component properties by a designer.
 - **Status dots on Avatar** — the plugin creates the avatar shape; add status dots as a separate boolean variant property.
-- **All button states (hover, focused, disabled, loading)** — the plugin creates "default" state only. Duplicate variants and adjust fills.
 - **Documentation frames** — the Colors / Gradients / Shadows / Spacing / Typography pages from the React preview. Build these as static frames in Figma using the imported variables.
 - **Code Connect mappings** — the `.figma.ts` files in `src/components/` to link Figma components to React source. Requires a `figma.config.json` and running `figma connect publish`.
 

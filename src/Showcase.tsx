@@ -19,6 +19,12 @@ import {
   Avatar,
   AvatarGroup,
   AvatarProfile,
+  Tooltip,
+  TooltipProvider,
+  TooltipRoot,
+  TooltipTrigger,
+  TooltipContent,
+  TooltipRich,
   ArrowRight,
   Search,
   Mail,
@@ -60,7 +66,7 @@ type PageId =
   | "colors" | "shadows-blurs" | "spacing-grids" | "typography" | "icons"
   | "buttons" | "button-group" | "social-buttons" | "close-button"
   | "badges" | "badge-groups" | "status-pills" | "forms" | "cards"
-  | "avatars";
+  | "avatars" | "tooltips";
 
 type IconCmp = React.ComponentType<React.SVGProps<SVGSVGElement>>;
 type NavItem =
@@ -86,6 +92,7 @@ const NAV: NavItem[] = [
   { kind: "link", id: "status-pills",   label: "Status pills",    icon: InfoCircle },
   { kind: "link", id: "forms",          label: "Forms & inputs",  icon: Edit },
   { kind: "link", id: "cards",          label: "Cards",           icon: Folder },
+  { kind: "link", id: "tooltips",       label: "Tooltips",        icon: InfoCircle },
 ];
 
 // Adapt the `usePageRoute` validator below to read from the new shape
@@ -2073,43 +2080,238 @@ function CardsPage() {
 }
 
 /* =========================================================================
+   Tooltips
+   ========================================================================= */
+
+const TT_USAGE: BtnUsage = {
+  doItems: [
+    "Explain the purpose of an icon-only button",
+    "Reveal a keyboard shortcut or hidden detail",
+    "Add a short label to a non-obvious control",
+  ],
+  dontItems: [
+    "Convey critical or must-see information",
+    "Hide primary content that should always be visible",
+    "On mobile touch devices (there's no reliable hover)",
+  ],
+};
+
+function TooltipDemoBox({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="min-h-[80px] flex flex-wrap items-center justify-center gap-6 px-4 py-8 bg-gray-50 border border-gray-100 rounded-lg">
+      {children}
+    </div>
+  );
+}
+
+function TooltipsPage() {
+  return (
+    <section data-page="tooltips">
+      <PageHeader
+        title="Tooltips"
+        subtitle="7 patterns · dark + light · 4 positions · rich mode with title / description / shortcut · Radix-backed"
+      />
+      <div className="space-y-4">
+
+        {/* 01 · Basic */}
+        <NumberedSection num={1} title="Basic tooltip" description='Hover to reveal · single-line hint' usage={TT_USAGE}>
+          <TooltipDemoBox>
+            <Tooltip content="Save your changes">
+              <Button hierarchy="secondary-gray">Save</Button>
+            </Tooltip>
+            <Tooltip content="Duplicate this record">
+              <Button hierarchy="tertiary-gray" iconOnly aria-label="Duplicate"><Plus /></Button>
+            </Tooltip>
+            <Tooltip content="Learn more about this metric">
+              <span className="inline-flex items-center gap-1 text-xs text-gray-600 border-b border-dotted border-gray-400 cursor-help">
+                Approval rate <InfoCircle className="h-3.5 w-3.5" />
+              </span>
+            </Tooltip>
+          </TooltipDemoBox>
+        </NumberedSection>
+
+        {/* 02 · Positions */}
+        <NumberedSection num={2} title="Positions" description="side · top · bottom · left · right">
+          <TooltipDemoBox>
+            <Tooltip content="Appears on top" side="top">
+              <Button hierarchy="secondary-gray" size="sm">Top</Button>
+            </Tooltip>
+            <Tooltip content="Appears on bottom" side="bottom">
+              <Button hierarchy="secondary-gray" size="sm">Bottom</Button>
+            </Tooltip>
+            <Tooltip content="Appears on left" side="left">
+              <Button hierarchy="secondary-gray" size="sm">Left</Button>
+            </Tooltip>
+            <Tooltip content="Appears on right" side="right">
+              <Button hierarchy="secondary-gray" size="sm">Right</Button>
+            </Tooltip>
+          </TooltipDemoBox>
+        </NumberedSection>
+
+        {/* 03 · Dark vs Light */}
+        <NumberedSection num={3} title="Variants" description="Dark for content · light for marketing / airy surfaces">
+          <SubGroup label="Dark (default)">
+            <TooltipDemoBox>
+              <Tooltip content="Dark tooltip on gray-900" variant="dark">
+                <Button hierarchy="secondary-gray">Hover me</Button>
+              </Tooltip>
+              <Tooltip content="Also dark" variant="dark">
+                <Button hierarchy="primary">Save</Button>
+              </Tooltip>
+            </TooltipDemoBox>
+          </SubGroup>
+          <SubGroup label="Light">
+            <TooltipDemoBox>
+              <Tooltip content="Light tooltip with border + shadow" variant="light">
+                <Button hierarchy="secondary-gray">Hover me</Button>
+              </Tooltip>
+              <Tooltip content="Also light" variant="light">
+                <Button hierarchy="primary">Save</Button>
+              </Tooltip>
+            </TooltipDemoBox>
+          </SubGroup>
+        </NumberedSection>
+
+        {/* 04 · Sizes */}
+        <NumberedSection num={4} title="Sizes" description="sm · compact · md · default">
+          <TooltipDemoBox>
+            <Tooltip content="Small tooltip" size="sm">
+              <Button hierarchy="secondary-gray" size="sm">sm</Button>
+            </Tooltip>
+            <Tooltip content="Medium tooltip (default)" size="md">
+              <Button hierarchy="secondary-gray">md</Button>
+            </Tooltip>
+          </TooltipDemoBox>
+        </NumberedSection>
+
+        {/* 05 · Arrow toggle */}
+        <NumberedSection num={5} title="Arrow" description="On by default · turn off for a floating pill look">
+          <TooltipDemoBox>
+            <Tooltip content="With arrow (default)">
+              <Button hierarchy="secondary-gray">With arrow</Button>
+            </Tooltip>
+            <Tooltip content="No arrow — free-floating" arrow={false}>
+              <Button hierarchy="secondary-gray">No arrow</Button>
+            </Tooltip>
+          </TooltipDemoBox>
+        </NumberedSection>
+
+        {/* 06 · Rich — title + description + shortcut */}
+        <NumberedSection num={6} title="Rich content" description="Title · optional description · optional shortcut chips">
+          <SubGroup label="Title + description">
+            <TooltipDemoBox>
+              <TooltipRich
+                title="Save changes"
+                description="Persists to draft. You can still discard before publishing."
+              >
+                <Button hierarchy="primary">Save</Button>
+              </TooltipRich>
+              <TooltipRich
+                title="Auto-refresh disabled"
+                description="Click to enable live updates every 30 seconds."
+                variant="light"
+              >
+                <Button hierarchy="secondary-gray" iconOnly aria-label="Refresh"><ArrowRight /></Button>
+              </TooltipRich>
+            </TooltipDemoBox>
+          </SubGroup>
+          <SubGroup label="With keyboard shortcut">
+            <TooltipDemoBox>
+              <TooltipRich
+                title="Save changes"
+                shortcut={["⌘", "S"]}
+              >
+                <Button hierarchy="primary">Save</Button>
+              </TooltipRich>
+              <TooltipRich
+                title="Search"
+                description="Find files, actions, or people"
+                shortcut={["⌘", "K"]}
+              >
+                <Button hierarchy="secondary-gray" leadingIcon={<Search />}>Search</Button>
+              </TooltipRich>
+              <TooltipRich
+                title="Delete"
+                description="Permanently removes this record. This cannot be undone."
+                shortcut={["⇧", "⌫"]}
+                variant="light"
+              >
+                <Button hierarchy="destructive-secondary" iconOnly aria-label="Delete"><Trash /></Button>
+              </TooltipRich>
+            </TooltipDemoBox>
+          </SubGroup>
+        </NumberedSection>
+
+        {/* 07 · In-context */}
+        <NumberedSection num={7} title="In-context" description="Real UI · icon-only toolbar · metric explainer · disabled action">
+          <TooltipDemoBox>
+            <div className="inline-flex items-center gap-0.5 p-1 bg-white rounded-md border border-gray-200 shadow-xs">
+              <Tooltip content="Bold" size="sm"><Button hierarchy="tertiary-gray" size="sm" iconOnly aria-label="Bold"><span className="text-sm font-bold">B</span></Button></Tooltip>
+              <Tooltip content="Italic" size="sm"><Button hierarchy="tertiary-gray" size="sm" iconOnly aria-label="Italic"><span className="text-sm italic">I</span></Button></Tooltip>
+              <Tooltip content="Underline" size="sm"><Button hierarchy="tertiary-gray" size="sm" iconOnly aria-label="Underline"><span className="text-sm underline">U</span></Button></Tooltip>
+              <div className="w-px h-5 bg-gray-200 mx-1" />
+              <Tooltip content="Add link" size="sm"><Button hierarchy="tertiary-gray" size="sm" iconOnly aria-label="Add link"><ExternalLink /></Button></Tooltip>
+            </div>
+            <TooltipRich
+              title="Auto-approve threshold"
+              description="Applications scoring above this value skip manual review and go straight to funding."
+            >
+              <span className="inline-flex items-center gap-1 text-sm text-gray-700 border-b border-dotted border-gray-400 cursor-help">
+                Threshold <InfoCircle className="h-3.5 w-3.5 text-gray-500" />
+              </span>
+            </TooltipRich>
+            <Tooltip content="You need admin permission to delete this record">
+              <span className="inline-block"><Button hierarchy="destructive-secondary" disabled>Delete</Button></span>
+            </Tooltip>
+          </TooltipDemoBox>
+        </NumberedSection>
+
+      </div>
+    </section>
+  );
+}
+
+/* =========================================================================
    Root
    ========================================================================= */
 
 export function Showcase() {
   const [page, setPage] = usePageRoute();
   return (
-    <div className="min-h-screen bg-white">
-      {/* Top header removed — brand identity now lives in the sidebar. */}
+    <TooltipProvider delayDuration={200} skipDelayDuration={0}>
+      <div className="min-h-screen bg-white">
+        {/* Top header removed — brand identity now lives in the sidebar. */}
 
-      <div className="flex">
-        <Sidebar active={page} onChange={setPage} />
-        <main className="flex-1 px-10 py-10 min-w-0">
-          {page === "overview" && <OverviewPage go={setPage} />}
-          {page === "colors" && <ColorsPage />}
-          {page === "shadows-blurs" && <ShadowsBlursPage />}
-          {page === "spacing-grids" && <SpacingGridsPage />}
-          {page === "typography" && <TypographyPage />}
-          {page === "icons" && <IconsPage />}
-          {page === "buttons" && <ButtonsPage />}
-          {page === "button-group" && <ButtonGroupPage />}
-          {page === "social-buttons" && <SocialButtonsPage />}
-          {page === "close-button" && <CloseButtonPage />}
-          {page === "avatars" && <AvatarsPage />}
-          {page === "badges" && <BadgesPage />}
-          {page === "badge-groups" && <BadgeGroupsPage />}
-          {page === "status-pills" && <StatusPillsPage />}
-          {page === "forms" && <FormsPage />}
-          {page === "cards" && <CardsPage />}
-        </main>
-      </div>
-
-      <footer className="border-t border-gray-200 py-6 bg-white">
-        <div className="max-w-[1600px] mx-auto px-6 text-sm text-gray-600 flex items-center justify-between">
-          <span>PULSE Design System · v0.2.0 · Powered by scienaptic.ai</span>
-          <span className="font-mono text-xs text-gray-500">React · TS · Tailwind · Radix</span>
+        <div className="flex">
+          <Sidebar active={page} onChange={setPage} />
+          <main className="flex-1 px-10 py-10 min-w-0">
+            {page === "overview" && <OverviewPage go={setPage} />}
+            {page === "colors" && <ColorsPage />}
+            {page === "shadows-blurs" && <ShadowsBlursPage />}
+            {page === "spacing-grids" && <SpacingGridsPage />}
+            {page === "typography" && <TypographyPage />}
+            {page === "icons" && <IconsPage />}
+            {page === "buttons" && <ButtonsPage />}
+            {page === "button-group" && <ButtonGroupPage />}
+            {page === "social-buttons" && <SocialButtonsPage />}
+            {page === "close-button" && <CloseButtonPage />}
+            {page === "avatars" && <AvatarsPage />}
+            {page === "badges" && <BadgesPage />}
+            {page === "badge-groups" && <BadgeGroupsPage />}
+            {page === "status-pills" && <StatusPillsPage />}
+            {page === "forms" && <FormsPage />}
+            {page === "cards" && <CardsPage />}
+            {page === "tooltips" && <TooltipsPage />}
+          </main>
         </div>
-      </footer>
-    </div>
+
+        <footer className="border-t border-gray-200 py-6 bg-white">
+          <div className="max-w-[1600px] mx-auto px-6 text-sm text-gray-600 flex items-center justify-between">
+            <span>PULSE Design System · v0.2.0 · Powered by scienaptic.ai</span>
+            <span className="font-mono text-xs text-gray-500">React · TS · Tailwind · Radix</span>
+          </div>
+        </footer>
+      </div>
+    </TooltipProvider>
   );
 }
