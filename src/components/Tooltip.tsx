@@ -87,7 +87,8 @@ TooltipContent.displayName = "TooltipContent";
 
 /* ─── High-level convenience: <Tooltip content="..."> ─── */
 
-export interface TooltipProps extends TooltipContentProps {
+export interface TooltipProps
+  extends Omit<TooltipContentProps, "content" | "title"> {
   /** The trigger element (typically a Button, Icon, or text). Rendered via asChild. */
   children: React.ReactNode;
   /** Tooltip body — string or ReactNode. If falsy, the trigger renders naked (no tooltip). */
@@ -123,7 +124,7 @@ export const Tooltip = ({
 /* ─── Rich tooltip helper — title + description + optional shortcut ─── */
 
 export interface TooltipRichProps
-  extends Omit<TooltipProps, "content" | "size"> {
+  extends Omit<TooltipProps, "content" | "size" | "title"> {
   title: React.ReactNode;
   description?: React.ReactNode;
   /** Small `<kbd>` chips shown at the top-right of the tooltip. Example: shortcut={["⌘", "S"]} */
