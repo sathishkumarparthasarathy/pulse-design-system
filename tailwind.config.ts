@@ -1,8 +1,12 @@
 import type { Config } from "tailwindcss";
-import { colors } from "./src/tokens/colors";
-import { typography } from "./src/tokens/typography";
-import { radius, shadow, blur } from "./src/tokens/spacing";
-import { gradients } from "./src/tokens/gradients";
+import {
+  colors,
+  typography,
+  radius,
+  shadow,
+  blur,
+  gradients,
+} from "./src/tokens/primitives";
 
 export default {
   content: ["./index.html", "./src/**/*.{ts,tsx}"],
