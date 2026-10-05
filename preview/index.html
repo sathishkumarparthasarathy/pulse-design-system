@@ -2005,7 +2005,7 @@
   <section class="mb-20" data-page="tooltips">
     <div class="mb-6">
       <h2 class="text-display-md font-semibold text-gray-900 tracking-tight">Tooltips</h2>
-      <p class="text-text-md text-gray-600 mt-1">8 patterns · dark + light · 12 positions (4 sides × 3 alignments) · sm/md/lg · rich mode with title / description / shortcut · Radix-backed</p>
+      <p class="text-text-md text-gray-600 mt-1">Interactive playground · pick variant · size · side · align · arrow · basic or rich mode · live preview + code</p>
     </div>
     <div id="tt-sections" class="space-y-4"></div>
   </section>
@@ -3945,6 +3945,18 @@
 
   // ─── Read all state from data-attrs on the section ───
   function readVariantState(section) {
+    const kind = section.dataset.variantSection;
+    if (kind === 'tooltip') {
+      return {
+        variant: section.dataset.currentVariant || 'dark',
+        size:    section.dataset.currentSize    || 'md',
+        side:    section.dataset.currentSide    || 'top',
+        align:   section.dataset.currentAlign   || 'center',
+        arrow:   section.dataset.currentArrow   || 'true',
+        mode:    section.dataset.currentMode    || 'basic',
+        label:   section.dataset.tooltipLabel   || 'Save your changes',
+      };
+    }
     return {
       hierarchy: section.dataset.currentHierarchy || 'primary',
       size:      section.dataset.currentSize      || 'md',
@@ -3955,10 +3967,19 @@
   }
 
   function rerenderVariantSection(section) {
+    const kind = section.dataset.variantSection;
     const state = readVariantState(section);
     const previewEl = section.querySelector('[data-variant-preview]');
-    if (previewEl) previewEl.innerHTML = renderPlaygroundButton(state);
     const codeHost = section.querySelector('[data-variant-code]');
+    if (kind === 'tooltip') {
+      if (previewEl) previewEl.innerHTML = renderTooltipPreview(state);
+      if (codeHost) {
+        const filename = codeHost.dataset.variantFilename || 'tooltip.tsx';
+        codeHost.innerHTML = codeBlock(renderTooltipCode(state), filename);
+      }
+      return;
+    }
+    if (previewEl) previewEl.innerHTML = renderPlaygroundButton(state);
     if (codeHost) {
       const filename = codeHost.dataset.variantFilename || 'button.tsx';
       codeHost.innerHTML = codeBlock(renderPlaygroundCode(state), filename);
@@ -3969,7 +3990,7 @@
   document.addEventListener('click', (e) => {
     const pill = e.target.closest('.variant-pill');
     if (!pill) return;
-    const section = pill.closest('[data-variant-section="button"]');
+    const section = pill.closest('[data-variant-section]');
     if (!section) return;
 
     const key = pill.dataset.variantKey;
@@ -4013,13 +4034,18 @@
     rerenderVariantSection(section);
   });
 
-  // ─── Label input · updates the button label live ───
+  // ─── Label input · updates the live label for button OR tooltip ───
   document.addEventListener('input', (e) => {
-    const input = e.target.closest('input[data-variant-input="label"]');
+    const input = e.target.closest('input[data-variant-input]');
     if (!input) return;
-    const section = input.closest('[data-variant-section="button"]');
+    const section = input.closest('[data-variant-section]');
     if (!section) return;
-    section.dataset.buttonLabel = input.value || 'Save changes';
+    const which = input.dataset.variantInput;
+    if (which === 'tooltip-label') {
+      section.dataset.tooltipLabel = input.value || 'Save your changes';
+    } else {
+      section.dataset.buttonLabel = input.value || 'Save changes';
+    }
     rerenderVariantSection(section);
   });
 
@@ -4139,111 +4165,167 @@
     ],
   };
 
+  // ─── Tooltip playground ─────────────────────────────────────────
+  const TT_VARIANTS = [
+    { value: 'dark',  label: 'Dark' },
+    { value: 'light', label: 'Light' },
+  ];
+  const TT_SIZES = [
+    { value: 'sm', label: 'sm' },
+    { value: 'md', label: 'md' },
+    { value: 'lg', label: 'lg' },
+  ];
+  const TT_SIDES = [
+    { value: 'top',    label: 'top' },
+    { value: 'bottom', label: 'bottom' },
+    { value: 'left',   label: 'left' },
+    { value: 'right',  label: 'right' },
+  ];
+  const TT_ALIGNS = [
+    { value: 'start',  label: 'start' },
+    { value: 'center', label: 'center' },
+    { value: 'end',    label: 'end' },
+  ];
+  const TT_ARROWS = [
+    { value: 'true',  label: 'on' },
+    { value: 'false', label: 'off' },
+  ];
+  const TT_MODES = [
+    { value: 'basic',       label: 'Basic — title only' },
+    { value: 'description', label: 'Rich — title + description' },
+    { value: 'shortcut',    label: 'Rich — title + keyboard shortcut (⌘S)' },
+  ];
+
+  function renderTooltipPreview(state) {
+    const trigger = `<button class="inline-flex items-center justify-center h-10 px-4 text-sm font-semibold rounded-md bg-white text-gray-700 border border-gray-300 shadow-xs">Hover me</button>`;
+    let content;
+    if (state.mode === 'description') {
+      content = richContent({ title: state.label, description: 'Persists to draft. You can still discard before publishing.', variant: state.variant });
+    } else if (state.mode === 'shortcut') {
+      content = richContent({ title: state.label, shortcut: ['⌘', 'S'], variant: state.variant });
+    } else {
+      content = state.label;
+    }
+    return tt({
+      trigger, content,
+      side: state.side,
+      align: state.align,
+      variant: state.variant,
+      size: state.size,
+      arrow: state.arrow === 'true',
+    });
+  }
+
+  function renderTooltipCode(state) {
+    const propsArr = [];
+    if (state.side !== 'top') propsArr.push(`side="${state.side}"`);
+    if (state.align !== 'center') propsArr.push(`align="${state.align}"`);
+    if (state.variant !== 'dark') propsArr.push(`variant="${state.variant}"`);
+    if (state.size !== 'md') propsArr.push(`size="${state.size}"`);
+    if (state.arrow !== 'true') propsArr.push(`arrow={false}`);
+
+    if (state.mode === 'basic') {
+      propsArr.unshift(`content="${state.label}"`);
+      return `import { Tooltip, Button } from "@/components/ui";
+
+<Tooltip ${propsArr.join(' ')}>
+  <Button>Hover me</Button>
+</Tooltip>`;
+    }
+    // Rich modes use TooltipRich
+    const richProps = [`title="${state.label}"`];
+    if (state.mode === 'description') {
+      richProps.push(`description="Persists to draft. You can still discard before publishing."`);
+    } else if (state.mode === 'shortcut') {
+      richProps.push(`shortcut={["⌘", "S"]}`);
+    }
+    return `import { TooltipRich, Button } from "@/components/ui";
+
+<TooltipRich
+  ${richProps.join('\n  ')}${propsArr.length ? '\n  ' + propsArr.join('\n  ') : ''}
+>
+  <Button>Hover me</Button>
+</TooltipRich>`;
+  }
+
+  function tooltipPlayground() {
+    const defaults = { variant: 'dark', size: 'md', side: 'top', align: 'center', arrow: 'true', mode: 'basic', label: 'Save your changes' };
+    const previewHtml = renderTooltipPreview(defaults);
+    const codeStr = renderTooltipCode(defaults);
+
+    return `
+      <div id="tooltip-playground"
+           data-variant-section="tooltip"
+           data-current-variant="${defaults.variant}"
+           data-current-size="${defaults.size}"
+           data-current-side="${defaults.side}"
+           data-current-align="${defaults.align}"
+           data-current-arrow="${defaults.arrow}"
+           data-current-mode="${defaults.mode}"
+           data-tooltip-label="${defaults.label}"
+           class="preview-code-tabs bg-white border border-gray-200 rounded-xl shadow-xs scroll-mt-24">
+
+        <!-- Toolbar row -->
+        <div class="flex items-center justify-between gap-3 border-b border-gray-200 bg-gray-50 px-4 py-3">
+          <div class="inline-flex items-center gap-0.5 p-0.5 bg-white border border-gray-200 rounded-md">
+            <button type="button" class="tab-btn is-active px-2.5 py-1 text-xs font-semibold rounded flex items-center gap-1.5 transition-colors" data-tab="preview">
+              <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              Preview
+            </button>
+            <button type="button" class="tab-btn px-2.5 py-1 text-xs font-semibold rounded flex items-center gap-1.5 transition-colors" data-tab="code">
+              <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg>
+              Code
+            </button>
+          </div>
+          <div class="flex items-center gap-2">
+            <label class="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Label</label>
+            <input type="text" data-variant-input="tooltip-label" value="${defaults.label}"
+              class="h-8 px-2.5 text-xs border border-gray-200 rounded-md w-56 bg-white focus:outline-none focus:border-brand-400 focus:ring-2 focus:ring-brand-100" />
+          </div>
+        </div>
+
+        <div class="preview-code-tabs">
+          <div class="tab-content-preview">
+            <div class="min-h-[260px] px-10 py-24 flex items-center justify-center bg-gray-50/30" data-variant-preview>${previewHtml}</div>
+          </div>
+          <div class="tab-content-code hidden" data-variant-code data-variant-filename="tooltip.tsx">${codeBlock(codeStr, 'tooltip.tsx')}</div>
+        </div>
+
+        <!-- Controls -->
+        <div class="border-t border-gray-100 px-4 pb-4 pt-2 divide-y divide-gray-100">
+          ${pgPillRow('Variant', 'variant', defaults.variant, TT_VARIANTS)}
+          ${pgPillRow('Size',    'size',    defaults.size,    TT_SIZES)}
+          ${pgPillRow('Side',    'side',    defaults.side,    TT_SIDES)}
+          ${pgPillRow('Align',   'align',   defaults.align,   TT_ALIGNS)}
+          ${pgPillRow('Arrow',   'arrow',   defaults.arrow,   TT_ARROWS)}
+          ${pgDropdownRow('Mode', 'mode',    defaults.mode,    TT_MODES, 300)}
+        </div>
+      </div>
+    `;
+  }
+
   const ttSections = [
-    // 01 · Basic
-    btnSection(1, 'Basic tooltip', 'Hover to reveal · single-line hint',
-      ttBox(
-        tt({ trigger: trigBtn('Save'), content: 'Save your changes' }) +
-        tt({ trigger: trigIconOnly('<svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v16m8-8H4"/></svg>'), content: 'Duplicate record' }) +
-        tt({ trigger: `<span class="inline-flex items-center gap-1 text-xs text-gray-600 border-b border-dotted border-gray-400 cursor-help">Approval rate <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></span>`, content: 'Learn more about this metric' })
-      ),
-      TT_USAGE),
-
-    // 02 · Positions
-    btnSection(2, 'Positions', 'side · top · bottom · left · right',
-      ttBox(
-        tt({ trigger: trigBtnSm('Top'),    content: 'Appears on top',    side: 'top' }) +
-        tt({ trigger: trigBtnSm('Bottom'), content: 'Appears on bottom', side: 'bottom' }) +
-        tt({ trigger: trigBtnSm('Left'),   content: 'Appears on left',   side: 'left' }) +
-        tt({ trigger: trigBtnSm('Right'),  content: 'Appears on right',  side: 'right' })
-      )),
-
-    // 03 · Alignment
-    btnSection(3, 'Alignment', 'Within each side · align=start · center · end · 12 positions total',
-      btnSubgroup('Top (align start · center · end)',
-        ttBox(
-          tt({ trigger: `<button class="inline-flex items-center justify-center h-10 min-w-[200px] px-4 text-sm font-semibold rounded-md bg-white text-gray-700 border border-gray-300 shadow-xs">A wider top button</button>`, content: 'align=start', side: 'top', align: 'start' }) +
-          tt({ trigger: `<button class="inline-flex items-center justify-center h-10 min-w-[200px] px-4 text-sm font-semibold rounded-md bg-white text-gray-700 border border-gray-300 shadow-xs">A wider top button</button>`, content: 'align=center (default)', side: 'top', align: 'center' }) +
-          tt({ trigger: `<button class="inline-flex items-center justify-center h-10 min-w-[200px] px-4 text-sm font-semibold rounded-md bg-white text-gray-700 border border-gray-300 shadow-xs">A wider top button</button>`, content: 'align=end', side: 'top', align: 'end' })
-        )) +
-      btnSubgroup('Bottom (align start · center · end)',
-        ttBox(
-          tt({ trigger: `<button class="inline-flex items-center justify-center h-10 min-w-[200px] px-4 text-sm font-semibold rounded-md bg-white text-gray-700 border border-gray-300 shadow-xs">A wider bottom button</button>`, content: 'align=start', side: 'bottom', align: 'start' }) +
-          tt({ trigger: `<button class="inline-flex items-center justify-center h-10 min-w-[200px] px-4 text-sm font-semibold rounded-md bg-white text-gray-700 border border-gray-300 shadow-xs">A wider bottom button</button>`, content: 'align=center (default)', side: 'bottom', align: 'center' }) +
-          tt({ trigger: `<button class="inline-flex items-center justify-center h-10 min-w-[200px] px-4 text-sm font-semibold rounded-md bg-white text-gray-700 border border-gray-300 shadow-xs">A wider bottom button</button>`, content: 'align=end', side: 'bottom', align: 'end' })
-        )) +
-      btnSubgroup('Right · Left (align start · center · end)',
-        ttBox(
-          tt({ trigger: `<button class="inline-flex items-center justify-center h-12 w-16 text-sm font-semibold rounded-md bg-white text-gray-700 border border-gray-300 shadow-xs">Right</button>`, content: 'right · start', side: 'right', align: 'start' }) +
-          tt({ trigger: `<button class="inline-flex items-center justify-center h-12 w-16 text-sm font-semibold rounded-md bg-white text-gray-700 border border-gray-300 shadow-xs">Right</button>`, content: 'right · end', side: 'right', align: 'end' }) +
-          tt({ trigger: `<button class="inline-flex items-center justify-center h-12 w-16 text-sm font-semibold rounded-md bg-white text-gray-700 border border-gray-300 shadow-xs">Left</button>`, content: 'left · start', side: 'left', align: 'start' }) +
-          tt({ trigger: `<button class="inline-flex items-center justify-center h-12 w-16 text-sm font-semibold rounded-md bg-white text-gray-700 border border-gray-300 shadow-xs">Left</button>`, content: 'left · end', side: 'left', align: 'end' })
-        ))),
-
-    // 04 · Variants
-    btnSection(4, 'Variants', 'Dark for content · light for marketing / airy surfaces',
-      btnSubgroup('Dark (default)',
-        ttBox(
-          tt({ trigger: trigBtn('Hover me'), content: 'Dark tooltip on gray-900', variant: 'dark' }) +
-          tt({ trigger: trigBtnPrimary('Save'), content: 'Also dark', variant: 'dark' })
-        )) +
-      btnSubgroup('Light',
-        ttBox(
-          tt({ trigger: trigBtn('Hover me'), content: 'Light tooltip with border + shadow', variant: 'light' }) +
-          tt({ trigger: trigBtnPrimary('Save'), content: 'Also light', variant: 'light' })
-        ))),
-
-    // 05 · Sizes
-    btnSection(5, 'Sizes', 'sm · compact · md · default · lg · marketing / critical hints',
-      ttBox(
-        tt({ trigger: trigBtnSm('sm'), content: 'Small tooltip', size: 'sm' }) +
-        tt({ trigger: trigBtn('md'),   content: 'Medium tooltip (default)', size: 'md' }) +
-        tt({ trigger: `<button class="inline-flex items-center justify-center h-11 px-[18px] text-base font-semibold rounded-md bg-white text-gray-700 border border-gray-300 shadow-xs">lg</button>`, content: 'Larger tooltip · more padding · body text size', size: 'lg' })
-      )),
-
-    // 06 · Arrow toggle
-    btnSection(6, 'Arrow', 'On by default · turn off for a floating pill look',
-      ttBox(
-        tt({ trigger: trigBtn('With arrow'), content: 'With arrow (default)', arrow: true }) +
-        tt({ trigger: trigBtn('No arrow'),   content: 'No arrow — free-floating', arrow: false })
-      )),
-
-    // 07 · Rich content
-    btnSection(7, 'Rich content', 'Title · optional description · optional shortcut chips',
-      btnSubgroup('Title + description',
-        ttBox(
-          tt({ trigger: trigBtnPrimary('Save'), content: richContent({ title: 'Save changes', description: 'Persists to draft. You can still discard before publishing.' }) }) +
-          tt({ trigger: trigBtn('Refresh'), content: richContent({ title: 'Auto-refresh disabled', description: 'Click to enable live updates every 30 seconds.', variant: 'light' }), variant: 'light' })
-        )) +
-      btnSubgroup('With keyboard shortcut',
-        ttBox(
-          tt({ trigger: trigBtnPrimary('Save'), content: richContent({ title: 'Save changes', shortcut: ['⌘', 'S'] }) }) +
-          tt({ trigger: trigBtn('Search'),      content: richContent({ title: 'Search', description: 'Find files, actions, or people', shortcut: ['⌘', 'K'] }) }) +
-          tt({ trigger: `<button class="inline-flex items-center justify-center h-10 w-10 rounded-md bg-white text-error-700 border border-error-300 shadow-xs"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18m-2 0v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2M10 11v6M14 11v6"/></svg></button>`, content: richContent({ title: 'Delete', description: 'Permanently removes this record. This cannot be undone.', shortcut: ['⇧', '⌫'], variant: 'light' }), variant: 'light' })
-        ))),
-
-    // 08 · In-context
-    btnSection(8, 'In-context', 'Real UI · icon-only toolbar · metric explainer · disabled action',
-      ttBox(
-        // Editor toolbar
-        `<div class="inline-flex items-center gap-0.5 p-1 bg-white rounded-md border border-gray-200 shadow-xs">
-          ${tt({ trigger: `<button class="h-8 w-8 flex items-center justify-center rounded text-gray-600 hover:bg-gray-50 text-sm font-bold">B</button>`, content: 'Bold', size: 'sm' })}
-          ${tt({ trigger: `<button class="h-8 w-8 flex items-center justify-center rounded text-gray-600 hover:bg-gray-50 text-sm italic">I</button>`, content: 'Italic', size: 'sm' })}
-          ${tt({ trigger: `<button class="h-8 w-8 flex items-center justify-center rounded text-gray-600 hover:bg-gray-50 text-sm underline">U</button>`, content: 'Underline', size: 'sm' })}
-          <div class="w-px h-5 bg-gray-200 mx-1"></div>
-          ${tt({ trigger: `<button class="h-8 w-8 flex items-center justify-center rounded text-gray-600 hover:bg-gray-50"><svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 007.07 0l4-4a5 5 0 00-7.07-7.07l-1.5 1.5M14 11a5 5 0 00-7.07 0l-4 4a5 5 0 007.07 7.07l1.5-1.5"/></svg></button>`, content: 'Add link', size: 'sm' })}
-        </div>` +
-        // Metric explainer
-        tt({
-          trigger: `<span class="inline-flex items-center gap-1 text-sm text-gray-700 border-b border-dotted border-gray-400 cursor-help">Threshold <svg class="h-3.5 w-3.5 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></span>`,
-          content: richContent({ title: 'Auto-approve threshold', description: 'Applications scoring above this value skip manual review and go straight to funding.' })
-        }) +
-        // Disabled with explanation
-        tt({
-          trigger: `<button class="inline-flex items-center justify-center h-10 px-4 text-sm font-semibold rounded-md bg-white text-gray-400 border border-gray-200 shadow-none cursor-not-allowed">Delete</button>`,
-          content: 'You need admin permission to delete this record'
-        })
-      )),
+    tooltipPlayground(),
+    // Source + install ribbon
+    `<div class="bg-white border border-gray-200 rounded-xl shadow-xs px-6 py-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-gray-500">
+      <span class="inline-flex items-center gap-1.5"><span class="font-medium text-gray-700">Source:</span>
+        <a href="https://github.com/sathishkumarparthasarathy/pulse-design-system/blob/main/src/components/Tooltip.tsx" target="_blank" rel="noopener" class="text-brand-700 hover:text-brand-800 font-medium inline-flex items-center gap-1">src/components/Tooltip.tsx
+          <svg class="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M17 7H8M17 7v9"/></svg>
+        </a>
+      </span>
+      <span class="text-gray-300">·</span>
+      <span class="inline-flex items-center gap-1.5"><span class="font-medium text-gray-700">Install:</span>
+        <code class="font-mono bg-gray-100 text-gray-700 px-2 py-0.5 rounded text-[11px]">npm i @radix-ui/react-tooltip class-variance-authority clsx tailwind-merge</code>
+      </span>
+    </div>`,
+    // Usage guidance
+    `<div class="bg-white border border-gray-200 rounded-xl shadow-xs px-6 py-6" data-toc-title="Usage guidance" id="tooltip-usage">
+      <div class="flex items-baseline gap-3 mb-4 pb-3 border-b border-gray-100">
+        <span class="text-base font-semibold text-gray-900">Usage guidance</span>
+        <span class="text-xs text-gray-500 ml-auto text-right">When to reach for a Tooltip · when to avoid</span>
+      </div>
+      ${usageBlock(TT_USAGE)}
+    </div>`,
   ].join('');
 
   document.getElementById('tt-sections').innerHTML = ttSections;
