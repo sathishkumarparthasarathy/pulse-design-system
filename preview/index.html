@@ -3954,6 +3954,7 @@
         align:   section.dataset.currentAlign   || 'center',
         arrow:   section.dataset.currentArrow   || 'true',
         mode:    section.dataset.currentMode    || 'basic',
+        trigger: section.dataset.currentTrigger || 'button',
         label:   section.dataset.tooltipLabel   || 'Save your changes',
       };
     }
@@ -4104,9 +4105,9 @@
       right:  `right:100%;${arrowAlign};border-width:5px 5px 5px 0;border-color:transparent ${arrowColor} transparent transparent;`,
     }[side];
     const arrowHtml = arrow ? `<div class="absolute w-0 h-0" style="${arrowEdge}"></div>` : '';
-    return `<div class="relative inline-block">
+    return `<div class="group relative inline-block">
       ${trigger}
-      <div class="absolute ${sideClass} ${alignClass} whitespace-nowrap z-10 pointer-events-none">
+      <div class="absolute ${sideClass} ${alignClass} whitespace-nowrap z-10 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-150">
         <div class="relative ${bg} ${pad} rounded-md font-medium shadow-md">
           ${content}
           ${arrowHtml}
@@ -4130,18 +4131,30 @@
     return `<kbd class="inline-flex items-center justify-center h-4 min-w-[16px] px-1 rounded text-[10px] font-mono font-medium ${cls}">${char}</kbd>`;
   }
 
-  function richContent({ title, description, shortcut, variant = 'dark' }) {
+  function richContent({ title, description, shortcut, variant = 'dark', layout = 'default' }) {
     const descColor = variant === 'light' ? 'text-gray-600' : 'text-gray-300';
     const shortcutHtml = shortcut
       ? `<div class="flex items-center gap-0.5 shrink-0">${shortcut.map(k => kbd(k, variant)).join('')}</div>`
       : '';
+
+    // Horizontal layout — title on the left, description on the right (wider pill)
+    if (description && layout === 'horizontal') {
+      return `
+        <div class="flex items-start gap-3 w-[360px] whitespace-normal">
+          <div class="font-semibold leading-tight shrink-0 max-w-[120px]">${title}</div>
+          <div class="leading-relaxed flex-1 ${descColor}">${description}</div>
+        </div>
+      `;
+    }
+
+    // Default (stacked) — title above description, shortcut inline right of title
     return `
       <div class="flex flex-col gap-1 max-w-[240px] whitespace-normal">
         <div class="flex items-start justify-between gap-3">
-          <div class="text-xs font-semibold leading-tight">${title}</div>
+          <div class="font-semibold leading-tight">${title}</div>
           ${shortcutHtml}
         </div>
-        ${description ? `<div class="text-xs leading-relaxed ${descColor}">${description}</div>` : ''}
+        ${description ? `<div class="leading-relaxed ${descColor}">${description}</div>` : ''}
       </div>
     `;
   }
@@ -4195,12 +4208,20 @@
     { value: 'description', label: 'Rich — title + description' },
     { value: 'shortcut',    label: 'Rich — title + keyboard shortcut (⌘S)' },
   ];
+  const TT_TRIGGERS = [
+    { value: 'button', label: 'Button' },
+    { value: 'icon',   label: 'Icon' },
+  ];
 
   function renderTooltipPreview(state) {
-    const trigger = `<button class="inline-flex items-center justify-center h-10 px-4 text-sm font-semibold rounded-md bg-white text-gray-700 border border-gray-300 shadow-xs">Hover me</button>`;
+    // Trigger: text button OR icon-only square button
+    const trigger = state.trigger === 'icon'
+      ? `<button class="inline-flex items-center justify-center h-10 w-10 rounded-md bg-white text-gray-700 border border-gray-300 shadow-xs"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v16m8-8H4"/></svg></button>`
+      : `<button class="inline-flex items-center justify-center h-10 px-4 text-sm font-semibold rounded-md bg-white text-gray-700 border border-gray-300 shadow-xs">Hover me</button>`;
+
     let content;
     if (state.mode === 'description') {
-      content = richContent({ title: state.label, description: 'Persists to draft. You can still discard before publishing.', variant: state.variant });
+      content = richContent({ title: state.label, description: 'Persists to draft. You can still discard before publishing.', variant: state.variant, layout: 'horizontal' });
     } else if (state.mode === 'shortcut') {
       content = richContent({ title: state.label, shortcut: ['⌘', 'S'], variant: state.variant });
     } else {
@@ -4224,12 +4245,25 @@
     if (state.size !== 'md') propsArr.push(`size="${state.size}"`);
     if (state.arrow !== 'true') propsArr.push(`arrow={false}`);
 
+    // Child trigger — text button or icon-only
+    const childImport = state.trigger === 'icon'
+      ? `import { Tooltip, Button } from "@/components/ui";
+import { Plus } from "@/icons";`
+      : `import { Tooltip, Button } from "@/components/ui";`;
+    const childImportRich = state.trigger === 'icon'
+      ? `import { TooltipRich, Button } from "@/components/ui";
+import { Plus } from "@/icons";`
+      : `import { TooltipRich, Button } from "@/components/ui";`;
+    const childJsx = state.trigger === 'icon'
+      ? `  <Button iconOnly aria-label="Add"><Plus /></Button>`
+      : `  <Button>Hover me</Button>`;
+
     if (state.mode === 'basic') {
       propsArr.unshift(`content="${state.label}"`);
-      return `import { Tooltip, Button } from "@/components/ui";
+      return `${childImport}
 
 <Tooltip ${propsArr.join(' ')}>
-  <Button>Hover me</Button>
+${childJsx}
 </Tooltip>`;
     }
     // Rich modes use TooltipRich
@@ -4239,17 +4273,17 @@
     } else if (state.mode === 'shortcut') {
       richProps.push(`shortcut={["⌘", "S"]}`);
     }
-    return `import { TooltipRich, Button } from "@/components/ui";
+    return `${childImportRich}
 
 <TooltipRich
   ${richProps.join('\n  ')}${propsArr.length ? '\n  ' + propsArr.join('\n  ') : ''}
 >
-  <Button>Hover me</Button>
+${childJsx}
 </TooltipRich>`;
   }
 
   function tooltipPlayground() {
-    const defaults = { variant: 'dark', size: 'md', side: 'top', align: 'center', arrow: 'true', mode: 'basic', label: 'Save your changes' };
+    const defaults = { variant: 'dark', size: 'md', side: 'top', align: 'center', arrow: 'true', mode: 'basic', trigger: 'button', label: 'Save your changes' };
     const previewHtml = renderTooltipPreview(defaults);
     const codeStr = renderTooltipCode(defaults);
 
@@ -4262,6 +4296,7 @@
            data-current-align="${defaults.align}"
            data-current-arrow="${defaults.arrow}"
            data-current-mode="${defaults.mode}"
+           data-current-trigger="${defaults.trigger}"
            data-tooltip-label="${defaults.label}"
            class="preview-code-tabs bg-white border border-gray-200 rounded-xl shadow-xs scroll-mt-24">
 
@@ -4293,6 +4328,7 @@
 
         <!-- Controls -->
         <div class="border-t border-gray-100 px-4 pb-4 pt-2 divide-y divide-gray-100">
+          ${pgPillRow('Trigger', 'trigger', defaults.trigger, TT_TRIGGERS)}
           ${pgPillRow('Variant', 'variant', defaults.variant, TT_VARIANTS)}
           ${pgPillRow('Size',    'size',    defaults.size,    TT_SIZES)}
           ${pgPillRow('Side',    'side',    defaults.side,    TT_SIDES)}
