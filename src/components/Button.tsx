@@ -33,10 +33,10 @@ const button = cva(
   {
     variants: {
       hierarchy: {
-        // PRIMARY — filled brand
+        // PRIMARY — Scienaptic navy at rest, orange on hover
         primary: [
-          "bg-brand-600 text-white border border-brand-600 shadow-xs",
-          "hover:bg-brand-700 hover:border-brand-700",
+          "bg-gray-800 text-white border border-gray-800 shadow-xs",
+          "hover:bg-brand-600 hover:border-brand-600",
           "focus:shadow-ring-brand",
           "disabled:bg-gray-100 disabled:border-gray-200 disabled:text-gray-400",
         ].join(" "),
