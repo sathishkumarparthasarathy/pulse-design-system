@@ -2005,7 +2005,7 @@
   <section class="mb-20" data-page="tooltips">
     <div class="mb-6">
       <h2 class="text-display-md font-semibold text-gray-900 tracking-tight">Tooltips</h2>
-      <p class="text-text-md text-gray-600 mt-1">7 patterns · dark + light · 4 positions · rich mode with title / description / shortcut · Radix-backed</p>
+      <p class="text-text-md text-gray-600 mt-1">8 patterns · dark + light · 12 positions (4 sides × 3 alignments) · sm/md/lg · rich mode with title / description / shortcut · Radix-backed</p>
     </div>
     <div id="tt-sections" class="space-y-4"></div>
   </section>
@@ -4028,31 +4028,60 @@
   // ============================================================
 
   // side: 'top' | 'bottom' | 'left' | 'right'
+  // align: 'start' | 'center' | 'end'  — within the side, which end to anchor to
   // variant: 'dark' | 'light'
-  // size: 'sm' | 'md'
-  function tt({ trigger, content, side = 'top', variant = 'dark', size = 'md', arrow = true }) {
+  // size: 'sm' | 'md' | 'lg'
+  function tt({ trigger, content, side = 'top', align = 'center', variant = 'dark', size = 'md', arrow = true }) {
     const bg = variant === 'light'
       ? 'bg-white text-gray-900 border border-gray-200'
       : 'bg-gray-900 text-white';
-    const pad = size === 'sm' ? 'px-2 py-1' : 'px-2.5 py-1.5';
-    const pos = {
-      top:    'bottom-full left-1/2 -translate-x-1/2 mb-2',
-      bottom: 'top-full left-1/2 -translate-x-1/2 mt-2',
-      left:   'right-full top-1/2 -translate-y-1/2 mr-2',
-      right:  'left-full top-1/2 -translate-y-1/2 ml-2',
+    const pad = size === 'sm' ? 'px-2 py-1 text-xs'
+              : size === 'lg' ? 'px-3 py-2 text-sm'
+              : 'px-2.5 py-1.5 text-xs';
+
+    // Position: side selects which edge of the trigger, align shifts along that edge
+    const isHoriz = side === 'top' || side === 'bottom';
+    const sideClass = {
+      top:    'bottom-full mb-2',
+      bottom: 'top-full mt-2',
+      left:   'right-full mr-2',
+      right:  'left-full ml-2',
     }[side];
+    // For top/bottom: align via horizontal position. For left/right: via vertical.
+    let alignClass;
+    if (isHoriz) {
+      alignClass = align === 'start' ? 'left-0'
+                 : align === 'end'   ? 'right-0'
+                 : 'left-1/2 -translate-x-1/2';
+    } else {
+      alignClass = align === 'start' ? 'top-0'
+                 : align === 'end'   ? 'bottom-0'
+                 : 'top-1/2 -translate-y-1/2';
+    }
+
+    // Arrow — follow alignment so it stays near the trigger
     const arrowColor = variant === 'light' ? '#ffffff' : '#101828';
-    const arrowStyle = {
-      top:    `top:100%;left:50%;transform:translateX(-50%);border-width:5px 5px 0 5px;border-color:${arrowColor} transparent transparent transparent;`,
-      bottom: `bottom:100%;left:50%;transform:translateX(-50%);border-width:0 5px 5px 5px;border-color:transparent transparent ${arrowColor} transparent;`,
-      left:   `left:100%;top:50%;transform:translateY(-50%);border-width:5px 0 5px 5px;border-color:transparent transparent transparent ${arrowColor};`,
-      right:  `right:100%;top:50%;transform:translateY(-50%);border-width:5px 5px 5px 0;border-color:transparent ${arrowColor} transparent transparent;`,
+    let arrowAlign;
+    if (isHoriz) {
+      arrowAlign = align === 'start' ? 'left:12px;'
+                 : align === 'end'   ? 'right:12px;'
+                 : 'left:50%;transform:translateX(-50%);';
+    } else {
+      arrowAlign = align === 'start' ? 'top:12px;'
+                 : align === 'end'   ? 'bottom:12px;'
+                 : 'top:50%;transform:translateY(-50%);';
+    }
+    const arrowEdge = {
+      top:    `top:100%;${arrowAlign};border-width:5px 5px 0 5px;border-color:${arrowColor} transparent transparent transparent;`,
+      bottom: `bottom:100%;${arrowAlign};border-width:0 5px 5px 5px;border-color:transparent transparent ${arrowColor} transparent;`,
+      left:   `left:100%;${arrowAlign};border-width:5px 0 5px 5px;border-color:transparent transparent transparent ${arrowColor};`,
+      right:  `right:100%;${arrowAlign};border-width:5px 5px 5px 0;border-color:transparent ${arrowColor} transparent transparent;`,
     }[side];
-    const arrowHtml = arrow ? `<div class="absolute w-0 h-0" style="${arrowStyle}"></div>` : '';
+    const arrowHtml = arrow ? `<div class="absolute w-0 h-0" style="${arrowEdge}"></div>` : '';
     return `<div class="relative inline-block">
       ${trigger}
-      <div class="absolute ${pos} whitespace-nowrap z-10 pointer-events-none">
-        <div class="relative ${bg} ${pad} rounded-md text-xs font-medium shadow-md">
+      <div class="absolute ${sideClass} ${alignClass} whitespace-nowrap z-10 pointer-events-none">
+        <div class="relative ${bg} ${pad} rounded-md font-medium shadow-md">
           ${content}
           ${arrowHtml}
         </div>
@@ -4129,8 +4158,30 @@
         tt({ trigger: trigBtnSm('Right'),  content: 'Appears on right',  side: 'right' })
       )),
 
-    // 03 · Variants
-    btnSection(3, 'Variants', 'Dark for content · light for marketing / airy surfaces',
+    // 03 · Alignment
+    btnSection(3, 'Alignment', 'Within each side · align=start · center · end · 12 positions total',
+      btnSubgroup('Top (align start · center · end)',
+        ttBox(
+          tt({ trigger: `<button class="inline-flex items-center justify-center h-10 min-w-[200px] px-4 text-sm font-semibold rounded-md bg-white text-gray-700 border border-gray-300 shadow-xs">A wider top button</button>`, content: 'align=start', side: 'top', align: 'start' }) +
+          tt({ trigger: `<button class="inline-flex items-center justify-center h-10 min-w-[200px] px-4 text-sm font-semibold rounded-md bg-white text-gray-700 border border-gray-300 shadow-xs">A wider top button</button>`, content: 'align=center (default)', side: 'top', align: 'center' }) +
+          tt({ trigger: `<button class="inline-flex items-center justify-center h-10 min-w-[200px] px-4 text-sm font-semibold rounded-md bg-white text-gray-700 border border-gray-300 shadow-xs">A wider top button</button>`, content: 'align=end', side: 'top', align: 'end' })
+        )) +
+      btnSubgroup('Bottom (align start · center · end)',
+        ttBox(
+          tt({ trigger: `<button class="inline-flex items-center justify-center h-10 min-w-[200px] px-4 text-sm font-semibold rounded-md bg-white text-gray-700 border border-gray-300 shadow-xs">A wider bottom button</button>`, content: 'align=start', side: 'bottom', align: 'start' }) +
+          tt({ trigger: `<button class="inline-flex items-center justify-center h-10 min-w-[200px] px-4 text-sm font-semibold rounded-md bg-white text-gray-700 border border-gray-300 shadow-xs">A wider bottom button</button>`, content: 'align=center (default)', side: 'bottom', align: 'center' }) +
+          tt({ trigger: `<button class="inline-flex items-center justify-center h-10 min-w-[200px] px-4 text-sm font-semibold rounded-md bg-white text-gray-700 border border-gray-300 shadow-xs">A wider bottom button</button>`, content: 'align=end', side: 'bottom', align: 'end' })
+        )) +
+      btnSubgroup('Right · Left (align start · center · end)',
+        ttBox(
+          tt({ trigger: `<button class="inline-flex items-center justify-center h-12 w-16 text-sm font-semibold rounded-md bg-white text-gray-700 border border-gray-300 shadow-xs">Right</button>`, content: 'right · start', side: 'right', align: 'start' }) +
+          tt({ trigger: `<button class="inline-flex items-center justify-center h-12 w-16 text-sm font-semibold rounded-md bg-white text-gray-700 border border-gray-300 shadow-xs">Right</button>`, content: 'right · end', side: 'right', align: 'end' }) +
+          tt({ trigger: `<button class="inline-flex items-center justify-center h-12 w-16 text-sm font-semibold rounded-md bg-white text-gray-700 border border-gray-300 shadow-xs">Left</button>`, content: 'left · start', side: 'left', align: 'start' }) +
+          tt({ trigger: `<button class="inline-flex items-center justify-center h-12 w-16 text-sm font-semibold rounded-md bg-white text-gray-700 border border-gray-300 shadow-xs">Left</button>`, content: 'left · end', side: 'left', align: 'end' })
+        ))),
+
+    // 04 · Variants
+    btnSection(4, 'Variants', 'Dark for content · light for marketing / airy surfaces',
       btnSubgroup('Dark (default)',
         ttBox(
           tt({ trigger: trigBtn('Hover me'), content: 'Dark tooltip on gray-900', variant: 'dark' }) +
@@ -4142,22 +4193,23 @@
           tt({ trigger: trigBtnPrimary('Save'), content: 'Also light', variant: 'light' })
         ))),
 
-    // 04 · Sizes
-    btnSection(4, 'Sizes', 'sm · compact · md · default',
+    // 05 · Sizes
+    btnSection(5, 'Sizes', 'sm · compact · md · default · lg · marketing / critical hints',
       ttBox(
         tt({ trigger: trigBtnSm('sm'), content: 'Small tooltip', size: 'sm' }) +
-        tt({ trigger: trigBtn('md'),   content: 'Medium tooltip (default)', size: 'md' })
+        tt({ trigger: trigBtn('md'),   content: 'Medium tooltip (default)', size: 'md' }) +
+        tt({ trigger: `<button class="inline-flex items-center justify-center h-11 px-[18px] text-base font-semibold rounded-md bg-white text-gray-700 border border-gray-300 shadow-xs">lg</button>`, content: 'Larger tooltip · more padding · body text size', size: 'lg' })
       )),
 
-    // 05 · Arrow toggle
-    btnSection(5, 'Arrow', 'On by default · turn off for a floating pill look',
+    // 06 · Arrow toggle
+    btnSection(6, 'Arrow', 'On by default · turn off for a floating pill look',
       ttBox(
         tt({ trigger: trigBtn('With arrow'), content: 'With arrow (default)', arrow: true }) +
         tt({ trigger: trigBtn('No arrow'),   content: 'No arrow — free-floating', arrow: false })
       )),
 
-    // 06 · Rich content
-    btnSection(6, 'Rich content', 'Title · optional description · optional shortcut chips',
+    // 07 · Rich content
+    btnSection(7, 'Rich content', 'Title · optional description · optional shortcut chips',
       btnSubgroup('Title + description',
         ttBox(
           tt({ trigger: trigBtnPrimary('Save'), content: richContent({ title: 'Save changes', description: 'Persists to draft. You can still discard before publishing.' }) }) +
@@ -4170,8 +4222,8 @@
           tt({ trigger: `<button class="inline-flex items-center justify-center h-10 w-10 rounded-md bg-white text-error-700 border border-error-300 shadow-xs"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18m-2 0v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2M10 11v6M14 11v6"/></svg></button>`, content: richContent({ title: 'Delete', description: 'Permanently removes this record. This cannot be undone.', shortcut: ['⇧', '⌫'], variant: 'light' }), variant: 'light' })
         ))),
 
-    // 07 · In-context
-    btnSection(7, 'In-context', 'Real UI · icon-only toolbar · metric explainer · disabled action',
+    // 08 · In-context
+    btnSection(8, 'In-context', 'Real UI · icon-only toolbar · metric explainer · disabled action',
       ttBox(
         // Editor toolbar
         `<div class="inline-flex items-center gap-0.5 p-1 bg-white rounded-md border border-gray-200 shadow-xs">

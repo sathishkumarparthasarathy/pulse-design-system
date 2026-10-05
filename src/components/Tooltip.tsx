@@ -29,6 +29,7 @@ const tooltipContentVariants = cva(
       size: {
         sm: "px-2 py-1 text-xs",
         md: "px-2.5 py-1.5 text-xs",
+        lg: "px-3 py-2 text-sm",
       },
     },
     defaultVariants: {

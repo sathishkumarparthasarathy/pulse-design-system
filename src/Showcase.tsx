@@ -2109,7 +2109,7 @@ function TooltipsPage() {
     <section data-page="tooltips">
       <PageHeader
         title="Tooltips"
-        subtitle="7 patterns · dark + light · 4 positions · rich mode with title / description / shortcut · Radix-backed"
+        subtitle="8 patterns · dark + light · 12 positions (4 sides × 3 alignments) · sm/md/lg · rich mode with title / description / shortcut · Radix-backed"
       />
       <div className="space-y-4">
 
@@ -2148,8 +2148,54 @@ function TooltipsPage() {
           </TooltipDemoBox>
         </NumberedSection>
 
-        {/* 03 · Dark vs Light */}
-        <NumberedSection num={3} title="Variants" description="Dark for content · light for marketing / airy surfaces">
+        {/* 03 · Alignment — align within a side (start / center / end) */}
+        <NumberedSection num={3} title="Alignment" description="Within each side · align=start · center · end · 12 positions total">
+          <SubGroup label="Top (align start · center · end)">
+            <TooltipDemoBox>
+              <Tooltip content="align=start" side="top" align="start">
+                <Button hierarchy="secondary-gray" className="min-w-[200px]">A wider top button</Button>
+              </Tooltip>
+              <Tooltip content="align=center (default)" side="top" align="center">
+                <Button hierarchy="secondary-gray" className="min-w-[200px]">A wider top button</Button>
+              </Tooltip>
+              <Tooltip content="align=end" side="top" align="end">
+                <Button hierarchy="secondary-gray" className="min-w-[200px]">A wider top button</Button>
+              </Tooltip>
+            </TooltipDemoBox>
+          </SubGroup>
+          <SubGroup label="Bottom (align start · center · end)">
+            <TooltipDemoBox>
+              <Tooltip content="align=start" side="bottom" align="start">
+                <Button hierarchy="secondary-gray" className="min-w-[200px]">A wider bottom button</Button>
+              </Tooltip>
+              <Tooltip content="align=center" side="bottom" align="center">
+                <Button hierarchy="secondary-gray" className="min-w-[200px]">A wider bottom button</Button>
+              </Tooltip>
+              <Tooltip content="align=end" side="bottom" align="end">
+                <Button hierarchy="secondary-gray" className="min-w-[200px]">A wider bottom button</Button>
+              </Tooltip>
+            </TooltipDemoBox>
+          </SubGroup>
+          <SubGroup label="Right · Left (align start · center · end)">
+            <TooltipDemoBox>
+              <Tooltip content="right · start" side="right" align="start">
+                <Button hierarchy="secondary-gray" size="lg">Right</Button>
+              </Tooltip>
+              <Tooltip content="right · end" side="right" align="end">
+                <Button hierarchy="secondary-gray" size="lg">Right</Button>
+              </Tooltip>
+              <Tooltip content="left · start" side="left" align="start">
+                <Button hierarchy="secondary-gray" size="lg">Left</Button>
+              </Tooltip>
+              <Tooltip content="left · end" side="left" align="end">
+                <Button hierarchy="secondary-gray" size="lg">Left</Button>
+              </Tooltip>
+            </TooltipDemoBox>
+          </SubGroup>
+        </NumberedSection>
+
+        {/* 04 · Dark vs Light */}
+        <NumberedSection num={4} title="Variants" description="Dark for content · light for marketing / airy surfaces">
           <SubGroup label="Dark (default)">
             <TooltipDemoBox>
               <Tooltip content="Dark tooltip on gray-900" variant="dark">
@@ -2172,8 +2218,8 @@ function TooltipsPage() {
           </SubGroup>
         </NumberedSection>
 
-        {/* 04 · Sizes */}
-        <NumberedSection num={4} title="Sizes" description="sm · compact · md · default">
+        {/* 05 · Sizes */}
+        <NumberedSection num={5} title="Sizes" description="sm · compact · md · default · lg · marketing / critical hints">
           <TooltipDemoBox>
             <Tooltip content="Small tooltip" size="sm">
               <Button hierarchy="secondary-gray" size="sm">sm</Button>
@@ -2181,11 +2227,14 @@ function TooltipsPage() {
             <Tooltip content="Medium tooltip (default)" size="md">
               <Button hierarchy="secondary-gray">md</Button>
             </Tooltip>
+            <Tooltip content="Larger tooltip · more padding · body text size" size="lg">
+              <Button hierarchy="secondary-gray" size="lg">lg</Button>
+            </Tooltip>
           </TooltipDemoBox>
         </NumberedSection>
 
-        {/* 05 · Arrow toggle */}
-        <NumberedSection num={5} title="Arrow" description="On by default · turn off for a floating pill look">
+        {/* 06 · Arrow toggle */}
+        <NumberedSection num={6} title="Arrow" description="On by default · turn off for a floating pill look">
           <TooltipDemoBox>
             <Tooltip content="With arrow (default)">
               <Button hierarchy="secondary-gray">With arrow</Button>
@@ -2196,8 +2245,8 @@ function TooltipsPage() {
           </TooltipDemoBox>
         </NumberedSection>
 
-        {/* 06 · Rich — title + description + shortcut */}
-        <NumberedSection num={6} title="Rich content" description="Title · optional description · optional shortcut chips">
+        {/* 07 · Rich — title + description + shortcut */}
+        <NumberedSection num={7} title="Rich content" description="Title · optional description · optional shortcut chips">
           <SubGroup label="Title + description">
             <TooltipDemoBox>
               <TooltipRich
@@ -2243,7 +2292,7 @@ function TooltipsPage() {
         </NumberedSection>
 
         {/* 07 · In-context */}
-        <NumberedSection num={7} title="In-context" description="Real UI · icon-only toolbar · metric explainer · disabled action">
+        <NumberedSection num={8} title="In-context" description="Real UI · icon-only toolbar · metric explainer · disabled action">
           <TooltipDemoBox>
             <div className="inline-flex items-center gap-0.5 p-1 bg-white rounded-md border border-gray-200 shadow-xs">
               <Tooltip content="Bold" size="sm"><Button hierarchy="tertiary-gray" size="sm" iconOnly aria-label="Bold"><span className="text-sm font-bold">B</span></Button></Tooltip>
