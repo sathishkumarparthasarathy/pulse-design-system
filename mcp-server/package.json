@@ -1,0 +1,37 @@
+{
+  "name": "@scienaptic/pulse-mcp-server",
+  "version": "0.1.0",
+  "description": "Model Context Protocol server for PULSE Design System — lets AI assistants (Claude Code, Cursor, etc.) query PULSE components, tokens, and icons in real time.",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "pulse-mcp": "dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsc --watch",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "design-system",
+    "pulse",
+    "scienaptic",
+    "claude",
+    "ai"
+  ],
+  "author": "Scienaptic",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.4"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "typescript": "^5.7.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
