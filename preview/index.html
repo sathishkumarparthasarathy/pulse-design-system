@@ -3149,8 +3149,9 @@
   const BTN_BASE = 'inline-flex items-center justify-center gap-1.5 font-semibold rounded-md transition-colors focus-visible:outline-none';
 
   const HIER = {
-    'primary':               'bg-gray-800 text-white border border-gray-800 shadow-xs hover:bg-gray-900 hover:border-gray-900',
+    'primary':               'bg-brand-600 text-white border border-brand-600 shadow-xs hover:bg-brand-700 hover:border-brand-700',
     'primary-gradient':      'bg-gradient-to-b from-brand-500 to-brand-600 text-white border border-brand-600 shadow-xs hover:from-brand-600 hover:to-brand-700 hover:border-brand-700',
+    'secondary-navy':        'bg-gray-800 text-white border border-gray-800 shadow-xs hover:bg-gray-900 hover:border-gray-900',
     'secondary-gray':        'bg-white text-gray-700 border border-gray-300 shadow-xs hover:bg-gray-50',
     'secondary-color':       'bg-brand-50 text-brand-700 border border-brand-50 shadow-xs hover:bg-brand-100',
     'tertiary-gray':         'bg-transparent text-gray-600 hover:bg-gray-50',
@@ -3164,7 +3165,7 @@
   const DIS_OUTLINED = 'bg-white text-gray-400 border border-gray-200 shadow-none cursor-not-allowed';
   const DIS_GHOST = 'bg-transparent text-gray-400 cursor-not-allowed';
   const DIS_MAP = {
-    'primary': DIS_FILLED, 'destructive-primary': DIS_FILLED,
+    'primary': DIS_FILLED, 'destructive-primary': DIS_FILLED, 'secondary-navy': DIS_FILLED,
     'secondary-gray': DIS_OUTLINED, 'secondary-color': DIS_OUTLINED, 'destructive-secondary': DIS_OUTLINED,
     'tertiary-gray': DIS_GHOST, 'tertiary-color': DIS_GHOST, 'destructive-tertiary': DIS_GHOST,
     'link-gray': DIS_GHOST, 'link-color': DIS_GHOST,
@@ -3677,6 +3678,7 @@
     { value: 'primary',              label: 'Primary' },
     { value: 'primary-gradient',     label: 'Primary gradient' },
     { group: 'Secondary' },
+    { value: 'secondary-navy',       label: 'Secondary navy' },
     { value: 'secondary-gray',       label: 'Secondary gray' },
     { value: 'secondary-color',      label: 'Secondary color' },
     { group: 'Tertiary' },

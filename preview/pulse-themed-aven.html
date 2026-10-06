@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Aven · reimagined with PULSE primary + brand</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        brand: {
+          25:  "#FFF7F0", 50:  "#FFEEDD", 100: "#FFDFC2", 200: "#FFC094",
+          300: "#FFA168", 400: "#FF8C45", 500: "#FF7918", 600: "#E5610A",
+          700: "#BB4D08", 800: "#913C0C", 900: "#6D2D0E",
+        },
+        gray: {
+          25: "#FCFCFD", 50: "#F8FAFC", 100: "#EEF2F6", 200: "#E3E8EF",
+          300: "#CDD5DF", 400: "#9AA4B2", 500: "#697586", 600: "#4B5565",
+          700: "#364152", 800: "#202939", 900: "#121926", 950: "#0D131E",
+        },
+        success: { 50: "#ECFDF5", 500: "#10B981", 600: "#059669", 700: "#047857" },
+      },
+    },
+  },
+};
+</script>
+<style>
+  body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+
+  /* Primary CTA — Scienaptic orange, the "go" action */
+  .btn-primary {
+    background: #E5610A; color: white; border: 1px solid #E5610A;
+    transition: background 150ms;
+    box-shadow: 0 1px 2px rgba(16,24,40,0.05);
+  }
+  .btn-primary:hover { background: #B84607; border-color: #B84607; }
+
+  /* Secondary navy — alternate commit action (peer options in a list) */
+  .btn-secondary-navy {
+    background: #202939; color: white; border: 1px solid #202939;
+    transition: background 150ms;
+    box-shadow: 0 1px 2px rgba(16,24,40,0.05);
+  }
+  .btn-secondary-navy:hover { background: #121926; border-color: #121926; }
+
+  .btn-secondary {
+    background: white; color: #364152; border: 1px solid #CDD5DF;
+    transition: background 150ms;
+    box-shadow: 0 1px 2px rgba(16,24,40,0.05);
+  }
+  .btn-secondary:hover { background: #F8FAFC; }
+
+  .btn-base {
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+    height: 40px; padding: 0 16px; border-radius: 8px;
+    font-size: 14px; font-weight: 600; cursor: pointer;
+  }
+
+  /* Pulsing brand dot — notification badge */
+  @keyframes pulse-brand {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(255,121,24,0.5); }
+    70%      { box-shadow: 0 0 0 6px rgba(255,121,24,0); }
+  }
+  .pulse-brand { animation: pulse-brand 2s infinite; }
+</style>
+</head>
+<body class="bg-gradient-to-br from-brand-25 via-white to-gray-50 min-h-screen">
+
+<!-- ============================================================
+     TOP CHROME · header
+============================================================ -->
+<header class="bg-white/70 backdrop-blur-sm border-b border-gray-100 px-8 py-4 flex items-center justify-between">
+  <!-- Logo — brand orange ownership moment -->
+  <div class="flex items-center gap-2">
+    <!-- Lotus-like logo: three orange petals -->
+    <svg width="30" height="30" viewBox="0 0 40 40" fill="none">
+      <circle cx="12" cy="22" r="8" fill="#FF7918" opacity="0.9"/>
+      <circle cx="28" cy="22" r="8" fill="#E5610A" opacity="0.9"/>
+      <circle cx="20" cy="12" r="8" fill="#FFA168" opacity="0.9"/>
+    </svg>
+    <div>
+      <div class="text-lg font-bold text-gray-900 tracking-tight leading-tight">aven<span class="text-brand-500">.</span></div>
+      <div class="text-[10px] text-gray-500 leading-tight">Credit Union</div>
+    </div>
+  </div>
+
+  <div class="flex items-center gap-5">
+    <!-- Notification bell with brand pulse dot -->
+    <button class="relative h-10 w-10 rounded-full border border-gray-200 bg-white hover:bg-gray-50 flex items-center justify-center">
+      <svg class="h-5 w-5 text-gray-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/>
+      </svg>
+      <span class="pulse-brand absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-brand-500 border border-white"></span>
+    </button>
+    <!-- Avatar -->
+    <div class="relative">
+      <div class="h-10 w-10 rounded-full bg-gradient-to-br from-brand-400 to-brand-700 flex items-center justify-center text-white text-sm font-semibold">AJ</div>
+      <span class="absolute bottom-0 right-0 h-3 w-3 rounded-full bg-success-500 border-2 border-white"></span>
+    </div>
+  </div>
+</header>
+
+<!-- ============================================================
+     CONTENT
+============================================================ -->
+<main class="max-w-4xl mx-auto px-8 py-10">
+
+  <!-- Application banner · brand accent -->
+  <div class="rounded-2xl bg-brand-25 border border-brand-100 px-6 py-4 mb-10 flex items-center gap-3">
+    <div class="h-9 w-9 rounded-full bg-brand-100 flex items-center justify-center shrink-0">
+      <svg class="h-4 w-4 text-brand-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/>
+      </svg>
+    </div>
+    <div class="text-sm font-semibold text-brand-800 tracking-tight">
+      Application <span class="font-mono text-brand-700">#AVU-2026-048271</span>
+      <span class="text-gray-400 font-normal mx-1">·</span> Alex Johnson
+      <span class="text-gray-400 font-normal mx-1">·</span> Auto Loan
+    </div>
+  </div>
+
+  <!-- Heading -->
+  <h1 class="text-3xl font-bold text-gray-900 tracking-tight mb-2">Verify your account</h1>
+  <p class="text-gray-600 mb-8">Please choose a verification method that works for you.</p>
+
+  <!-- Verification cards -->
+  <div class="space-y-3">
+    <!-- Card 1 · Link bank account -->
+    <div class="bg-white border border-gray-200 rounded-xl px-5 py-4 flex items-center gap-4 shadow-xs">
+      <div class="h-10 w-10 rounded-lg bg-gray-100 flex items-center justify-center shrink-0">
+        <svg class="h-5 w-5 text-gray-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/>
+        </svg>
+      </div>
+      <div class="flex-1">
+        <div class="text-sm font-semibold text-gray-900">Link bank account</div>
+        <div class="text-xs text-gray-600 mt-0.5">Securely link your account to automatically share bank statements.</div>
+      </div>
+      <button class="btn-base btn-secondary-navy">Link Now</button>
+    </div>
+
+    <!-- Card 2 · Link payroll provider -->
+    <div class="bg-white border border-gray-200 rounded-xl px-5 py-4 flex items-center gap-4 shadow-xs">
+      <div class="h-10 w-10 rounded-lg bg-gray-100 flex items-center justify-center shrink-0">
+        <svg class="h-5 w-5 text-gray-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+        </svg>
+      </div>
+      <div class="flex-1">
+        <div class="text-sm font-semibold text-gray-900">Link payroll provider</div>
+        <div class="text-xs text-gray-600 mt-0.5">Connect your payroll account for faster income verification.</div>
+      </div>
+      <button class="btn-base btn-secondary-navy">Link Now</button>
+    </div>
+
+    <!-- Card 3 · Document upload — currently active (ring-brand) -->
+    <div class="bg-white border-2 border-brand-500 rounded-xl px-5 py-4 flex items-center gap-4 shadow-xs" style="box-shadow: 0 0 0 4px rgba(255,121,24,0.12), 0 1px 2px rgba(16,24,40,0.05);">
+      <div class="h-10 w-10 rounded-lg bg-brand-50 flex items-center justify-center shrink-0">
+        <svg class="h-5 w-5 text-brand-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
+        </svg>
+      </div>
+      <div class="flex-1">
+        <div class="text-sm font-semibold text-gray-900">Document upload</div>
+        <div class="text-xs text-gray-600 mt-0.5">Upload your documents directly from your device.</div>
+      </div>
+      <button class="btn-base btn-secondary-navy">Upload</button>
+    </div>
+  </div>
+</main>
+
+<!-- ============================================================
+     MODAL · Upload documents
+============================================================ -->
+<div class="fixed inset-0 bg-gray-900/40 backdrop-blur-sm flex items-center justify-center p-6 z-50">
+  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-xl overflow-hidden">
+    <!-- Header -->
+    <div class="px-6 pt-6 pb-4 border-b border-gray-100 flex items-start justify-between gap-4">
+      <div>
+        <h2 class="text-lg font-bold text-gray-900">Upload documents</h2>
+        <p class="text-sm text-gray-600 mt-1">Attach files to each category that applies to you.</p>
+      </div>
+      <button class="h-8 w-8 rounded-md hover:bg-gray-100 flex items-center justify-center text-gray-500">
+        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+
+    <!-- Expanded category · Bank statements -->
+    <div class="px-6 py-4 border-b border-gray-100">
+      <div class="flex items-start gap-3">
+        <div class="h-9 w-9 rounded-lg bg-brand-50 border border-brand-100 flex items-center justify-center shrink-0 mt-0.5">
+          <svg class="h-4 w-4 text-brand-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/>
+          </svg>
+        </div>
+        <div class="flex-1">
+          <div class="text-sm font-semibold text-gray-900">Bank statements</div>
+          <div class="text-xs text-gray-600 mt-0.5">Last 3 months · PDF, JPG, or PNG · 10 MB max per file</div>
+        </div>
+        <button class="h-8 w-8 rounded-md hover:bg-gray-50 flex items-center justify-center text-gray-500">
+          <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg>
+        </button>
+      </div>
+
+      <!-- Dropzone with brand hover accent -->
+      <button class="mt-3 w-full border border-dashed border-brand-300 rounded-lg bg-brand-25 hover:bg-brand-50 hover:border-brand-500 transition-colors py-4 flex items-center justify-center gap-2 text-sm font-medium text-brand-700">
+        <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v16m8-8H4"/></svg>
+        Add file(s)
+      </button>
+    </div>
+
+    <!-- Collapsed category · P&L -->
+    <div class="px-6 py-4 border-b border-gray-100">
+      <div class="flex items-start gap-3">
+        <div class="h-9 w-9 rounded-lg bg-gray-100 border border-gray-200 flex items-center justify-center shrink-0 mt-0.5">
+          <svg class="h-4 w-4 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/>
+          </svg>
+        </div>
+        <div class="flex-1">
+          <div class="text-sm font-semibold text-gray-900">Profit &amp; Loss Statement and Balance Sheet</div>
+          <div class="text-xs text-gray-600 mt-0.5">Required for self-employed applicants · last filed year</div>
+        </div>
+        <button class="h-8 w-8 rounded-md hover:bg-gray-50 flex items-center justify-center text-gray-500">
+          <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Row: file requirements -->
+    <div class="px-6 py-3 border-b border-gray-100 bg-gray-50/60 flex items-center justify-between">
+      <button class="inline-flex items-center gap-1.5 text-xs text-gray-600 hover:text-brand-700 font-medium">
+        File requirements
+        <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+      </button>
+    </div>
+
+    <!-- Footer actions -->
+    <div class="px-6 py-4 flex items-center justify-between gap-3">
+      <span class="text-xs text-gray-500">No files selected yet.</span>
+      <div class="flex items-center gap-2">
+        <button class="btn-base btn-secondary">Cancel</button>
+        <button class="btn-base btn-primary">Submit</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

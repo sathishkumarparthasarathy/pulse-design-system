@@ -8,9 +8,11 @@ import { cn } from "@/lib/cn";
  * Untitled UI Button.
  *
  * Hierarchy:
- *   - Primary       — filled brand, white text, the "go" action on a page
+ *   - Primary        — filled Scienaptic orange, white text, the "go" action on a page
+ *   - Primary gradient — vertical brand gradient, opt-in for hero CTAs
+ *   - Secondary navy — filled navy, used for alternate actions (Link, Upload)
  *   - Secondary gray — outlined gray, used for cancel/back
- *   - Secondary color — outlined brand, used for emphasis without committing
+ *   - Secondary color — soft brand surface, used for emphasis without committing
  *   - Tertiary gray — ghost gray, low-emphasis
  *   - Tertiary color — ghost brand, low-emphasis but on-brand
  *   - Link gray / Link color — inline text actions
@@ -33,10 +35,10 @@ const button = cva(
   {
     variants: {
       hierarchy: {
-        // PRIMARY — Scienaptic navy · darker-of-same-color on hover · orange focus ring
+        // PRIMARY — Scienaptic orange, the "go" action on a page
         primary: [
-          "bg-gray-800 text-white border border-gray-800 shadow-xs",
-          "hover:bg-gray-900 hover:border-gray-900",
+          "bg-brand-600 text-white border border-brand-600 shadow-xs",
+          "hover:bg-brand-700 hover:border-brand-700",
           "focus:shadow-ring-brand",
           "disabled:bg-gray-100 disabled:border-gray-200 disabled:text-gray-400",
         ].join(" "),
@@ -47,6 +49,14 @@ const button = cva(
           "hover:from-brand-600 hover:to-brand-700 hover:border-brand-700",
           "focus:shadow-ring-brand",
           "disabled:bg-none disabled:bg-gray-100 disabled:border-gray-200 disabled:text-gray-400",
+        ].join(" "),
+
+        // SECONDARY NAVY — filled navy, alternate commit action (Link, Upload)
+        "secondary-navy": [
+          "bg-gray-800 text-white border border-gray-800 shadow-xs",
+          "hover:bg-gray-900 hover:border-gray-900",
+          "focus:shadow-ring-gray",
+          "disabled:bg-gray-100 disabled:border-gray-200 disabled:text-gray-400",
         ].join(" "),
 
         // SECONDARY GRAY — white surface, gray border

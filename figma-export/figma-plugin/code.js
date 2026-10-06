@@ -92,8 +92,9 @@ function gradientBrandVertical() {
 // isLink=true → no fill/border, no shadow, text-only styling (link-* variants)
 // isFilled → shadow-xs on filled variants
 const BUTTON_HIERARCHIES = [
-  { id: "primary",               fill: COLORS.gray[800],   text: COLORS.white,       stroke: COLORS.gray[800] },
+  { id: "primary",               fill: COLORS.brand[600],  text: COLORS.white,       stroke: COLORS.brand[600] },
   { id: "primary-gradient",      fillPaint: gradientBrandVertical, text: COLORS.white, stroke: COLORS.brand[600] },
+  { id: "secondary-navy",        fill: COLORS.gray[800],   text: COLORS.white,       stroke: COLORS.gray[800] },
   { id: "secondary-gray",        fill: COLORS.white,       text: COLORS.gray[700],   stroke: COLORS.gray[300] },
   { id: "secondary-color",       fill: COLORS.brand[50],   text: COLORS.brand[700],  stroke: COLORS.brand[50] },
   { id: "tertiary-gray",         fill: null,               text: COLORS.gray[600],   stroke: null },
