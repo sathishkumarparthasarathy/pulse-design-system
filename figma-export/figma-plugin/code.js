@@ -526,6 +526,135 @@ async function buildCard(parent) {
   return cmp;
 }
 
+/* ─── Tooltip ─────────────────────────────────────────────────────
+   Mirrors src/components/Tooltip.tsx:
+   - 2 variants (dark / light)
+   - 3 sizes (sm / md / lg) with px/py/fs matching the cva variants
+   - 4 sides (top / right / bottom / left) determining arrow position
+   - shadow-md Tailwind drop shadow
+   - 11×5 arrow (Radix TooltipPrimitive.Arrow defaults)
+   --------------------------------------------------------------- */
+const TOOLTIP_VARIANTS = [
+  { id: "dark",  bg: COLORS.gray[900], text: COLORS.white,     border: null             },
+  { id: "light", bg: COLORS.white,     text: COLORS.gray[900], border: COLORS.gray[200] },
+];
+const TOOLTIP_SIZES = [
+  { id: "sm", px: 10, py: 6,  fs: 12 }, // Tailwind px-2.5 py-1.5 text-xs
+  { id: "md", px: 12, py: 8,  fs: 12 }, // Tailwind px-3   py-2   text-xs
+  { id: "lg", px: 14, py: 10, fs: 14 }, // Tailwind px-3.5 py-2.5 text-sm
+];
+// For each side we need to know:
+//   layout     — HORIZONTAL means arrow stacks beside bubble (left/right)
+//   arrowFirst — put arrow before bubble in children order
+//   path       — SVG path for the arrow pointing *toward* the trigger
+//   arrowW, arrowH — arrow bounding box
+const TOOLTIP_SIDES = [
+  { id: "top",    layout: "VERTICAL",   arrowFirst: false, arrowW: 11, arrowH: 5,
+    path: "M 0 0 L 11 0 L 5.5 5 Z" }, // apex points down
+  { id: "bottom", layout: "VERTICAL",   arrowFirst: true,  arrowW: 11, arrowH: 5,
+    path: "M 0 5 L 11 5 L 5.5 0 Z" }, // apex points up
+  { id: "left",   layout: "HORIZONTAL", arrowFirst: false, arrowW: 5,  arrowH: 11,
+    path: "M 0 0 L 0 11 L 5 5.5 Z" }, // apex points right
+  { id: "right",  layout: "HORIZONTAL", arrowFirst: true,  arrowW: 5,  arrowH: 11,
+    path: "M 5 0 L 5 11 L 0 5.5 Z" }, // apex points left
+];
+// Tailwind shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.1)
+const TOOLTIP_SHADOW = [
+  dropShadow(0, 4, 6, "#000000", 0.1),
+  dropShadow(0, 2, 4, "#000000", 0.06),
+];
+
+function createTooltipArrow(side, variant) {
+  const vec = figma.createVector();
+  vec.name = "arrow";
+  vec.resize(side.arrowW, side.arrowH);
+  vec.vectorPaths = [{ windingRule: "NONZERO", data: side.path }];
+  vec.fills = solid(variant.bg);
+  if (variant.border) {
+    vec.strokes = solid(variant.border);
+    vec.strokeWeight = 1;
+    vec.strokeAlign = "INSIDE";
+  }
+  return vec;
+}
+
+async function buildTooltipSet(parent) {
+  const variants = [];
+  for (const v of TOOLTIP_VARIANTS) {
+    for (const s of TOOLTIP_SIZES) {
+      for (const side of TOOLTIP_SIDES) {
+        const cmp = figma.createComponent();
+        cmp.name = `Variant=${v.id}, Size=${s.id}, Side=${side.id}`;
+        cmp.layoutMode = side.layout;
+        cmp.primaryAxisAlignItems = "CENTER";
+        cmp.counterAxisAlignItems = "CENTER";
+        cmp.primaryAxisSizingMode = "AUTO";
+        cmp.counterAxisSizingMode = "AUTO";
+        cmp.itemSpacing = 0;
+        cmp.fills = [];
+
+        // Bubble — padded, rounded, with text label
+        const bubble = autoFrame("bubble", "HORIZONTAL", {
+          px: s.px, py: s.py,
+          radius: 6,   // rounded-md
+          fill: v.bg,
+          stroke: v.border,
+          shadow: TOOLTIP_SHADOW,
+        });
+        bubble.primaryAxisSizingMode = "AUTO";
+        bubble.counterAxisSizingMode = "AUTO";
+        const label = text("Tooltip", { size: s.fs, weight: "Medium", color: v.text });
+        label.name = "label";
+        bubble.appendChild(label);
+
+        const arrow = createTooltipArrow(side, v);
+
+        if (side.arrowFirst) {
+          cmp.appendChild(arrow);
+          cmp.appendChild(bubble);
+        } else {
+          cmp.appendChild(bubble);
+          cmp.appendChild(arrow);
+        }
+
+        cmp.primaryAxisSizingMode = "AUTO";
+        cmp.counterAxisSizingMode = "AUTO";
+        variants.push(cmp);
+      }
+    }
+  }
+
+  // Step 2 — combine into variant set
+  const set = figma.combineAsVariants(variants, parent);
+  set.name = "Tooltip";
+  set.description = "PULSE Tooltip · 2 variants × 3 sizes × 4 sides · property: Label";
+  set.layoutMode = "VERTICAL";
+  set.primaryAxisSizingMode = "AUTO";
+  set.counterAxisSizingMode = "AUTO";
+  set.itemSpacing = 24;
+  set.paddingTop = 48; set.paddingBottom = 48; set.paddingLeft = 48; set.paddingRight = 48;
+  set.fills = solid(COLORS.gray[50]);
+  set.cornerRadius = 16;
+  set.strokes = solid(COLORS.gray[200]);
+  set.strokeWeight = 1;
+
+  // Shared editable Label text property
+  const labelProp = set.addComponentProperty("Label", "TEXT", "Tooltip");
+  for (const variant of variants) {
+    for (const child of variant.children) {
+      if (child.name === "bubble") {
+        for (const grandchild of child.children) {
+          if (grandchild.name === "label") {
+            grandchild.componentPropertyReferences = { characters: labelProp };
+          }
+        }
+      }
+    }
+  }
+
+  return set;
+}
+
 /* ─── Gradients (paint styles) ────────────────────────────────────
    Gradients can't live in tokens.json cleanly (Tokens Studio's gradient
    support is partial), so they're created here as native Figma paint
@@ -662,6 +791,7 @@ async function main() {
   await buildAvatarSet(section);
   await buildInput(section);
   await buildCard(section);
+  await buildTooltipSet(section);
 
   // Create paint styles for all gradients (Brand · Soft · Multi · Radial · Bg = 47 total)
   const gradientCount = await buildGradientStyles();
@@ -669,7 +799,7 @@ async function main() {
   // Center on the new section
   figma.viewport.scrollAndZoomIntoView([section]);
 
-  figma.notify(`✓ Scaffolded 5 component sets · ${gradientCount} gradient paint styles created`);
+  figma.notify(`✓ Scaffolded 6 component sets · ${gradientCount} gradient paint styles created`);
   figma.closePlugin();
 }
 
