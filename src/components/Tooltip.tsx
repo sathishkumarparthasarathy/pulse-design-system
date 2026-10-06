@@ -146,7 +146,7 @@ export const TooltipRich = ({
       : "bg-gray-800 text-gray-300 border border-gray-700";
 
   const body = (
-    <div className="flex flex-col gap-1 max-w-[240px]">
+    <div className="flex flex-col items-start gap-1 max-w-[260px] p-1.5 text-left">
       <div className="flex items-start justify-between gap-3">
         <div className="text-xs font-semibold leading-tight">{title}</div>
         {shortcut && shortcut.length > 0 && (
