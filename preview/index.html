@@ -4211,6 +4211,7 @@
     { value: 'basic',       label: 'Basic — title only' },
     { value: 'description', label: 'Rich — title + description' },
     { value: 'shortcut',    label: 'Rich — title + keyboard shortcut (⌘S)' },
+    { value: 'full',        label: 'Rich — title + description + shortcut' },
   ];
   const TT_TRIGGERS = [
     { value: 'button', label: 'Button' },
@@ -4228,6 +4229,8 @@
       content = richContent({ title: state.label, description: 'Persists to draft. You can still discard before publishing.', variant: state.variant });
     } else if (state.mode === 'shortcut') {
       content = richContent({ title: state.label, shortcut: ['⌘', 'S'], variant: state.variant });
+    } else if (state.mode === 'full') {
+      content = richContent({ title: state.label, description: 'Persists to draft. You can still discard before publishing.', shortcut: ['⌘', 'S'], variant: state.variant });
     } else {
       content = state.label;
     }
@@ -4275,6 +4278,9 @@ ${childJsx}
     if (state.mode === 'description') {
       richProps.push(`description="Persists to draft. You can still discard before publishing."`);
     } else if (state.mode === 'shortcut') {
+      richProps.push(`shortcut={["⌘", "S"]}`);
+    } else if (state.mode === 'full') {
+      richProps.push(`description="Persists to draft. You can still discard before publishing."`);
       richProps.push(`shortcut={["⌘", "S"]}`);
     }
     return `${childImportRich}
