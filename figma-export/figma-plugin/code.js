@@ -564,6 +564,91 @@ const TOOLTIP_SHADOW = [
   dropShadow(0, 2, 4, "#000000", 0.06),
 ];
 
+// Mode axis — matches TT_MODES in preview/index.html playground
+// basic         : single text label (<Tooltip content="...">)
+// description   : title + description stacked (TooltipRich)
+// shortcut      : title + kbd chips inline right (TooltipRich)
+// full          : title + shortcut inline + description stacked (TooltipRich)
+const TOOLTIP_MODES = [
+  { id: "basic" },
+  { id: "description" },
+  { id: "shortcut" },
+  { id: "full" },
+];
+
+// Build a small kbd chip row (e.g. "⌘ S") — matches TooltipRich kbdBase styling
+function buildShortcutRow(variant) {
+  const row = autoFrame("shortcut", "HORIZONTAL", { gap: 2, fill: null });
+  row.primaryAxisSizingMode = "AUTO";
+  row.counterAxisSizingMode = "AUTO";
+  const kbdBg     = variant.id === "light" ? COLORS.gray[100] : COLORS.gray[800];
+  const kbdText   = variant.id === "light" ? COLORS.gray[600] : COLORS.gray[300];
+  const kbdBorder = variant.id === "light" ? COLORS.gray[200] : COLORS.gray[700];
+  for (const key of ["⌘", "S"]) {
+    const chip = autoFrame("kbd", "HORIZONTAL", {
+      px: 4, py: 0, radius: 3, fill: kbdBg, stroke: kbdBorder,
+    });
+    chip.primaryAxisSizingMode = "AUTO";
+    chip.counterAxisSizingMode = "AUTO";
+    chip.minWidth = 16;
+    const t = text(key, { size: 10, weight: "Medium", color: kbdText });
+    chip.appendChild(t);
+    row.appendChild(chip);
+  }
+  return row;
+}
+
+// Build the inner bubble content based on mode. Returns the parent bubble frame.
+function buildTooltipBubble(mode, size, variant) {
+  const bubble = autoFrame("bubble", "HORIZONTAL", {
+    px: size.px, py: size.py,
+    radius: 6,
+    fill: variant.bg,
+    stroke: variant.border,
+    shadow: TOOLTIP_SHADOW,
+  });
+  bubble.primaryAxisSizingMode = "AUTO";
+  bubble.counterAxisSizingMode = "AUTO";
+
+  // ─ Basic — single text label
+  if (mode === "basic") {
+    const label = text("Tooltip", { size: size.fs, weight: "Medium", color: variant.text });
+    label.name = "label";
+    bubble.appendChild(label);
+    return bubble;
+  }
+
+  // ─ Rich modes — stack vertically
+  bubble.layoutMode = "VERTICAL";
+  bubble.counterAxisAlignItems = "MIN";
+  bubble.itemSpacing = 4;
+  const descColor = variant.id === "light" ? COLORS.gray[600] : COLORS.gray[300];
+
+  // Title row — "Semi Bold" title + optional shortcut chips on the right
+  const titleRow = autoFrame("title-row", "HORIZONTAL", { gap: 12, fill: null });
+  titleRow.primaryAxisSizingMode = "AUTO";
+  titleRow.counterAxisSizingMode = "AUTO";
+  titleRow.counterAxisAlignItems = "CENTER";
+  const title = text("Save your changes", { size: size.fs, weight: "Semi Bold", color: variant.text });
+  title.name = "label";
+  titleRow.appendChild(title);
+  if (mode === "shortcut" || mode === "full") {
+    titleRow.appendChild(buildShortcutRow(variant));
+  }
+  bubble.appendChild(titleRow);
+
+  if (mode === "description" || mode === "full") {
+    const desc = text(
+      "Persists to draft. You can still discard before publishing.",
+      { size: size.fs, weight: "Regular", color: descColor }
+    );
+    desc.name = "description";
+    bubble.appendChild(desc);
+  }
+
+  return bubble;
+}
+
 function createTooltipArrow(side, variant) {
   const vec = figma.createVector();
   vec.name = "arrow";
@@ -583,43 +668,34 @@ async function buildTooltipSet(parent) {
   for (const v of TOOLTIP_VARIANTS) {
     for (const s of TOOLTIP_SIZES) {
       for (const side of TOOLTIP_SIDES) {
-        const cmp = figma.createComponent();
-        cmp.name = `Variant=${v.id}, Size=${s.id}, Side=${side.id}`;
-        cmp.layoutMode = side.layout;
-        cmp.primaryAxisAlignItems = "CENTER";
-        cmp.counterAxisAlignItems = "CENTER";
-        cmp.primaryAxisSizingMode = "AUTO";
-        cmp.counterAxisSizingMode = "AUTO";
-        cmp.itemSpacing = 0;
-        cmp.fills = [];
+        for (const m of TOOLTIP_MODES) {
+          const cmp = figma.createComponent();
+          cmp.name = `Variant=${v.id}, Size=${s.id}, Side=${side.id}, Mode=${m.id}`;
+          cmp.layoutMode = side.layout;
+          cmp.primaryAxisAlignItems = "CENTER";
+          cmp.counterAxisAlignItems = "CENTER";
+          cmp.primaryAxisSizingMode = "AUTO";
+          cmp.counterAxisSizingMode = "AUTO";
+          cmp.itemSpacing = 0;
+          cmp.fills = [];
 
-        // Bubble — padded, rounded, with text label
-        const bubble = autoFrame("bubble", "HORIZONTAL", {
-          px: s.px, py: s.py,
-          radius: 6,   // rounded-md
-          fill: v.bg,
-          stroke: v.border,
-          shadow: TOOLTIP_SHADOW,
-        });
-        bubble.primaryAxisSizingMode = "AUTO";
-        bubble.counterAxisSizingMode = "AUTO";
-        const label = text("Tooltip", { size: s.fs, weight: "Medium", color: v.text });
-        label.name = "label";
-        bubble.appendChild(label);
+          // Bubble body — basic (single line) or rich (title + description + shortcut)
+          const bubble = buildTooltipBubble(m.id, s, v);
 
-        const arrow = createTooltipArrow(side, v);
+          const arrow = createTooltipArrow(side, v);
 
-        if (side.arrowFirst) {
-          cmp.appendChild(arrow);
-          cmp.appendChild(bubble);
-        } else {
-          cmp.appendChild(bubble);
-          cmp.appendChild(arrow);
+          if (side.arrowFirst) {
+            cmp.appendChild(arrow);
+            cmp.appendChild(bubble);
+          } else {
+            cmp.appendChild(bubble);
+            cmp.appendChild(arrow);
+          }
+
+          cmp.primaryAxisSizingMode = "AUTO";
+          cmp.counterAxisSizingMode = "AUTO";
+          variants.push(cmp);
         }
-
-        cmp.primaryAxisSizingMode = "AUTO";
-        cmp.counterAxisSizingMode = "AUTO";
-        variants.push(cmp);
       }
     }
   }
@@ -627,7 +703,7 @@ async function buildTooltipSet(parent) {
   // Step 2 — combine into variant set
   const set = figma.combineAsVariants(variants, parent);
   set.name = "Tooltip";
-  set.description = "PULSE Tooltip · 2 variants × 3 sizes × 4 sides · property: Label";
+  set.description = "PULSE Tooltip · 2 variants × 3 sizes × 4 sides × 4 modes · property: Label";
   set.layoutMode = "VERTICAL";
   set.primaryAxisSizingMode = "AUTO";
   set.counterAxisSizingMode = "AUTO";
@@ -638,19 +714,19 @@ async function buildTooltipSet(parent) {
   set.strokes = solid(COLORS.gray[200]);
   set.strokeWeight = 1;
 
-  // Shared editable Label text property
+  // Shared editable Label text property — recursive since rich modes nest the
+  // title node inside a title-row inside the bubble
   const labelProp = set.addComponentProperty("Label", "TEXT", "Tooltip");
-  for (const variant of variants) {
-    for (const child of variant.children) {
-      if (child.name === "bubble") {
-        for (const grandchild of child.children) {
-          if (grandchild.name === "label") {
-            grandchild.componentPropertyReferences = { characters: labelProp };
-          }
-        }
-      }
+  function bindLabel(node) {
+    if (node.name === "label" && node.type === "TEXT") {
+      node.componentPropertyReferences = { characters: labelProp };
+      return;
+    }
+    if ("children" in node) {
+      for (const child of node.children) bindLabel(child);
     }
   }
+  for (const variant of variants) bindLabel(variant);
 
   return set;
 }
