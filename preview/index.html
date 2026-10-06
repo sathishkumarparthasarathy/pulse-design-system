@@ -4107,8 +4107,8 @@
     const arrowHtml = arrow ? `<div class="absolute w-0 h-0" style="${arrowEdge}"></div>` : '';
     return `<div class="group relative inline-block">
       ${trigger}
-      <div class="absolute ${sideClass} ${alignClass} whitespace-nowrap z-10 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-150">
-        <div class="relative ${bg} ${pad} rounded-md font-medium shadow-md">
+      <div class="absolute ${sideClass} ${alignClass} z-10 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-150">
+        <div class="relative ${bg} ${pad} rounded-md font-medium shadow-md w-max max-w-[320px]">
           ${content}
           ${arrowHtml}
         </div>
@@ -4147,10 +4147,11 @@
       `;
     }
 
-    // Default (stacked) — title above description, shortcut inline right of title
+    // Default (stacked) — title above description, both left-aligned (vertical start)
+    // Shortcut (when present) sits inline right of the title
     return `
-      <div class="flex flex-col gap-1 max-w-[240px] whitespace-normal">
-        <div class="flex items-start justify-between gap-3">
+      <div class="flex flex-col items-start gap-1 max-w-[260px] whitespace-normal text-left">
+        <div class="flex items-start justify-between gap-3 w-full">
           <div class="font-semibold leading-tight">${title}</div>
           ${shortcutHtml}
         </div>
@@ -4221,7 +4222,7 @@
 
     let content;
     if (state.mode === 'description') {
-      content = richContent({ title: state.label, description: 'Persists to draft. You can still discard before publishing.', variant: state.variant, layout: 'horizontal' });
+      content = richContent({ title: state.label, description: 'Persists to draft. You can still discard before publishing.', variant: state.variant });
     } else if (state.mode === 'shortcut') {
       content = richContent({ title: state.label, shortcut: ['⌘', 'S'], variant: state.variant });
     } else {
