@@ -89,6 +89,20 @@ function gradientBrandVertical() {
   }];
 }
 
+// Hover gradient #E5610A (top) → #BB4D08 (bottom) for primary-gradient hover state
+function gradientBrandVerticalHover() {
+  const top = hexToRgb("#E5610A");
+  const bot = hexToRgb("#BB4D08");
+  return [{
+    type: "GRADIENT_LINEAR",
+    gradientTransform: [[0, 1, 0], [-1, 0, 1]],
+    gradientStops: [
+      { color: { r: top.r, g: top.g, b: top.b, a: 1 }, position: 0 },
+      { color: { r: bot.r, g: bot.g, b: bot.b, a: 1 }, position: 1 },
+    ],
+  }];
+}
+
 // isLink=true → no fill/border, no shadow, text-only styling (link-* variants)
 // isFilled → shadow-xs on filled variants
 const BUTTON_HIERARCHIES = [
@@ -105,6 +119,86 @@ const BUTTON_HIERARCHIES = [
   { id: "destructive-secondary", fill: COLORS.white,       text: COLORS.error[700],  stroke: COLORS.error[300] },
   { id: "destructive-tertiary",  fill: null,               text: COLORS.error[700],  stroke: null },
 ];
+
+// States axis — visual states shipped as variants for designer composition
+// (Loading stays as a separate boolean prop since it overlays any state)
+const BUTTON_STATES = [
+  { id: "default" },
+  { id: "hover" },
+  { id: "focused" },
+  { id: "disabled" },
+];
+
+// Hover overrides per hierarchy — matches src/components/Button.tsx hover: classes
+const HOVER_OVERRIDES = {
+  "primary":               { fill: COLORS.brand[700],  stroke: COLORS.brand[700] },
+  "primary-gradient":      { fillPaint: gradientBrandVerticalHover, stroke: COLORS.brand[700] },
+  "secondary-navy":        { fill: COLORS.gray[900],   stroke: COLORS.gray[900] },
+  "secondary-gray":        { fill: COLORS.gray[50],    text: COLORS.gray[800],  stroke: COLORS.gray[300] },
+  "secondary-color":       { fill: COLORS.brand[100],  text: COLORS.brand[800], stroke: COLORS.brand[100] },
+  "tertiary-gray":         { fill: COLORS.gray[50],    text: COLORS.gray[700] },
+  "tertiary-color":        { fill: COLORS.brand[50],   text: COLORS.brand[700] },
+  "link-color":            { text: COLORS.brand[800] },
+  "link-gray":             { text: COLORS.gray[700] },
+  "destructive-primary":   { fill: COLORS.error[700],  stroke: COLORS.error[700] },
+  "destructive-secondary": { fill: COLORS.error[50],   text: COLORS.error[700], stroke: COLORS.error[300] },
+  "destructive-tertiary":  { fill: COLORS.error[50],   text: COLORS.error[700] },
+};
+
+// Focus-ring color by hierarchy family — matches focus:shadow-ring-* in Button.tsx
+function focusRingHex(h) {
+  if (h.id.startsWith("destructive")) return "#DC2626"; // error-600
+  if (h.id.includes("gray") || h.id === "secondary-navy") return "#697586"; // gray-500
+  return "#FF7918"; // brand-500 (primary / primary-gradient / secondary-color / tertiary-color / link-color)
+}
+
+// 4px ring @ 24% opacity — matches shadow-ring-* tokens
+function focusRingEffect(hex) {
+  const c = hexToRgb(hex);
+  return { type: "DROP_SHADOW", color: { r: c.r, g: c.g, b: c.b, a: 0.24 },
+           offset: { x: 0, y: 0 }, radius: 0, spread: 4, visible: true, blendMode: "NORMAL" };
+}
+
+// Resolve per-state style for a hierarchy. Returns { fill, fillPaint, text, stroke, effects }
+function getStateStyle(h, stateId) {
+  // Default — just mirror the hierarchy's base look
+  if (stateId === "default") {
+    return { fill: h.fill, fillPaint: h.fillPaint, text: h.text, stroke: h.stroke, ring: false };
+  }
+
+  // Disabled — universal: gray fill/text/border for filled & outlined; just gray text for ghost/link
+  if (stateId === "disabled") {
+    if (h.isLink || h.id.startsWith("tertiary")) {
+      return { fill: null, fillPaint: null, text: COLORS.gray[400], stroke: null, ring: false };
+    }
+    return {
+      fill: COLORS.gray[100],
+      fillPaint: null,
+      text: COLORS.gray[400],
+      stroke: h.stroke ? COLORS.gray[200] : null,
+      ring: false,
+    };
+  }
+
+  // Hover — darker-of-same-color per hierarchy
+  if (stateId === "hover") {
+    const o = HOVER_OVERRIDES[h.id] || {};
+    return {
+      fill: o.fill !== undefined ? o.fill : h.fill,
+      fillPaint: o.fillPaint !== undefined ? o.fillPaint : h.fillPaint,
+      text: o.text !== undefined ? o.text : h.text,
+      stroke: o.stroke !== undefined ? o.stroke : h.stroke,
+      ring: false,
+    };
+  }
+
+  // Focused — base look + 4px ring effect
+  if (stateId === "focused") {
+    return { fill: h.fill, fillPaint: h.fillPaint, text: h.text, stroke: h.stroke, ring: true };
+  }
+
+  return { fill: h.fill, fillPaint: h.fillPaint, text: h.text, stroke: h.stroke, ring: false };
+}
 
 // Sizes matching src/components/Button.tsx — sm 36 · md 40 · lg 44 · xl 48 · 2xl 60
 const BUTTON_SIZES = [
@@ -172,75 +266,83 @@ async function buildButtonSet(parent) {
   const iconBase = createIconBaseComponent();
   parent.appendChild(iconBase);
 
-  // Step 2 — build all 55 button variants, each with instances of the base icon
+  // Step 2 — build 12 hierarchies × 5 sizes × 4 states = 240 button variants
   const variants = [];
   for (const h of BUTTON_HIERARCHIES) {
     for (const s of BUTTON_SIZES) {
-      const cmp = figma.createComponent();
-      cmp.name = `Hierarchy=${h.id}, Size=${s.id}`;
-      cmp.layoutMode = "HORIZONTAL";
-      cmp.primaryAxisAlignItems = "CENTER";
-      cmp.counterAxisAlignItems = "CENTER";
-      cmp.primaryAxisSizingMode = "AUTO";
-      cmp.counterAxisSizingMode = "FIXED";
-      cmp.paddingLeft = h.isLink ? 0 : s.px;
-      cmp.paddingRight = h.isLink ? 0 : s.px;
-      cmp.paddingTop = 0; cmp.paddingBottom = 0;
-      cmp.itemSpacing = 6;
-      cmp.cornerRadius = h.isLink ? 0 : 6;
+      for (const st of BUTTON_STATES) {
+        const style = getStateStyle(h, st.id);
+        const cmp = figma.createComponent();
+        cmp.name = `Hierarchy=${h.id}, Size=${s.id}, State=${st.id}`;
+        cmp.layoutMode = "HORIZONTAL";
+        cmp.primaryAxisAlignItems = "CENTER";
+        cmp.counterAxisAlignItems = "CENTER";
+        cmp.primaryAxisSizingMode = "AUTO";
+        cmp.counterAxisSizingMode = "FIXED";
+        cmp.paddingLeft = h.isLink ? 0 : s.px;
+        cmp.paddingRight = h.isLink ? 0 : s.px;
+        cmp.paddingTop = 0; cmp.paddingBottom = 0;
+        cmp.itemSpacing = 6;
+        cmp.cornerRadius = h.isLink ? 0 : 6;
 
-      // Fill: solid, gradient, or none
-      if (h.fillPaint) {
-        cmp.fills = h.fillPaint();
-      } else if (h.fill) {
-        cmp.fills = solid(h.fill);
-      } else {
-        cmp.fills = [];
+        // Fill: solid, gradient, or none (per-state)
+        if (style.fillPaint) {
+          cmp.fills = style.fillPaint();
+        } else if (style.fill) {
+          cmp.fills = solid(style.fill);
+        } else {
+          cmp.fills = [];
+        }
+
+        // Border — gray/color secondary + destructive secondary — not on tertiary/link
+        if (style.stroke) {
+          cmp.strokes = solid(style.stroke);
+          cmp.strokeWeight = 1;
+          cmp.strokeAlign = "INSIDE";
+        }
+
+        // Effects — shadow-xs on filled non-tertiary non-link, plus focus ring when state=focused
+        const hasFill = !!(style.fill || style.fillPaint);
+        const effects = [];
+        if (hasFill && !h.id.startsWith("tertiary") && !h.isLink && st.id !== "disabled") {
+          effects.push(...SHADOW_XS);
+        }
+        if (style.ring) {
+          effects.push(focusRingEffect(focusRingHex(h)));
+        }
+        if (effects.length) cmp.effects = effects;
+
+        // Layer order (auto-layout, left-to-right):
+        //   1. leading-icon (INSTANCE of iconBase, hidden by default)
+        //   2. spinner (hidden by default — toggled via Loading boolean)
+        //   3. label (text)
+        //   4. trailing-icon (INSTANCE of iconBase, hidden by default)
+        const iconSize = s.fs === 18 ? 24 : 20; // 24px icon for 2xl, otherwise 20px
+
+        const leadingIcon = createIconInstance(iconBase, "leading-icon", iconSize);
+        cmp.appendChild(leadingIcon);
+
+        const spinner = createSpinnerSlot("spinner", iconSize, style.text);
+        spinner.visible = false;
+        cmp.appendChild(spinner);
+
+        const label = text("Button", { size: s.fs, weight: "Semi Bold", color: style.text });
+        label.name = "label";
+        cmp.appendChild(label);
+
+        const trailingIcon = createIconInstance(iconBase, "trailing-icon", iconSize);
+        cmp.appendChild(trailingIcon);
+
+        cmp.resize(cmp.width || 100, s.h);
+        variants.push(cmp);
       }
-
-      // Border on gray/color secondary + destructive secondary — not on tertiary/link
-      if (h.stroke) {
-        cmp.strokes = solid(h.stroke);
-        cmp.strokeWeight = 1;
-        cmp.strokeAlign = "INSIDE";
-      }
-
-      // Shadow on filled non-tertiary non-link variants
-      const hasFill = !!(h.fill || h.fillPaint);
-      if (hasFill && !h.id.startsWith("tertiary") && !h.isLink) {
-        cmp.effects = SHADOW_XS;
-      }
-
-      // Layer order (auto-layout, left-to-right):
-      //   1. leading-icon (INSTANCE of iconBase, hidden by default)
-      //   2. spinner (hidden by default — designer replaces leading-icon visually when Loading=true)
-      //   3. label (text)
-      //   4. trailing-icon (INSTANCE of iconBase, hidden by default)
-      const iconSize = s.fs === 18 ? 24 : 20; // 24px icon for 2xl, otherwise 20px
-
-      const leadingIcon = createIconInstance(iconBase, "leading-icon", iconSize);
-      cmp.appendChild(leadingIcon);
-
-      const spinner = createSpinnerSlot("spinner", iconSize, h.text);
-      spinner.visible = false;
-      cmp.appendChild(spinner);
-
-      const label = text("Button", { size: s.fs, weight: "Semi Bold", color: h.text });
-      label.name = "label";
-      cmp.appendChild(label);
-
-      const trailingIcon = createIconInstance(iconBase, "trailing-icon", iconSize);
-      cmp.appendChild(trailingIcon);
-
-      cmp.resize(cmp.width || 100, s.h);
-      variants.push(cmp);
     }
   }
 
   // Step 3 — combine into variant set
   const set = figma.combineAsVariants(variants, parent);
   set.name = "Button";
-  set.description = "PULSE Button · 11 hierarchies × 5 sizes · properties: Label, Show/pick Leading & Trailing icon, Loading";
+  set.description = "PULSE Button · 12 hierarchies × 5 sizes × 4 states · properties: Label, Show/pick Leading & Trailing icon, Loading";
   set.layoutMode = "VERTICAL";
   set.primaryAxisSizingMode = "AUTO";
   set.counterAxisSizingMode = "AUTO";
