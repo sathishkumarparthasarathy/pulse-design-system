@@ -1,0 +1,46 @@
+<!-- @dsCard group="Actions" height=200 subtitle="4 sizes · gray, brand and ghost themes" -->
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>CloseButton</title></head>
+<body>
+<div id="root"></div>
+<script>
+(function () {
+  var e = React.createElement;
+  var CloseButton = window.PULSE.CloseButton;
+
+  function Label(props) {
+    return e('div', { className: 'text-xs font-semibold uppercase tracking-wide text-gray-500 mb-2.5' }, props.children);
+  }
+
+  function Demo() {
+    return e('div', { className: 'flex flex-col gap-6 p-6' },
+      e('div', null,
+        e(Label, null, 'Size'),
+        e('div', { className: 'flex items-center gap-3' },
+          ['sm', 'md', 'lg', 'xl'].map(function (s) {
+            return e(CloseButton, { key: s, size: s, 'aria-label': 'Close ' + s });
+          })
+        )
+      ),
+      e('div', null,
+        e(Label, null, 'Theme'),
+        e('div', { className: 'flex items-center gap-3' },
+          e(CloseButton, { theme: 'gray', 'aria-label': 'Close' }),
+          e('span', { className: 'inline-flex items-center rounded-md bg-brand-50 p-1' },
+            e(CloseButton, { theme: 'brand', 'aria-label': 'Dismiss' })
+          ),
+          e(CloseButton, { theme: 'ghost', 'aria-label': 'Close' }),
+          e(CloseButton, { disabled: true, 'aria-label': 'Close' })
+        )
+      )
+    );
+  }
+
+  var root = document.getElementById('root');
+  if (ReactDOM.createRoot) ReactDOM.createRoot(root).render(e(Demo));
+  else ReactDOM.render(e(Demo), root);
+})();
+</script>
+</body>
+</html>

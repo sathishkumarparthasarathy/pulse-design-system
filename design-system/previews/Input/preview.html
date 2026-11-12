@@ -1,0 +1,58 @@
+<!-- @dsCard group="Forms" height=400 subtitle="3 sizes · icons, addons, invalid state · Field wrapper" -->
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>Input</title></head>
+<body>
+<div id="root"></div>
+<script>
+(function () {
+  var e = React.createElement;
+  var P = window.PULSE;
+  var Input = P.Input, Field = P.Field, Search = P.Search, Mail = P.Mail;
+
+  function Label(props) {
+    return e('div', { className: 'text-xs font-semibold uppercase tracking-wide text-gray-500 mb-2.5' }, props.children);
+  }
+
+  function Demo() {
+    return e('div', { className: 'flex flex-col gap-5 p-6 max-w-2xl' },
+      e('div', null,
+        e(Label, null, 'Field — label, required mark, hint, helper text'),
+        e('div', { className: 'grid grid-cols-2 gap-4' },
+          e(Field, {
+            label: 'Member email', required: true, htmlFor: 'p-email',
+            helper: 'We send the decision letter here.'
+          }, e(Input, { id: 'p-email', type: 'email', placeholder: 'name@creditunion.org', leadingIcon: e(Mail, null) })),
+          e(Field, {
+            label: 'Annual income', htmlFor: 'p-income',
+            error: 'Enter a whole number without separators.'
+          }, e(Input, { id: 'p-income', invalid: true, defaultValue: '72,500', leadingAddon: '$' }))
+        )
+      ),
+      e('div', null,
+        e(Label, null, 'Size'),
+        e('div', { className: 'grid grid-cols-3 gap-4' },
+          e(Input, { size: 'sm', placeholder: 'Small' }),
+          e(Input, { size: 'md', placeholder: 'Medium' }),
+          e(Input, { size: 'lg', placeholder: 'Large' })
+        )
+      ),
+      e('div', null,
+        e(Label, null, 'Slots and states'),
+        e('div', { className: 'grid grid-cols-2 gap-4' },
+          e(Input, { placeholder: 'Search applications', leadingIcon: e(Search, null) }),
+          e(Input, { defaultValue: 'Filled value' }),
+          e(Input, { disabled: true, defaultValue: 'Disabled' }),
+          e(Input, { className: 'min-w-0', leadingAddon: 'https://', trailingAddon: '.org', placeholder: 'yourcu' })
+        )
+      )
+    );
+  }
+
+  var root = document.getElementById('root');
+  if (ReactDOM.createRoot) ReactDOM.createRoot(root).render(e(Demo));
+  else ReactDOM.render(e(Demo), root);
+})();
+</script>
+</body>
+</html>

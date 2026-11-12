@@ -1,0 +1,44 @@
+<!-- @dsCard group="Data display" height=280 subtitle="Addon pill + message · announcement banners" -->
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>BadgeGroup</title></head>
+<body>
+<div id="root"></div>
+<script>
+(function () {
+  var e = React.createElement;
+  var P = window.PULSE;
+  var BadgeGroup = P.BadgeGroup, ArrowRight = P.ArrowRight;
+
+  function Label(props) {
+    return e('div', { className: 'text-xs font-semibold uppercase tracking-wide text-gray-500 mb-2.5' }, props.children);
+  }
+
+  function Demo() {
+    return e('div', { className: 'flex flex-col gap-5 p-6' },
+      e('div', null,
+        e(Label, null, 'Variants'),
+        e('div', { className: 'flex flex-wrap items-center gap-3' },
+          e(BadgeGroup, { addonText: 'New', trailingIcon: e(ArrowRight, null) }, 'Adverse action letters'),
+          e(BadgeGroup, { variant: 'pill-outline', theme: 'success', addonText: 'v0.2' }, 'Shipped'),
+          e(BadgeGroup, { variant: 'badge-color', theme: 'ai', addonText: 'Beta' }, 'Model explainability'),
+          e(BadgeGroup, { variant: 'modern', dot: true, theme: 'brand', addonText: 'Live' }, 'Decision engine')
+        )
+      ),
+      e('div', null,
+        e(Label, null, 'Alignment and size'),
+        e('div', { className: 'flex flex-wrap items-center gap-3' },
+          e(BadgeGroup, { align: 'trailing', theme: 'blue', addonText: 'Docs' }, 'Read the integration guide'),
+          e(BadgeGroup, { size: 'lg', theme: 'warning', addonText: 'Action', trailingIcon: e(ArrowRight, null) }, '3 applications need review')
+        )
+      )
+    );
+  }
+
+  var root = document.getElementById('root');
+  if (ReactDOM.createRoot) ReactDOM.createRoot(root).render(e(Demo));
+  else ReactDOM.render(e(Demo), root);
+})();
+</script>
+</body>
+</html>

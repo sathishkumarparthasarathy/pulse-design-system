@@ -1,0 +1,31 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Base layer from src/styles/globals.css. The :root and .dark custom
+   properties that file declares are NOT repeated here — they live in
+   tokens.json, so editing a token on this page changes them. */
+@layer base {
+  html,
+  body {
+    background: var(--bg-primary, #ffffff);
+    color: var(--text-primary, #121926);
+    font-family: var(--font-sans, theme(fontFamily.sans));
+    font-feature-settings: "cv11", "ss01";
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  /* PULSE uses focus rings, not outlines. */
+  *:focus {
+    outline: none;
+  }
+}

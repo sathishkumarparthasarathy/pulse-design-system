@@ -1,0 +1,37 @@
+<!-- @dsCard group="Foundations" height=420 subtitle="The 54 semantic aliases · Lucide, 1.5px stroke, currentColor" -->
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>Icons</title></head>
+<body>
+<div id="root"></div>
+<script>
+(function () {
+  var e = React.createElement;
+  var P = window.PULSE;
+  var icons = P.icons;
+
+  function Demo() {
+    var names = Object.keys(icons);
+    return e('div', { className: 'p-6' },
+      e('div', { className: 'text-xs font-semibold uppercase tracking-wide text-gray-500 mb-4' },
+        names.length + ' semantic aliases — import from @/icons'),
+      e('div', { className: 'grid grid-cols-9 gap-x-3 gap-y-4' },
+        names.map(function (n) {
+          var Cmp = icons[n];
+          return e('div', { key: n, className: 'flex flex-col items-center gap-1.5 text-center' },
+            e('span', { className: 'inline-flex h-10 w-10 items-center justify-center rounded-md border border-gray-200 bg-white text-gray-700 shadow-xs' },
+              e(Cmp, { className: 'h-5 w-5' })),
+            e('span', { className: 'text-[10px] leading-tight text-gray-500 break-all' }, n)
+          );
+        })
+      )
+    );
+  }
+
+  var root = document.getElementById('root');
+  if (ReactDOM.createRoot) ReactDOM.createRoot(root).render(e(Demo));
+  else ReactDOM.render(e(Demo), root);
+})();
+</script>
+</body>
+</html>

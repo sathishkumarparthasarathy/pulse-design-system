@@ -1,0 +1,67 @@
+<!-- @dsCard height=300 -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>PULSE</title>
+<style>
+  .cover { position: relative; width: 960px; height: 300px; overflow: hidden;
+           background: var(--bg-primary, #ffffff); }
+  .cover svg { position: absolute; inset: 0; display: block; }
+  .slab   { fill: var(--brand-500, #ff7918); }
+  .deep   { fill: var(--brand-700, #bb4d08); }
+  .tint   { fill: var(--brand-200, #ffc094); }
+  .ink    { fill: var(--gray-700, #364152); }
+  .ai     { fill: var(--ai-process-500, #7a5af8); }
+  .tile   { rx: 8px; }
+  .name   { position: absolute; left: 64px; bottom: 56px; margin: 0;
+            font-family: var(--font-sans, Inter, system-ui, sans-serif);
+            font-size: 120px; font-weight: 700; line-height: .9; letter-spacing: -.045em;
+            color: var(--text-primary, #121926); }
+  .tagline { position: absolute; left: 64px; bottom: 28px; margin: 0; max-width: 440px;
+             font-family: var(--font-sans, Inter, system-ui, sans-serif);
+             font-size: 14px; font-weight: 500; line-height: 1.4;
+             color: var(--text-tertiary, #4b5565); }
+</style>
+</head>
+<body>
+<div class="cover">
+  <!--
+    blocks      brand-500 tall slab 120×184 · brand-700, brand-200, gray-700 and
+                aiProcess-500 tiles at 56px, two merged two-wide at 120px
+    arrangement one tall slab with a modular tile field to its right, pitch 64px
+                (space-4 gap on a 56px cell), the last column bleeding off the
+                right edge; everything right of x = 480
+    pattern     geometric / modular / dense UI → tiles cut by the radius tokens,
+                some merged two-wide like the components. PULSE is a dense B2B
+                decisioning library on a 4px grid where every control is
+                radius-md and every pill radius-full, so the field is its own
+                controls seen from above.
+    scales      cell 56px, gap space-2 (8px), pitch space-4 × 4 (64px),
+                corners radius-md (8px) and radius-full (28px = half the short side)
+  -->
+  <svg viewBox="0 0 960 300" width="960" height="300" aria-hidden="true">
+    <!-- tall slab -->
+    <rect class="slab tile" x="512" y="44" width="120" height="184" rx="8"/>
+
+    <!-- row 1 -->
+    <rect class="ink tile"  x="640" y="44"  width="56"  height="56" rx="8"/>
+    <rect class="deep tile" x="704" y="44"  width="120" height="56" rx="8"/>
+    <rect class="tint tile" x="832" y="44"  width="120" height="56" rx="8"/>
+
+    <!-- row 2 -->
+    <rect class="ai"        x="640" y="108" width="184" height="56" rx="28"/>
+    <rect class="tint tile" x="832" y="108" width="56"  height="56" rx="8"/>
+    <rect class="deep tile" x="896" y="108" width="120" height="56" rx="8"/>
+
+    <!-- row 3 -->
+    <rect class="ink"       x="640" y="172" width="56"  height="56" rx="28"/>
+    <rect class="slab tile" x="704" y="172" width="120" height="56" rx="8"/>
+    <rect class="ai tile"   x="832" y="172" width="56"  height="56" rx="8"/>
+    <rect class="tint"      x="896" y="172" width="56"  height="56" rx="28"/>
+  </svg>
+  <p class="name">PULSE</p>
+  <p class="tagline">A modern B2B SaaS design system, powered by Scienaptic.</p>
+</div>
+</body>
+</html>

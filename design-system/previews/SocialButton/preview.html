@@ -1,0 +1,45 @@
+<!-- @dsCard group="Actions" height=330 subtitle="7 OAuth providers · default and brand modes" -->
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>SocialButton</title></head>
+<body>
+<div id="root"></div>
+<script>
+(function () {
+  var e = React.createElement;
+  var SocialButton = window.PULSE.SocialButton;
+
+  function Label(props) {
+    return e('div', { className: 'text-xs font-semibold uppercase tracking-wide text-gray-500 mb-2.5' }, props.children);
+  }
+
+  var providers = ['google', 'apple', 'github', 'microsoft', 'x', 'facebook', 'linkedin'];
+
+  function Demo() {
+    return e('div', { className: 'flex flex-col gap-6 p-6' },
+      e('div', null,
+        e(Label, null, 'Default — white surface, colour mark'),
+        e('div', { className: 'flex flex-wrap gap-3' },
+          providers.map(function (p) {
+            return e(SocialButton, { key: p, provider: p });
+          })
+        )
+      ),
+      e('div', null,
+        e(Label, null, "Brand — each provider's own ground"),
+        e('div', { className: 'flex flex-wrap gap-3' },
+          providers.map(function (p) {
+            return e(SocialButton, { key: p, provider: p, mode: 'brand' });
+          })
+        )
+      )
+    );
+  }
+
+  var root = document.getElementById('root');
+  if (ReactDOM.createRoot) ReactDOM.createRoot(root).render(e(Demo));
+  else ReactDOM.render(e(Demo), root);
+})();
+</script>
+</body>
+</html>

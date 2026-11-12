@@ -1,0 +1,70 @@
+<!-- @dsCard group="Foundations" height=620 subtitle="24 compositions — brand, multi-colour, mesh, radial, fades, conic" -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Gradients</title>
+<style>
+  .g-wrap { padding: 24px; }
+  .g-head { font-size: 12px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase;
+            color: var(--gray-500, #697586); margin: 0 0 10px; }
+  .g-head + .g-head { margin-top: 20px; }
+  .g-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 22px; }
+  .g-cell { border-radius: 12px; overflow: hidden; border: 1px solid var(--border-primary, #e3e8ef); }
+  .g-swatch { height: 76px; }
+  .g-name { font-family: var(--font-mono, ui-monospace, Menlo, monospace); font-size: 11px;
+            padding: 7px 10px; color: var(--text-secondary, #364152);
+            background: var(--bg-primary, #fff); border-top: 1px solid var(--border-primary, #e3e8ef); }
+</style>
+</head>
+<body>
+<div class="g-wrap">
+
+  <p class="g-head">Brand — single-hue progressions</p>
+  <div class="g-grid">
+    <div class="g-cell"><div class="g-swatch" style="background-image:linear-gradient(180deg, #FF8C45 0%, #E5610A 100%)"></div><div class="g-name">brand-vertical</div></div>
+    <div class="g-cell"><div class="g-swatch" style="background-image:linear-gradient(90deg, #FF8C45 0%, #E5610A 100%)"></div><div class="g-name">brand-horizontal</div></div>
+    <div class="g-cell"><div class="g-swatch" style="background-image:linear-gradient(135deg, #FFA168 0%, #BB4D08 100%)"></div><div class="g-name">brand-diagonal</div></div>
+    <div class="g-cell"><div class="g-swatch" style="background-image:linear-gradient(135deg, #FFEEDD 0%, #FFC094 100%)"></div><div class="g-name">brand-soft</div></div>
+    <div class="g-cell"><div class="g-swatch" style="background-image:linear-gradient(135deg, #FF7918 0%, #6D2D0E 100%)"></div><div class="g-name">brand-deep</div></div>
+    <div class="g-cell"><div class="g-swatch" style="background-image:linear-gradient(180deg, #FF7918 0%, rgba(255,121,24,0) 100%)"></div><div class="g-name">brand-fade</div></div>
+  </div>
+
+  <p class="g-head">Multi-colour — warm</p>
+  <div class="g-grid">
+    <div class="g-cell"><div class="g-swatch" style="background-image:linear-gradient(135deg, #FACC15 0%, #FF7918 50%, #EE46BC 100%)"></div><div class="g-name">sunset</div></div>
+    <div class="g-cell"><div class="g-swatch" style="background-image:linear-gradient(45deg, #FFC094 0%, #FF7918 50%, #DC2626 100%)"></div><div class="g-name">sunrise</div></div>
+    <div class="g-cell"><div class="g-swatch" style="background-image:linear-gradient(135deg, #FF7918 0%, #DC2626 100%)"></div><div class="g-name">ember</div></div>
+    <div class="g-cell"><div class="g-swatch" style="background-image:linear-gradient(135deg, #FFDFC2 0%, #FAA7E0 100%)"></div><div class="g-name">peach</div></div>
+  </div>
+
+  <p class="g-head">Multi-colour — cool, for AI and data viz</p>
+  <div class="g-grid">
+    <div class="g-cell"><div class="g-swatch" style="background-image:linear-gradient(135deg, #FF8C45 0%, #D444F1 50%, #6172F3 100%)"></div><div class="g-name">aurora</div></div>
+    <div class="g-cell"><div class="g-swatch" style="background-image:linear-gradient(135deg, #06AED4 0%, #2E90FA 50%, #6172F3 100%)"></div><div class="g-name">ocean</div></div>
+    <div class="g-cell"><div class="g-swatch" style="background-image:linear-gradient(135deg, #7A5AF8 0%, #DD2590 50%, #FF7918 100%)"></div><div class="g-name">twilight</div></div>
+    <div class="g-cell"><div class="g-swatch" style="background-image:linear-gradient(180deg, #121926 0%, #364152 100%)"></div><div class="g-name">midnight</div></div>
+  </div>
+
+  <p class="g-head">Mesh</p>
+  <div class="g-grid">
+    <div class="g-cell"><div class="g-swatch" style="background-image:radial-gradient(at 0% 0%, #FFC094 0px, transparent 50%), radial-gradient(at 100% 0%, #FAA7E0 0px, transparent 50%), radial-gradient(at 100% 100%, #FF7918 0px, transparent 50%), radial-gradient(at 0% 100%, #FACC15 0px, transparent 50%); background-color:#FFF7F0"></div><div class="g-name">mesh-warm</div></div>
+    <div class="g-cell"><div class="g-swatch" style="background-image:radial-gradient(at 0% 0%, #C7D7FE 0px, transparent 50%), radial-gradient(at 100% 0%, #FAA7E0 0px, transparent 50%), radial-gradient(at 100% 100%, #5FE9D0 0px, transparent 50%), radial-gradient(at 0% 100%, #BDB4FE 0px, transparent 50%); background-color:#F5F8FF"></div><div class="g-name">mesh-cool</div></div>
+    <div class="g-cell"><div class="g-swatch" style="background-image:radial-gradient(at 0% 0%, #FFDFC2 0px, transparent 50%), radial-gradient(at 100% 100%, #FF8C45 0px, transparent 50%), radial-gradient(at 50% 50%, #FFC094 0px, transparent 50%); background-color:#FFEEDD"></div><div class="g-name">mesh-mono</div></div>
+  </div>
+
+  <p class="g-head">Radial spotlights, background fades, conic</p>
+  <div class="g-grid">
+    <div class="g-cell"><div class="g-swatch" style="background-image:radial-gradient(ellipse at top, #FFC094 0%, transparent 60%)"></div><div class="g-name">spot-brand</div></div>
+    <div class="g-cell"><div class="g-swatch" style="background-image:radial-gradient(ellipse at top, #C7D7FE 0%, transparent 60%)"></div><div class="g-name">spot-cool</div></div>
+    <div class="g-cell"><div class="g-swatch" style="background-image:radial-gradient(circle at center, #FF7918 0%, rgba(255,121,24,0) 70%)"></div><div class="g-name">halo-brand</div></div>
+    <div class="g-cell"><div class="g-swatch" style="background-image:linear-gradient(180deg, #FFF7F0 0%, #FFFFFF 100%)"></div><div class="g-name">bg-warm</div></div>
+    <div class="g-cell"><div class="g-swatch" style="background-image:linear-gradient(180deg, #F5F8FF 0%, #FFFFFF 100%)"></div><div class="g-name">bg-cool</div></div>
+    <div class="g-cell"><div class="g-swatch" style="background-image:linear-gradient(180deg, #F8FAFC 0%, #FFFFFF 100%)"></div><div class="g-name">bg-neutral</div></div>
+    <div class="g-cell"><div class="g-swatch" style="background-image:conic-gradient(from 180deg at 50% 50%, #FF7918 0deg, #EE46BC 120deg, #6172F3 240deg, #FF7918 360deg)"></div><div class="g-name">conic-brand</div></div>
+    <div class="g-cell"><div class="g-swatch" style="background-image:conic-gradient(from 0deg at 50% 50%, #FACC15 0deg, #FF7918 120deg, #DC2626 240deg, #FACC15 360deg)"></div><div class="g-name">conic-warm</div></div>
+  </div>
+
+</div>
+</body>
+</html>

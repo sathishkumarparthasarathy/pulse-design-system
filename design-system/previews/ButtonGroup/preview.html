@@ -1,0 +1,57 @@
+<!-- @dsCard group="Actions" height=250 subtitle="Segmented control · single and multiple selection" -->
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>ButtonGroup</title></head>
+<body>
+<div id="root"></div>
+<script>
+(function () {
+  var e = React.createElement;
+  var P = window.PULSE;
+  var ButtonGroup = P.ButtonGroup, Item = P.ButtonGroupItem;
+  var BarChart = P.BarChart, Grid = P.Grid, Menu = P.Menu;
+
+  function Label(props) {
+    return e('div', { className: 'text-xs font-semibold uppercase tracking-wide text-gray-500 mb-2.5' }, props.children);
+  }
+
+  function Demo() {
+    var picked = React.useState('week');
+    return e('div', { className: 'flex flex-col gap-6 p-6' },
+      e('div', null,
+        e(Label, null, 'Single select'),
+        e('div', { className: 'flex flex-wrap items-center gap-4' },
+          e(ButtonGroup, { mode: 'single', value: picked[0], onValueChange: picked[1] },
+            e(Item, { value: 'day' }, 'Day'),
+            e(Item, { value: 'week' }, 'Week'),
+            e(Item, { value: 'month' }, 'Month'),
+            e(Item, { value: 'quarter' }, 'Quarter')
+          ),
+          e('span', { className: 'text-sm text-gray-600' }, 'Selected: ', e('code', { className: 'font-mono text-gray-900' }, picked[0] || '—'))
+        )
+      ),
+      e('div', null,
+        e(Label, null, 'Multiple select · icon only'),
+        e('div', { className: 'flex flex-wrap items-center gap-4' },
+          e(ButtonGroup, { mode: 'multiple', defaultValue: ['chart'] },
+            e(Item, { value: 'chart', iconOnly: true, 'aria-label': 'Chart view' }, e(BarChart, null)),
+            e(Item, { value: 'grid', iconOnly: true, 'aria-label': 'Grid view' }, e(Grid, null)),
+            e(Item, { value: 'list', iconOnly: true, 'aria-label': 'List view' }, e(Menu, null))
+          ),
+          e(ButtonGroup, { size: 'sm', defaultValue: 'all' },
+            e(Item, { value: 'all' }, 'All'),
+            e(Item, { value: 'open' }, 'Open'),
+            e(Item, { value: 'closed' }, 'Closed')
+          )
+        )
+      )
+    );
+  }
+
+  var root = document.getElementById('root');
+  if (ReactDOM.createRoot) ReactDOM.createRoot(root).render(e(Demo));
+  else ReactDOM.render(e(Demo), root);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!-- @dsCard group="Data display" height=320 subtitle="7 sizes · initials and icon fallback · status dots · groups" -->
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>Avatar</title></head>
+<body>
+<div id="root"></div>
+<script>
+(function () {
+  var e = React.createElement;
+  var P = window.PULSE;
+  var Avatar = P.Avatar, AvatarGroup = P.AvatarGroup, AvatarProfile = P.AvatarProfile;
+
+  function Label(props) {
+    return e('div', { className: 'text-xs font-semibold uppercase tracking-wide text-gray-500 mb-2.5' }, props.children);
+  }
+
+  function Demo() {
+    return e('div', { className: 'flex flex-col gap-5 p-6' },
+      e('div', null,
+        e(Label, null, 'Size · initials fallback, colour hashed from the name'),
+        e('div', { className: 'flex items-end gap-3' },
+          ['xs', 'sm', 'md', 'lg', 'xl', '2xl', '3xl'].map(function (s) {
+            return e(Avatar, { key: s, size: s, name: 'Priya Raman' });
+          })
+        )
+      ),
+      e('div', null,
+        e(Label, null, 'Fallback waterfall and status'),
+        e('div', { className: 'flex items-center gap-3' },
+          e(Avatar, { name: 'Dana Okoro' }),
+          e(Avatar, { name: 'Marcus Lee', shape: 'square' }),
+          e(Avatar, null),
+          e(Avatar, { name: 'Ana Silva', status: 'online' }),
+          e(Avatar, { name: 'Tom Byrne', status: 'busy' }),
+          e(Avatar, { name: 'Kira Patel', status: 'away' }),
+          e(Avatar, { name: 'Sam Hale', status: 'offline' })
+        )
+      ),
+      e('div', { className: 'flex flex-wrap items-center gap-8' },
+        e('div', null,
+          e(Label, null, 'Group'),
+          e(AvatarGroup, { max: 4, total: 9 },
+            e(Avatar, { name: 'Ana Silva' }),
+            e(Avatar, { name: 'Tom Byrne' }),
+            e(Avatar, { name: 'Kira Patel' }),
+            e(Avatar, { name: 'Sam Hale' }),
+            e(Avatar, { name: 'Jo Mensah' })
+          )
+        ),
+        e('div', null,
+          e(Label, null, 'Profile'),
+          e(AvatarProfile, {
+            title: 'Priya Raman',
+            subtitle: 'Credit risk analyst',
+            avatarProps: { name: 'Priya Raman', status: 'online' }
+          })
+        )
+      )
+    );
+  }
+
+  var root = document.getElementById('root');
+  if (ReactDOM.createRoot) ReactDOM.createRoot(root).render(e(Demo));
+  else ReactDOM.render(e(Demo), root);
+})();
+</script>
+</body>
+</html>

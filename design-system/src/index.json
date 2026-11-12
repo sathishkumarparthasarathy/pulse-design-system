@@ -1,0 +1,67 @@
+{
+  "v": 3,
+  "layout": "files",
+  "createdOnFiles": { "v": 1, "at": "2026-11-12T09:20:00Z" },
+  "title": "PULSE",
+  "namespace": "PULSE",
+  "libraries": [
+    { "name": "react", "version": "18" },
+    { "name": "react-dom", "version": "18" }
+  ],
+  "sections": {},
+  "groups": ["Logos", "Icons"],
+  "assetGroups": {
+    "Logos": {
+      "name": "Logos",
+      "tile": "m",
+      "order": ["pulse-logo.svg", "scienaptic-logo.png"],
+      "files": {
+        "pulse-logo.svg": {
+          "name": "pulse-logo.svg",
+          "blob": "1a6db7742dc558c6c172da07b3e1b306",
+          "size": 324,
+          "type": "image/svg+xml"
+        },
+        "scienaptic-logo.png": {
+          "name": "scienaptic-logo.png",
+          "blob": "b77a09f7fc04cd1a7d97485a23af0972",
+          "size": 11322,
+          "type": "image/png"
+        }
+      }
+    },
+    "Icons": {
+      "name": "Icons",
+      "tile": "s",
+      "order": ["GoogleColor.svg", "AppleColor.svg", "GitHubColor.svg"],
+      "files": {
+        "GoogleColor.svg": {
+          "name": "GoogleColor.svg",
+          "blob": "4b6cbc10042771ae588cc710aa5ca8c0",
+          "size": 1197,
+          "type": "image/svg+xml"
+        },
+        "AppleColor.svg": {
+          "name": "AppleColor.svg",
+          "blob": "28b127b6bcb8bc617d077b22e6e9abf7",
+          "size": 878,
+          "type": "image/svg+xml"
+        },
+        "GitHubColor.svg": {
+          "name": "GitHubColor.svg",
+          "blob": "de5522cae1a807d2709ff9a68bd8ca9b",
+          "size": 1367,
+          "type": "image/svg+xml"
+        }
+      }
+    }
+  },
+  "blobs": {},
+  "docs": { "readme": "project/README.md", "sections": [] },
+  "lastChange": {
+    "by": "SK",
+    "at": "2026-11-12T09:20:00Z",
+    "via": "GitHub · sathishkumarparthasarathy/pulse-design-system@f7f496d",
+    "note": "First sync from the repository — tokens, assets, docs and all 11 component families built from main@f7f496d."
+  }
+}

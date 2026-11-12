@@ -1,0 +1,50 @@
+<!-- @dsCard group="Data display" height=260 subtitle="Credit decisioning states · modern and soft" -->
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>StatusPill</title></head>
+<body>
+<div id="root"></div>
+<script>
+(function () {
+  var e = React.createElement;
+  var StatusPill = window.PULSE.StatusPill;
+
+  function Label(props) {
+    return e('div', { className: 'text-xs font-semibold uppercase tracking-wide text-gray-500 mb-2.5' }, props.children);
+  }
+
+  var kinds = ['approved', 'declined', 'review', 'ai', 'neutral'];
+
+  function Demo() {
+    return e('div', { className: 'flex flex-col gap-5 p-6' },
+      e('div', null,
+        e(Label, null, 'modern — the default'),
+        e('div', { className: 'flex flex-wrap gap-2' },
+          kinds.map(function (k) { return e(StatusPill, { key: k, status: k }); })
+        )
+      ),
+      e('div', null,
+        e(Label, null, 'soft'),
+        e('div', { className: 'flex flex-wrap gap-2' },
+          kinds.map(function (k) { return e(StatusPill, { key: k, status: k, variant: 'soft' }); })
+        )
+      ),
+      e('div', null,
+        e(Label, null, 'Sizes and custom label'),
+        e('div', { className: 'flex flex-wrap items-center gap-2' },
+          e(StatusPill, { status: 'approved', size: 'sm' }),
+          e(StatusPill, { status: 'approved', size: 'md' }),
+          e(StatusPill, { status: 'approved', size: 'lg' }),
+          e(StatusPill, { status: 'review', label: 'Manual review · 2 days' })
+        )
+      )
+    );
+  }
+
+  var root = document.getElementById('root');
+  if (ReactDOM.createRoot) ReactDOM.createRoot(root).render(e(Demo));
+  else ReactDOM.render(e(Demo), root);
+})();
+</script>
+</body>
+</html>

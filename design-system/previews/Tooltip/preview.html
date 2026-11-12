@@ -1,0 +1,66 @@
+<!-- @dsCard group="Overlays" height=470 subtitle="Radix-backed · dark and light · rich variant with shortcuts" -->
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>Tooltip</title></head>
+<body>
+<div id="root"></div>
+<script>
+(function () {
+  var e = React.createElement;
+  var P = window.PULSE;
+  var Tooltip = P.Tooltip, TooltipRich = P.TooltipRich, TooltipProvider = P.TooltipProvider;
+  var Button = P.Button, HelpCircle = P.HelpCircle;
+
+  function Label(props) {
+    return e('div', { className: 'text-xs font-semibold uppercase tracking-wide text-gray-500 mb-2.5' }, props.children);
+  }
+
+  function Demo() {
+    return e(TooltipProvider, { delayDuration: 150 },
+      e('div', { className: 'flex flex-col gap-6 p-6' },
+        e('div', null,
+          e(Label, null, 'Hover any trigger'),
+          e('div', { className: 'flex flex-wrap items-center gap-3' },
+            e(Tooltip, { content: 'Re-run the model with the current bureau pull' },
+              e(Button, { hierarchy: 'secondary-gray' }, 'Rescore')),
+            e(Tooltip, { content: 'Light variant', variant: 'light' },
+              e(Button, { hierarchy: 'secondary-gray' }, 'Light')),
+            e(Tooltip, { content: 'Large', size: 'lg' },
+              e(Button, { hierarchy: 'tertiary-gray' }, 'Large')),
+            e(Tooltip, { content: 'Why this decision?' },
+              e('button', { type: 'button', className: 'text-gray-500 hover:text-gray-700' }, e(HelpCircle, { className: 'h-5 w-5' })))
+          )
+        ),
+        e('div', null,
+          e(Label, null, 'Always open — dark on light, light on dark'),
+          e('div', { className: 'flex items-start gap-16 pb-14 pl-4' },
+            e(Tooltip, { content: 'Dark', open: true, side: 'bottom' },
+              e(Button, { hierarchy: 'secondary-gray' }, 'Dark')),
+            e('div', { className: 'rounded-xl bg-gray-800 p-3' },
+              e(Tooltip, { content: 'Light', variant: 'light', open: true, side: 'bottom' },
+                e(Button, { hierarchy: 'secondary-gray' }, 'Light')))
+          )
+        ),
+        e('div', null,
+          e(Label, null, 'Rich — title, description, shortcut'),
+          e('div', { className: 'flex pb-28 pl-32' },
+            e(TooltipRich, {
+              title: 'Save decision',
+              description: 'Writes the adverse action reason codes and notifies the member.',
+              shortcut: ['⌘', 'S'],
+              open: true,
+              side: 'bottom'
+            }, e(Button, null, 'Save decision'))
+          )
+        )
+      )
+    );
+  }
+
+  var root = document.getElementById('root');
+  if (ReactDOM.createRoot) ReactDOM.createRoot(root).render(e(Demo));
+  else ReactDOM.render(e(Demo), root);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!-- @dsCard group="Actions" height=470 subtitle="12 hierarchies · 5 sizes · loading, icons, icon-only" -->
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>Button</title></head>
+<body>
+<div id="root"></div>
+<script>
+(function () {
+  var e = React.createElement;
+  var P = window.PULSE;
+  var Button = P.Button, ArrowRight = P.ArrowRight, Plus = P.Plus, Trash = P.Trash;
+
+  function Row(props) {
+    return e('div', { className: 'flex flex-wrap items-center gap-3' }, props.children);
+  }
+  function Label(props) {
+    return e('div', { className: 'text-xs font-semibold uppercase tracking-wide text-gray-500 mb-2.5' }, props.children);
+  }
+  function Block(props) {
+    return e('div', null, e(Label, null, props.title), e(Row, null, props.children));
+  }
+
+  function Demo() {
+    return e('div', { className: 'flex flex-col gap-6 p-6' },
+      e(Block, { title: 'Hierarchy' },
+        e(Button, { hierarchy: 'primary' }, 'Primary'),
+        e(Button, { hierarchy: 'primary-gradient' }, 'Gradient'),
+        e(Button, { hierarchy: 'secondary-navy' }, 'Navy'),
+        e(Button, { hierarchy: 'secondary-gray' }, 'Secondary gray'),
+        e(Button, { hierarchy: 'secondary-color' }, 'Secondary color'),
+        e(Button, { hierarchy: 'tertiary-gray' }, 'Tertiary gray'),
+        e(Button, { hierarchy: 'tertiary-color' }, 'Tertiary color'),
+        e(Button, { hierarchy: 'link-color' }, 'Link color')
+      ),
+      e(Block, { title: 'Destructive' },
+        e(Button, { hierarchy: 'destructive-primary', leadingIcon: e(Trash, null) }, 'Delete'),
+        e(Button, { hierarchy: 'destructive-secondary' }, 'Delete'),
+        e(Button, { hierarchy: 'destructive-tertiary' }, 'Delete')
+      ),
+      e(Block, { title: 'Size' },
+        e(Button, { size: 'sm' }, 'Small'),
+        e(Button, { size: 'md' }, 'Medium'),
+        e(Button, { size: 'lg' }, 'Large'),
+        e(Button, { size: 'xl' }, 'XL'),
+        e(Button, { size: '2xl' }, '2XL')
+      ),
+      e(Block, { title: 'States and slots' },
+        e(Button, { leadingIcon: e(Plus, null) }, 'New application'),
+        e(Button, { hierarchy: 'secondary-gray', trailingIcon: e(ArrowRight, null) }, 'Continue'),
+        e(Button, { loading: true }, 'Submitting'),
+        e(Button, { disabled: true }, 'Disabled'),
+        e(Button, { iconOnly: true, 'aria-label': 'Add' }, e(Plus, null))
+      )
+    );
+  }
+
+  var root = document.getElementById('root');
+  if (ReactDOM.createRoot) ReactDOM.createRoot(root).render(e(Demo));
+  else ReactDOM.render(e(Demo), root);
+})();
+</script>
+</body>
+</html>

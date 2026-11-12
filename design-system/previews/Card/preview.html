@@ -1,0 +1,66 @@
+<!-- @dsCard group="Containers" height=360 subtitle="Header / Content / Footer · 5 elevations · 4 radii" -->
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>Card</title></head>
+<body>
+<div id="root"></div>
+<script>
+(function () {
+  var e = React.createElement;
+  var P = window.PULSE;
+  var Card = P.Card, CardHeader = P.CardHeader, CardTitle = P.CardTitle,
+      CardDescription = P.CardDescription, CardContent = P.CardContent, CardFooter = P.CardFooter,
+      Button = P.Button, StatusPill = P.StatusPill;
+
+  function Label(props) {
+    return e('div', { className: 'text-xs font-semibold uppercase tracking-wide text-gray-500 mb-2.5' }, props.children);
+  }
+
+  function Demo() {
+    return e('div', { className: 'flex flex-col gap-5 p-6' },
+      e('div', { className: 'grid grid-cols-2 gap-4' },
+        e(Card, null,
+          e(CardHeader, null,
+            e(CardTitle, null, 'Application #48219'),
+            e(CardDescription, null, 'Auto loan · submitted 2 hours ago')
+          ),
+          e(CardContent, { className: 'flex items-center justify-between' },
+            e('div', null,
+              e('div', { className: 'text-sm text-gray-600' }, 'Requested'),
+              e('div', { className: 'text-display-xs font-semibold text-gray-900' }, '$28,400')
+            ),
+            e(StatusPill, { status: 'review' })
+          ),
+          e(CardFooter, null,
+            e(Button, { size: 'sm' }, 'Open decision'),
+            e(Button, { size: 'sm', hierarchy: 'secondary-gray' }, 'Assign')
+          )
+        ),
+        e(Card, { elevation: 'md', radius: '2xl', interactive: true },
+          e(CardContent, null,
+            e('div', { className: 'text-sm font-medium text-gray-600' }, 'Approval rate'),
+            e('div', { className: 'mt-1 text-display-sm font-semibold text-gray-900' }, '61.4%'),
+            e('div', { className: 'mt-2 text-sm text-gray-600' }, 'Up 4.2 points against last quarter. Interactive card — hover to lift.')
+          )
+        )
+      ),
+      e('div', null,
+        e(Label, null, 'Elevation'),
+        e('div', { className: 'flex flex-wrap gap-3' },
+          ['flat', 'xs', 'sm', 'md', 'lg'].map(function (el) {
+            return e(Card, { key: el, elevation: el, className: 'w-28' },
+              e(CardContent, { className: 'py-4 text-center text-sm font-medium text-gray-700' }, el)
+            );
+          })
+        )
+      )
+    );
+  }
+
+  var root = document.getElementById('root');
+  if (ReactDOM.createRoot) ReactDOM.createRoot(root).render(e(Demo));
+  else ReactDOM.render(e(Demo), root);
+})();
+</script>
+</body>
+</html>
