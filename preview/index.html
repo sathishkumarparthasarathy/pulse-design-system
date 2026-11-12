@@ -2018,7 +2018,7 @@
   <section class="mb-20" data-page="toasts">
     <div class="mb-6">
       <h2 class="text-display-md font-semibold text-gray-900 tracking-tight">Toasts</h2>
-      <p class="text-text-md text-gray-600 mt-1">Non-blocking status messages · 15 edge cases from the Pulse spec · compact (240–560px) + full-width variants</p>
+      <p class="text-text-md text-gray-600 mt-1">Interactive playground · pick layout · intent · action · state · live preview + code</p>
     </div>
 
     <style>
@@ -2063,221 +2063,7 @@
       .ts-spin { animation:ts-spin .9s linear infinite; transform-origin:center; }
     </style>
 
-    <div class="space-y-4">
-
-      <div class="ts-card">
-        <div class="ts-head"><p class="ts-title">01 · Very short message</p><p class="ts-rule">Min width 240px, so a one-word toast never shrinks into a chip.</p></div>
-        <div class="ts-stage">
-          <div class="ts-toast">
-            <div class="ts-content">
-              <svg class="ts-icon" viewBox="0 0 24 24"><path d="M2 12a10 10 0 1 0 20 0a10 10 0 1 0-20 0M9 12l2 2 4-4" stroke="#059669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
-              <p class="ts-msg"><strong>Saved</strong></p>
-            </div>
-            <div class="ts-close-wrap"><button class="ts-close" aria-label="Dismiss"><svg width="16" height="16" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12" stroke="#697586" stroke-width="2" stroke-linecap="round" fill="none"/></svg></button></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="ts-card">
-        <div class="ts-head"><p class="ts-title">02 · Long message — truncate</p><p class="ts-rule">Max width 560px, one line. Overflow ends in an ellipsis; full text shows on hover.</p></div>
-        <div class="ts-stage">
-          <div class="ts-toast" title="Bulk decision sent for 248 applications across 6 branches; members get an email and SMS within the hour">
-            <div class="ts-content">
-              <svg class="ts-icon" viewBox="0 0 24 24"><path d="M2 12a10 10 0 1 0 20 0a10 10 0 1 0-20 0M12 16v-4M12 8h.01" stroke="#1570EF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
-              <p class="ts-msg"><strong>Bulk decision</strong> sent for 248 applications across 6 branches; members get an email and SMS within the hour</p>
-            </div>
-            <button class="ts-action">View</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="ts-card">
-        <div class="ts-head"><p class="ts-title">03 · Long message — wrap</p><p class="ts-rule">When the full sentence matters, wrap to 2 lines max. Icon pins to the first line; action stays centered.</p></div>
-        <div class="ts-stage">
-          <div class="ts-toast narrow">
-            <div class="ts-content wrap">
-              <svg class="ts-icon" viewBox="0 0 24 24"><path d="M21.73 18l-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3M12 9v4M12 17h.01" stroke="#A16207" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
-              <p class="ts-msg wrap"><strong>Credit report</strong> is over 30 days old. Re-pull it before giving a final decision on this application.</p>
-            </div>
-            <button class="ts-action">Re-pull</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="ts-card">
-        <div class="ts-head"><p class="ts-title">04 · Long subject</p><p class="ts-rule">Names and IDs truncate first, at 200px, so the verb — what happened — always stays visible.</p></div>
-        <div class="ts-stage">
-          <div class="ts-toast">
-            <div class="ts-content">
-              <svg class="ts-icon" viewBox="0 0 24 24"><path d="M2 12a10 10 0 1 0 20 0a10 10 0 1 0-20 0M9 12l2 2 4-4" stroke="#059669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
-              <p class="ts-msg" title="Jonathan Alexander Whitfield-Ramirez moved to manual review"><strong class="ts-subject-cap">Jonathan Alexander Whitfield-Ramirez</strong> moved to manual review</p>
-            </div>
-            <button class="ts-action">Open</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="ts-card">
-        <div class="ts-head"><p class="ts-title">05 · Long action label</p><p class="ts-rule">Action label: 2 words, ~16 characters max. Never truncate it — shorten the copy instead.</p></div>
-        <div class="ts-stage">
-          <div class="ts-toast">
-            <div class="ts-content">
-              <svg class="ts-icon" viewBox="0 0 24 24"><path d="M2 12a10 10 0 1 0 20 0a10 10 0 1 0-20 0M12 16v-4M12 8h.01" stroke="#1570EF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
-              <p class="ts-msg"><strong>Income verification</strong> is pending</p>
-            </div>
-            <button class="ts-action">View application</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="ts-card">
-        <div class="ts-head"><p class="ts-title">06 · No icon</p><p class="ts-rule">Neutral confirmations may drop the icon. Status toasts (success, warning, error) always keep it.</p></div>
-        <div class="ts-stage">
-          <div class="ts-toast">
-            <div class="ts-content">
-              <p class="ts-msg"><strong>Draft</strong> saved</p>
-            </div>
-            <button class="ts-action">Undo</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="ts-card">
-        <div class="ts-head"><p class="ts-title">07 · Persistent — action + close</p><p class="ts-rule">Errors that block work don't auto-close. They show the fix action and a close button.</p></div>
-        <div class="ts-stage">
-          <div class="ts-toast">
-            <div class="ts-content">
-              <svg class="ts-icon" viewBox="0 0 24 24"><path d="M2 12a10 10 0 1 0 20 0a10 10 0 1 0-20 0M15 9l-6 6M9 9l6 6" stroke="#DC2626" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
-              <p class="ts-msg"><strong>Bureau pull</strong> failed, connection timed out</p>
-            </div>
-            <button class="ts-action" style="border-radius:0">Retry</button>
-            <div class="ts-close-wrap"><button class="ts-close" aria-label="Dismiss"><svg width="16" height="16" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12" stroke="#697586" stroke-width="2" stroke-linecap="round" fill="none"/></svg></button></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="ts-card">
-        <div class="ts-head"><p class="ts-title">08 · Loading</p><p class="ts-rule">Long tasks: spinner, no timer, no close. Swaps in place to success or error when done.</p></div>
-        <div class="ts-stage">
-          <div class="ts-toast">
-            <div class="ts-content">
-              <svg class="ts-icon ts-spin" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-6.219-8.56" stroke="#697586" stroke-width="2" stroke-linecap="round" fill="none"/></svg>
-              <p class="ts-msg"><strong>Exporting</strong> 1,240 applications…</p>
-            </div>
-            <button class="ts-action">Cancel</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="ts-card">
-        <div class="ts-head"><p class="ts-title">09 · Action in progress</p><p class="ts-rule">After a tap the action shows a spinner and disables, so a slow network can't trigger it twice.</p></div>
-        <div class="ts-stage">
-          <div class="ts-toast">
-            <div class="ts-content">
-              <svg class="ts-icon" viewBox="0 0 24 24"><path d="M2 12a10 10 0 1 0 20 0a10 10 0 1 0-20 0M12 16v-4M12 8h.01" stroke="#1570EF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
-              <p class="ts-msg"><strong>Amount range</strong> filter removed</p>
-            </div>
-            <button class="ts-action busy" disabled><svg width="16" height="16" viewBox="0 0 24 24" class="ts-spin"><path d="M21 12a9 9 0 1 1-6.219-8.56" stroke="#697586" stroke-width="2" stroke-linecap="round" fill="none"/></svg>Undoing…</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="ts-card">
-        <div class="ts-head"><p class="ts-title">10 · Same event repeats</p><p class="ts-rule">Identical messages merge into one toast with a count, and the timer restarts.</p></div>
-        <div class="ts-stage">
-          <div class="ts-toast">
-            <div class="ts-content">
-              <svg class="ts-icon" viewBox="0 0 24 24"><path d="M2 12a10 10 0 1 0 20 0a10 10 0 1 0-20 0M15 9l-6 6M9 9l6 6" stroke="#DC2626" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
-              <p class="ts-msg"><strong>Bureau pull</strong> failed</p>
-              <span class="ts-count">×3</span>
-            </div>
-            <button class="ts-action">Retry</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="ts-card">
-        <div class="ts-head"><p class="ts-title">11 · Keyboard &amp; hover</p><p class="ts-rule">Toasts never steal focus. Tabbed action gets the 4px brand ring. Hover or focus pauses the timer; Esc closes.</p></div>
-        <div class="ts-stage">
-          <div class="ts-toast">
-            <div class="ts-content">
-              <svg class="ts-icon" viewBox="0 0 24 24"><path d="M2 12a10 10 0 1 0 20 0a10 10 0 1 0-20 0M12 16v-4M12 8h.01" stroke="#1570EF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
-              <p class="ts-msg"><strong>Amount range</strong> filter removed</p>
-            </div>
-            <div style="display:flex;align-items:center;padding:6px;border-left:1px solid #E3E8EF">
-              <button class="ts-focus-ring" style="height:36px;border:0;border-radius:8px;background:#F8FAFC;padding:0 12px;font-size:14px;font-weight:600;color:#121926;cursor:pointer">Undo</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="ts-card">
-        <div class="ts-head"><p class="ts-title">12 · Primary CTA</p><p class="ts-rule">Gradient button only for time-sensitive, high-value actions. One per screen, never on errors.</p></div>
-        <div class="ts-stage">
-          <div class="ts-toast">
-            <div class="ts-content">
-              <svg class="ts-icon" viewBox="0 0 24 24"><path d="M21.73 18l-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3M12 9v4M12 17h.01" stroke="#A16207" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
-              <p class="ts-msg"><strong>Rate sheet</strong> expires on [DATE]</p>
-            </div>
-            <div class="ts-primary"><button>Update rates</button></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="ts-card">
-        <div class="ts-head"><p class="ts-title">13 · Too many at once</p><p class="ts-rule">Max 3 visible (compact) · 2 (full), newest at the bottom. Older fold into a "+N more" pill.</p></div>
-        <div class="ts-stage ts-stage-col">
-          <button class="ts-pill">+2 more</button>
-          <div class="ts-toast"><div class="ts-content"><svg class="ts-icon" viewBox="0 0 24 24"><path d="M2 12a10 10 0 1 0 20 0a10 10 0 1 0-20 0M9 12l2 2 4-4" stroke="#059669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg><p class="ts-msg"><strong>Application 3</strong> approved</p></div></div>
-          <div class="ts-toast"><div class="ts-content"><svg class="ts-icon" viewBox="0 0 24 24"><path d="M2 12a10 10 0 1 0 20 0a10 10 0 1 0-20 0M9 12l2 2 4-4" stroke="#059669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg><p class="ts-msg"><strong>Application 4</strong> approved</p></div></div>
-          <div class="ts-toast"><div class="ts-content"><svg class="ts-icon" viewBox="0 0 24 24"><path d="M2 12a10 10 0 1 0 20 0a10 10 0 1 0-20 0M9 12l2 2 4-4" stroke="#059669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg><p class="ts-msg"><strong>Application 5</strong> approved</p></div></div>
-        </div>
-      </div>
-
-      <div class="ts-card">
-        <div class="ts-head"><p class="ts-title">14 · Small screens (360px)</p><p class="ts-rule">Full width minus 16px margins, at the bottom above any nav. Text may wrap to 2 lines; action never wraps.</p></div>
-        <div class="ts-stage">
-          <div class="ts-device">
-            <div class="ts-toast full">
-              <div class="ts-content wrap">
-                <svg class="ts-icon" viewBox="0 0 24 24"><path d="M21.73 18l-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3M12 9v4M12 17h.01" stroke="#A16207" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
-                <p class="ts-msg wrap"><strong>Amount range</strong> filter removed from this view</p>
-              </div>
-              <button class="ts-action">Undo</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="ts-card">
-        <div class="ts-head"><p class="ts-title">15 · Placement in a page (full-width)</p><p class="ts-rule">Spans the content column, not the viewport: 24px in from its edges, clear of the side nav, above any sticky footer.</p></div>
-        <div class="ts-stage">
-          <div class="ts-page">
-            <div class="ts-page-nav">
-              <div style="height:10px;width:60%"></div>
-              <div style="height:8px;width:80%;background:#EEF2F6"></div>
-              <div style="height:8px;width:70%;background:#EEF2F6"></div>
-              <div style="height:8px;width:75%;background:#EEF2F6"></div>
-            </div>
-            <div class="ts-page-main">
-              <div class="ph" style="height:12px;width:40%"></div>
-              <div class="box"></div>
-              <div class="box"></div>
-              <div class="ts-page-toast">
-                <div class="ts-toast full">
-                  <div class="ts-content">
-                    <svg class="ts-icon" viewBox="0 0 24 24"><path d="M2 12a10 10 0 1 0 20 0a10 10 0 1 0-20 0M9 12l2 2 4-4" stroke="#059669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
-                    <p class="ts-msg"><strong>Rule set v4</strong> published</p>
-                  </div>
-                  <button class="ts-action">View</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </div>
+    <div id="ts-sections" class="space-y-4"></div>
   </section>
 
 </main>
@@ -4230,6 +4016,19 @@
         label:   section.dataset.tooltipLabel   || 'Save your changes',
       };
     }
+    if (kind === 'toast') {
+      return {
+        layout:      section.dataset.currentLayout    || 'compact',
+        intent:      section.dataset.currentIntent    || 'success',
+        action:      section.dataset.currentAction    || 'text',
+        state:       section.dataset.currentState     || 'default',
+        showCount:   section.dataset.currentShowcount || 'false',
+        subject:     section.dataset.toastSubject     || 'Saved.',
+        message:     section.dataset.toastMessage     || 'Your changes are safe.',
+        actionLabel: section.dataset.toastActionlabel || 'Retry',
+        count:       section.dataset.toastCount       || '3',
+      };
+    }
     return {
       hierarchy: section.dataset.currentHierarchy || 'primary',
       size:      section.dataset.currentSize      || 'md',
@@ -4249,6 +4048,14 @@
       if (codeHost) {
         const filename = codeHost.dataset.variantFilename || 'tooltip.tsx';
         codeHost.innerHTML = codeBlock(renderTooltipCode(state), filename);
+      }
+      return;
+    }
+    if (kind === 'toast') {
+      if (previewEl) previewEl.innerHTML = renderToastPreview(state);
+      if (codeHost) {
+        const filename = codeHost.dataset.variantFilename || 'toast.tsx';
+        codeHost.innerHTML = codeBlock(renderToastCode(state), filename);
       }
       return;
     }
@@ -4316,6 +4123,14 @@
     const which = input.dataset.variantInput;
     if (which === 'tooltip-label') {
       section.dataset.tooltipLabel = input.value || 'Save your changes';
+    } else if (which === 'toast-subject') {
+      section.dataset.toastSubject = input.value;
+    } else if (which === 'toast-message') {
+      section.dataset.toastMessage = input.value;
+    } else if (which === 'toast-actionlabel') {
+      section.dataset.toastActionlabel = input.value || 'Retry';
+    } else if (which === 'toast-count') {
+      section.dataset.toastCount = input.value || '3';
     } else {
       section.dataset.buttonLabel = input.value || 'Save changes';
     }
@@ -4645,6 +4460,244 @@ ${childJsx}
   ].join('');
 
   document.getElementById('tt-sections').innerHTML = ttSections;
+
+  // ============================================================
+  // Toasts — interactive playground
+  // ============================================================
+
+  const TS_LAYOUTS = [
+    { value: 'compact', label: 'Compact' },
+    { value: 'full',    label: 'Full width' },
+  ];
+  const TS_INTENTS = [
+    { value: 'info',     label: 'Info' },
+    { value: 'success',  label: 'Success' },
+    { value: 'warning',  label: 'Warning' },
+    { value: 'error',    label: 'Error' },
+    { value: 'neutral',  label: 'Neutral' },
+  ];
+  const TS_ACTIONS = [
+    { value: 'none',           label: 'None' },
+    { value: 'text',           label: 'Text' },
+    { value: 'primary',        label: 'Primary (gradient)' },
+    { value: 'close',          label: 'Close only' },
+    { value: 'text-and-close', label: 'Text + Close' },
+  ];
+  const TS_STATES = [
+    { value: 'default', label: 'Default' },
+    { value: 'loading', label: 'Loading' },
+    { value: 'busy',    label: 'Busy' },
+  ];
+  const TS_COUNT = [
+    { value: 'false', label: 'Off' },
+    { value: 'true',  label: 'On' },
+  ];
+
+  const TS_ICON = {
+    info:    { color: '#1570EF', path: 'M2 12a10 10 0 1 0 20 0a10 10 0 1 0-20 0M12 16v-4M12 8h.01' },
+    success: { color: '#059669', path: 'M2 12a10 10 0 1 0 20 0a10 10 0 1 0-20 0M9 12l2 2 4-4' },
+    warning: { color: '#A16207', path: 'M21.73 18l-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3M12 9v4M12 17h.01' },
+    error:   { color: '#DC2626', path: 'M2 12a10 10 0 1 0 20 0a10 10 0 1 0-20 0M15 9l-6 6M9 9l6 6' },
+  };
+
+  const SPINNER_SVG = `<svg class="ts-icon ts-spin" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-6.219-8.56" stroke="#697586" stroke-width="2" stroke-linecap="round" fill="none"/></svg>`;
+  const CLOSE_SVG   = `<svg width="16" height="16" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12" stroke="#697586" stroke-width="2" stroke-linecap="round" fill="none"/></svg>`;
+
+  function renderToastPreview(s) {
+    const isLoading = s.state === 'loading';
+    const isBusy    = s.state === 'busy';
+    const hasText   = s.action === 'text' || s.action === 'text-and-close';
+    const hasClose  = (s.action === 'close' || s.action === 'text-and-close') && !isLoading;
+    const isPrimary = s.action === 'primary';
+
+    // Icon — spinner swap on loading; hidden entirely on neutral
+    let iconHtml = '';
+    if (isLoading) {
+      iconHtml = SPINNER_SVG;
+    } else if (s.intent !== 'neutral') {
+      const ic = TS_ICON[s.intent];
+      iconHtml = `<svg class="ts-icon" viewBox="0 0 24 24"><path d="${ic.path}" stroke="${ic.color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>`;
+    }
+
+    // Message row (strong subject + regular message)
+    const subject = s.subject ? `<strong>${escapeHtml(s.subject)}</strong>` : '';
+    const message = s.message ? ` ${escapeHtml(s.message)}` : '';
+    const msgHtml = `<p class="ts-msg">${subject}${message}</p>`;
+
+    // Count pill
+    const countHtml = s.showCount === 'true'
+      ? `<span class="ts-count">×${escapeHtml(s.count || '3')}</span>`
+      : '';
+
+    // Action zone
+    let actionHtml = '';
+    if (hasText) {
+      const label = escapeHtml(s.actionLabel || 'Retry');
+      const busyHtml = isBusy
+        ? `<svg width="16" height="16" viewBox="0 0 24 24" class="ts-spin"><path d="M21 12a9 9 0 1 1-6.219-8.56" stroke="#697586" stroke-width="2" stroke-linecap="round" fill="none"/></svg>`
+        : '';
+      const cls = isBusy ? 'ts-action busy' : 'ts-action';
+      // Border-radius right-cap when there's no close after us
+      const style = hasClose ? 'border-radius:0' : '';
+      actionHtml = `<button class="${cls}" style="${style}" ${isBusy ? 'disabled' : ''}>${busyHtml}${label}</button>`;
+    } else if (isPrimary) {
+      actionHtml = `<div class="ts-primary"><button>${escapeHtml(s.actionLabel || 'Update rates')}</button></div>`;
+    }
+
+    // Close zone
+    const closeHtml = hasClose
+      ? `<div class="ts-close-wrap"><button class="ts-close" aria-label="Dismiss">${CLOSE_SVG}</button></div>`
+      : '';
+
+    const toastClass = s.layout === 'full' ? 'ts-toast full' : 'ts-toast';
+    return `
+      <div class="${toastClass}">
+        <div class="ts-content">
+          ${iconHtml}
+          ${msgHtml}
+          ${countHtml}
+        </div>
+        ${actionHtml}
+        ${closeHtml}
+      </div>
+    `;
+  }
+
+  function renderToastCode(s) {
+    const props = [];
+    if (s.intent !== 'info')      props.push(`intent="${s.intent}"`);
+    if (s.layout === 'full')      props.push(`layout="full"`);
+    if (s.state  !== 'default')   props.push(`state="${s.state}"`);
+    if (s.subject)                props.push(`subject="${s.subject}"`);
+    if (s.message)                props.push(`message="${s.message}"`);
+    const hasText   = s.action === 'text' || s.action === 'text-and-close';
+    const hasClose  = s.action === 'close' || s.action === 'text-and-close';
+    const isPrimary = s.action === 'primary';
+    if (hasText || isPrimary) {
+      props.push(`action="${s.actionLabel || (isPrimary ? 'Update rates' : 'Retry')}"`);
+      if (isPrimary) props.push(`actionVariant="primary"`);
+      props.push(`onAction={() => {}}`);
+    }
+    if (hasClose) props.push(`onClose={() => {}}`);
+    if (s.showCount === 'true') props.push(`count={${s.count || 3}}`);
+
+    const propsStr = props.length <= 2 ? props.join(' ') : '\n  ' + props.join('\n  ') + '\n';
+    return `import { Toast } from "@/components/ui";
+
+<Toast ${propsStr}/>`;
+  }
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  }
+
+  function toastPlayground() {
+    const defaults = {
+      layout: 'compact', intent: 'success', action: 'text', state: 'default',
+      showCount: 'false',
+      subject: 'Saved.', message: 'Your changes are safe.',
+      actionLabel: 'Retry', count: '3',
+    };
+    const previewHtml = renderToastPreview(defaults);
+    const codeStr    = renderToastCode(defaults);
+
+    return `
+      <div id="toast-playground"
+           data-variant-section="toast"
+           data-current-layout="${defaults.layout}"
+           data-current-intent="${defaults.intent}"
+           data-current-action="${defaults.action}"
+           data-current-state="${defaults.state}"
+           data-current-showcount="${defaults.showCount}"
+           data-toast-subject="${defaults.subject}"
+           data-toast-message="${defaults.message}"
+           data-toast-actionlabel="${defaults.actionLabel}"
+           data-toast-count="${defaults.count}"
+           class="preview-code-tabs bg-white border border-gray-200 rounded-xl shadow-xs scroll-mt-24">
+
+        <!-- Toolbar row — tabs + text inputs -->
+        <div class="flex flex-wrap items-center justify-between gap-3 border-b border-gray-200 bg-gray-50 px-4 py-3">
+          <div class="inline-flex items-center gap-0.5 p-0.5 bg-white border border-gray-200 rounded-md">
+            <button type="button" class="tab-btn is-active px-2.5 py-1 text-xs font-semibold rounded flex items-center gap-1.5 transition-colors" data-tab="preview">
+              <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              Preview
+            </button>
+            <button type="button" class="tab-btn px-2.5 py-1 text-xs font-semibold rounded flex items-center gap-1.5 transition-colors" data-tab="code">
+              <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg>
+              Code
+            </button>
+          </div>
+          <div class="flex items-center gap-3 flex-wrap">
+            <div class="flex items-center gap-1.5">
+              <label class="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Subject</label>
+              <input type="text" data-variant-input="toast-subject" value="${defaults.subject}"
+                class="h-8 px-2.5 text-xs border border-gray-200 rounded-md w-36 bg-white focus:outline-none focus:border-brand-400 focus:ring-2 focus:ring-brand-100" />
+            </div>
+            <div class="flex items-center gap-1.5">
+              <label class="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Message</label>
+              <input type="text" data-variant-input="toast-message" value="${defaults.message}"
+                class="h-8 px-2.5 text-xs border border-gray-200 rounded-md w-56 bg-white focus:outline-none focus:border-brand-400 focus:ring-2 focus:ring-brand-100" />
+            </div>
+          </div>
+        </div>
+
+        <div class="preview-code-tabs">
+          <div class="tab-content-preview">
+            <div class="min-h-[200px] px-10 py-16 flex items-center justify-center bg-gray-50/30" data-variant-preview>${previewHtml}</div>
+          </div>
+          <div class="tab-content-code hidden" data-variant-code data-variant-filename="toast.tsx">${codeBlock(codeStr, 'toast.tsx')}</div>
+        </div>
+
+        <!-- Variant controls -->
+        <div class="border-t border-gray-100 px-4 pb-4 pt-2 divide-y divide-gray-100">
+          ${pgPillRow('Layout',     'layout', defaults.layout, TS_LAYOUTS)}
+          ${pgPillRow('Intent',     'intent', defaults.intent, TS_INTENTS)}
+          ${pgDropdownRow('Action', 'action', defaults.action, TS_ACTIONS, 220)}
+          ${pgPillRow('State',      'state',  defaults.state,  TS_STATES)}
+          ${pgPillRow('Count pill', 'showcount', defaults.showCount, TS_COUNT)}
+        </div>
+      </div>
+    `;
+  }
+
+  const TS_USAGE = {
+    doItems: [
+      'Short, present-tense, one sentence: "Saved."',
+      'Lead with the subject in bold, continue in gray',
+      'Pick an intent that matches the stakes — error for failures, warning for risks, info for FYIs',
+    ],
+    dontItems: [
+      'Multi-paragraph bodies (use a modal or inline alert instead)',
+      "Must-read legal / terms — users will miss them",
+      'Form validation (use inline error text, not a toast)',
+    ],
+  };
+
+  const tsSections = [
+    toastPlayground(),
+    // Source + install ribbon
+    `<div class="bg-white border border-gray-200 rounded-xl shadow-xs px-6 py-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-gray-500">
+      <span class="inline-flex items-center gap-1.5"><span class="font-medium text-gray-700">Source:</span>
+        <a href="https://github.com/sathishkumarparthasarathy/pulse-design-system/blob/main/src/components/Toast.tsx" target="_blank" rel="noopener" class="text-brand-700 hover:text-brand-800 font-medium inline-flex items-center gap-1">src/components/Toast.tsx
+          <svg class="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M17 7H8M17 7v9"/></svg>
+        </a>
+      </span>
+      <span class="text-gray-300">·</span>
+      <span class="inline-flex items-center gap-1.5"><span class="font-medium text-gray-700">Install:</span>
+        <code class="font-mono bg-gray-100 text-gray-700 px-2 py-0.5 rounded text-[11px]">npm i class-variance-authority clsx tailwind-merge lucide-react</code>
+      </span>
+    </div>`,
+    // Usage guidance
+    `<div class="bg-white border border-gray-200 rounded-xl shadow-xs px-6 py-6" data-toc-title="Usage guidance" id="toast-usage">
+      <div class="flex items-baseline gap-3 mb-4 pb-3 border-b border-gray-100">
+        <span class="text-base font-semibold text-gray-900">Usage guidance</span>
+        <span class="text-xs text-gray-500 ml-auto text-right">When to reach for a Toast · when to avoid</span>
+      </div>
+      ${usageBlock(TS_USAGE)}
+    </div>`,
+  ].join('');
+
+  document.getElementById('ts-sections').innerHTML = tsSections;
 
   // ============================================================
   // Badge Groups
