@@ -45,5 +45,20 @@ export type {
   TooltipSize,
 } from "./Tooltip";
 
+export {
+  Toast,
+  ToastProvider,
+  ToastRoot,
+  ToastTitle,
+  ToastDescription,
+  ToastAction,
+  ToastClose,
+  ToastViewport,
+} from "./Toast";
+export type { ToastProps, ToastIntent, ToastLayout } from "./Toast";
+
+export { Toaster, toast } from "./Toaster";
+export type { ToasterProps, ToastInput, ToastItem, ToastHandle } from "./Toaster";
+
 // Icons
 export * from "../icons";

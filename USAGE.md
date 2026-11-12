@@ -36,7 +36,7 @@ If your project already uses Vite + React + Tailwind, you're set.
 npm install  lucide-react class-variance-authority clsx tailwind-merge \
              @radix-ui/react-slot @radix-ui/react-dialog @radix-ui/react-popover \
              @radix-ui/react-tooltip @radix-ui/react-tabs @radix-ui/react-select \
-             @radix-ui/react-dropdown-menu
+             @radix-ui/react-dropdown-menu @radix-ui/react-toast
 
 # or pnpm / yarn — same package names
 ```
@@ -201,6 +201,53 @@ import { Mail } from "@/icons";
 </Field>
 ```
 
+### Toast
+
+```tsx
+// 1. Mount the Toaster once at your app root
+import { Toaster } from "@/components/ui";
+
+export default function App() {
+  return (
+    <>
+      <RouterOrPages />
+      <Toaster />
+    </>
+  );
+}
+
+// 2. Fire a toast from anywhere
+import { toast } from "@/components/ui";
+
+toast({ intent: "success", subject: "Saved.", message: "Your changes are safe." });
+
+// With an action — returning a Promise flips the toast to `busy`
+toast({
+  intent: "error",
+  subject: "Upload failed.",
+  message: "Network dropped mid-upload.",
+  action: "Retry",
+  onAction: () => uploadAgain(),
+});
+
+// Loading → swap in place when work completes
+const t = toast.loading({ subject: "Uploading…" });
+await uploadFile(file);
+t.update({ state: "default", intent: "success", subject: "Done." });
+
+// Dedupe — repeat calls merge into one toast with an ×N pill
+toast({ intent: "warning", subject: "Conflict —", message: "Someone else is editing.", dedupeKey: "conflict" });
+
+// Persistent — no auto-dismiss, user must close
+toast({ intent: "info", subject: "Release v0.3 available.", action: "Reload", persistent: true });
+```
+
+**Intents:** `info` · `success` · `warning` · `error` · `neutral` *(no icon)*
+
+**Layouts:** `compact` *(default)* · `full`
+
+Spec and edge cases: see the Toasts page in the Showcase.
+
 ### Card
 
 ```tsx
@@ -253,7 +300,7 @@ Tailwind re-reads tokens on next dev-server restart. Components pick up the chan
 
 ---
 
-## What's there today (v0.2.0)
+## What's there today (v0.3.0)
 
 | Family | Components |
 |---|---|
@@ -262,6 +309,7 @@ Tailwind re-reads tokens on next dev-server restart. Components pick up the chan
 | **Status** | `Badge`, `BadgeGroup`, `StatusPill` |
 | **Form** | `Input`, `Field`, `Label`, `HelperText` |
 | **Surface** | `Card`, `CardHeader`, `CardTitle`, `CardDescription`, `CardContent`, `CardFooter` |
+| **Feedback** | `Tooltip`, `TooltipRich`, `Toast`, `Toaster` + `toast()` |
 
 See `CHANGELOG.md` for what's coming (Switch, Checkbox, Radio, Tooltip, Select, DatePicker, DataTable, Modal, Toast, …).
 

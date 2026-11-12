@@ -25,6 +25,9 @@ import {
   TooltipTrigger,
   TooltipContent,
   TooltipRich,
+  Toaster,
+  toast,
+  Bell,
   ArrowRight,
   Search,
   Mail,
@@ -66,7 +69,7 @@ type PageId =
   | "colors" | "shadows-blurs" | "spacing-grids" | "typography" | "icons"
   | "buttons" | "button-group" | "social-buttons" | "close-button"
   | "badges" | "badge-groups" | "status-pills" | "forms" | "cards"
-  | "avatars" | "tooltips";
+  | "avatars" | "tooltips" | "toasts";
 
 type IconCmp = React.ComponentType<React.SVGProps<SVGSVGElement>>;
 type NavItem =
@@ -93,6 +96,7 @@ const NAV: NavItem[] = [
   { kind: "link", id: "forms",          label: "Forms & inputs",  icon: Edit },
   { kind: "link", id: "cards",          label: "Cards",           icon: Folder },
   { kind: "link", id: "tooltips",       label: "Tooltips",        icon: InfoCircle },
+  { kind: "link", id: "toasts",         label: "Toasts",          icon: Bell },
 ];
 
 // Adapt the `usePageRoute` validator below to read from the new shape
@@ -2321,6 +2325,237 @@ function TooltipsPage() {
 }
 
 /* =========================================================================
+   Toasts page
+   ========================================================================= */
+
+function ToastDemoBox({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="min-h-[80px] flex flex-wrap items-center gap-3 px-4 py-6 bg-gray-50 border border-gray-100 rounded-lg">
+      {children}
+    </div>
+  );
+}
+
+function ToastsPage() {
+  // Live demos — fire a real toast via the imperative API
+  const demoBasic = () =>
+    toast({ intent: "success", subject: "Saved.", message: "Your changes are safe." });
+
+  const demoInfo = () =>
+    toast({ intent: "info", subject: "Heads up —", message: "New runs are queued behind your current job." });
+
+  const demoWarning = () =>
+    toast({ intent: "warning", subject: "Nearing limit.", message: "You've used 82% of this month's quota." });
+
+  const demoError = () =>
+    toast({
+      intent: "error",
+      subject: "Upload failed.",
+      message: "Network dropped mid-upload.",
+      action: "Retry",
+      onAction: () => new Promise((r) => setTimeout(r, 1500)),
+    });
+
+  const demoNeutral = () =>
+    toast({ intent: "neutral", message: "Draft autosaved." });
+
+  const demoPersistent = () =>
+    toast({
+      intent: "info",
+      subject: "New release —",
+      message: "v0.3 ships Toasts. Reload to see it.",
+      persistent: true,
+      action: "Reload",
+      onAction: () => {},
+    });
+
+  const demoLoadingToSuccess = () => {
+    const t = toast.loading({ subject: "Uploading…", message: "report-q4.pdf" });
+    setTimeout(() => {
+      t.update({ state: "default", intent: "success", subject: "Done.", message: "report-q4.pdf uploaded.", persistent: false });
+    }, 1800);
+  };
+
+  const demoDedupe = () => {
+    const key = "save-conflict";
+    toast({ intent: "warning", subject: "Heads up —", message: "Someone else is editing this record.", dedupeKey: key });
+  };
+
+  const demoPrimaryCta = () =>
+    toast({
+      intent: "success",
+      subject: "Model trained.",
+      message: "Accuracy: 92.4%",
+      action: "View report",
+      actionVariant: "primary",
+      onAction: () => {},
+    });
+
+  const demoFullWidth = () =>
+    toast({
+      layout: "full",
+      intent: "info",
+      subject: "Maintenance window.",
+      message: "This cluster restarts in 10 minutes. Save your work.",
+      action: "Dismiss",
+      onAction: () => {},
+    });
+
+  const demoWrap = () =>
+    toast({
+      intent: "info",
+      subject: "Policy change —",
+      message:
+        "Starting November 20th, applications over $50,000 require a secondary reviewer. Your workflow has been updated to match.",
+      wrap: true,
+    });
+
+  return (
+    <section data-page="toasts">
+      <PageHeader
+        title="Toasts"
+        subtitle="Non-blocking status messages · info / success / warning / error / neutral · compact + full · dedupe + loading + busy · Radix-backed"
+      />
+
+      <div className="space-y-4">
+        {/* 01 · Intents — all 5, compact */}
+        <NumberedSection
+          num={1}
+          title="Intents"
+          description="info · success · warning · error · neutral — compact layout"
+          usage={{
+            doItems: [
+              "Short, present-tense, one sentence: 'Saved.'",
+              "Lead with the subject in bold, continue in gray",
+              "Pick an intent that matches the stakes — error for failures, warning for risks, info for FYIs",
+            ],
+            dontItems: [
+              "Multi-paragraph bodies (use a modal or inline alert instead)",
+              "Must-read legal / terms — users will miss them",
+              "Form validation (use inline error text, not a toast)",
+            ],
+          }}
+        >
+          <ToastDemoBox>
+            <Button hierarchy="secondary-gray" onClick={demoBasic}>Fire success</Button>
+            <Button hierarchy="secondary-gray" onClick={demoInfo}>Fire info</Button>
+            <Button hierarchy="secondary-gray" onClick={demoWarning}>Fire warning</Button>
+            <Button hierarchy="secondary-gray" onClick={demoError}>Fire error + retry</Button>
+            <Button hierarchy="secondary-gray" onClick={demoNeutral}>Fire neutral</Button>
+          </ToastDemoBox>
+        </NumberedSection>
+
+        {/* 02 · Full-width + mixed */}
+        <NumberedSection
+          num={2}
+          title="Full-width layout"
+          description="Banner-style — spans the content column"
+        >
+          <ToastDemoBox>
+            <Button hierarchy="secondary-gray" onClick={demoFullWidth}>Fire full-width</Button>
+            <span className="text-xs text-gray-500">
+              Full-width toasts always sit at the bottom of the stack.
+            </span>
+          </ToastDemoBox>
+        </NumberedSection>
+
+        {/* 03 · Loading → success swap */}
+        <NumberedSection
+          num={3}
+          title="Loading → in-place update"
+          description="Fire a loading toast, swap it to success/error without unmounting"
+        >
+          <ToastDemoBox>
+            <Button hierarchy="secondary-gray" onClick={demoLoadingToSuccess}>
+              Upload & swap
+            </Button>
+            <span className="text-xs text-gray-500">
+              Uses <code className="font-mono bg-white px-1 rounded">toast.loading().update(...)</code>
+            </span>
+          </ToastDemoBox>
+        </NumberedSection>
+
+        {/* 04 · Dedupe */}
+        <NumberedSection
+          num={4}
+          title="Dedupe by key"
+          description="Fire the same dedupeKey repeatedly → merges into one toast + ×N count"
+        >
+          <ToastDemoBox>
+            <Button hierarchy="secondary-gray" onClick={demoDedupe}>
+              Fire the same conflict (click 3×)
+            </Button>
+            <span className="text-xs text-gray-500">
+              Count pill appears on the second trigger; timer restarts each time.
+            </span>
+          </ToastDemoBox>
+        </NumberedSection>
+
+        {/* 05 · Persistent + action */}
+        <NumberedSection
+          num={5}
+          title="Persistent + action"
+          description="No auto-dismiss; user must click action or close"
+        >
+          <ToastDemoBox>
+            <Button hierarchy="secondary-gray" onClick={demoPersistent}>Fire persistent</Button>
+          </ToastDemoBox>
+        </NumberedSection>
+
+        {/* 06 · Primary CTA action */}
+        <NumberedSection
+          num={6}
+          title="Primary CTA action"
+          description="actionVariant='primary' inlines a brand gradient Button"
+        >
+          <ToastDemoBox>
+            <Button hierarchy="secondary-gray" onClick={demoPrimaryCta}>Fire with primary CTA</Button>
+          </ToastDemoBox>
+        </NumberedSection>
+
+        {/* 07 · 2-line wrap */}
+        <NumberedSection
+          num={7}
+          title="2-line wrap"
+          description="wrap=true · icon top-aligned · line-clamp-2"
+        >
+          <ToastDemoBox>
+            <Button hierarchy="secondary-gray" onClick={demoWrap}>Fire long message</Button>
+          </ToastDemoBox>
+        </NumberedSection>
+
+        {/* 08 · Stacking */}
+        <NumberedSection
+          num={8}
+          title="Stacking"
+          description="Max 3 visible; oldest drops when a new one arrives"
+        >
+          <ToastDemoBox>
+            <Button hierarchy="secondary-gray" onClick={() => {
+              toast({ intent: "info",    subject: "One —",   message: "First toast fired." });
+              toast({ intent: "success", subject: "Two —",   message: "Second toast fired." });
+              toast({ intent: "warning", subject: "Three —", message: "Third toast fired." });
+              toast({ intent: "error",   subject: "Four —",  message: "Oldest drops off." });
+            }}>
+              Fire 4 (watch oldest drop)
+            </Button>
+          </ToastDemoBox>
+        </NumberedSection>
+
+        {/* 09 · Clear all */}
+        <NumberedSection num={9} title="Clear" description="Dismiss every visible toast at once">
+          <ToastDemoBox>
+            <Button hierarchy="destructive-secondary" onClick={() => toast.clear()}>
+              toast.clear()
+            </Button>
+          </ToastDemoBox>
+        </NumberedSection>
+      </div>
+    </section>
+  );
+}
+
+/* =========================================================================
    Root
    ========================================================================= */
 
@@ -2351,14 +2586,18 @@ export function Showcase() {
             {page === "forms" && <FormsPage />}
             {page === "cards" && <CardsPage />}
             {page === "tooltips" && <TooltipsPage />}
+            {page === "toasts" && <ToastsPage />}
           </main>
         </div>
 
         <footer className="border-t border-gray-200 py-6 bg-white">
           <div className="max-w-[1600px] mx-auto px-6 text-sm text-gray-600 flex items-center justify-between">
-            <span>PULSE Design System · v0.2.0 · Powered by scienaptic.ai</span>
+            <span>PULSE Design System · v0.3.0 · Powered by scienaptic.ai</span>
             <span className="font-mono text-xs text-gray-500">React · TS · Tailwind · Radix</span>
           </div>
+
+          {/* Toaster lives at the root so every page can call `toast()` */}
+          <Toaster />
         </footer>
       </div>
     </TooltipProvider>
