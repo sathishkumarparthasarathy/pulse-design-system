@@ -74,7 +74,7 @@ These are color-filled (not stroke) and aren't in Lucide. We ship them as standa
 
 ## Step 3 · Components (10 min)
 
-Programmatic scaffolding — runs the Plugin API to create Button, Badge, Avatar, Input, and Card component sets with proper auto-layout, padding, fills, and variant properties.
+Programmatic scaffolding — runs the Plugin API to create Button, Badge, Avatar, Input, Card, Tooltip, and Toast component sets with proper auto-layout, padding, fills, and variant properties.
 
 ### One-time plugin install
 1. In Figma desktop, go to **Menu → Plugins → Development → Import plugin from manifest…**
@@ -85,16 +85,18 @@ Programmatic scaffolding — runs the Plugin API to create Button, Badge, Avatar
 1. Make sure you're in your design file (Pulse)
 2. **Menu → Plugins → Development → Scienaptic DS — Component Builder**
 3. Wait ~5 seconds — a toast confirms scaffolding is done
-4. The viewport jumps to a new **🧩 Components** page with all 5 component sets laid out
+4. The viewport jumps to a new **🧩 Components** page with all 7 component sets laid out
 
 ### What it creates
 | Component | Variants |
 |-----------|----------|
-| **Button** | 11 hierarchies × 5 sizes = **55 variants** — Primary · Primary gradient (`#FF7918 → #E5610A`) · Secondary gray · Secondary color · Tertiary gray · Tertiary color · Link color · Link gray · Destructive primary/secondary/tertiary × sm/md/lg/xl/2xl |
+| **Button** | 12 hierarchies × 5 sizes × 4 states = **240 variants** — Primary (`brand-600`) · Primary gradient · Secondary navy · Secondary gray · Secondary color · Tertiary gray · Tertiary color · Link color · Link gray · Destructive primary/secondary/tertiary × sm/md/lg/xl/2xl × default/hover/focused/disabled |
 | **Badge** | 7 tones (gray, brand, error, warning, success, info, ai) |
 | **Avatar** | 6 sizes (xs → 2xl) |
 | **Input** | 1 default (320×40 with placeholder) |
 | **Card** | 1 default (with header + divider + content) |
+| **Tooltip** | 2 variants × 3 sizes × 4 sides × 4 modes = **96 variants** — dark/light × sm/md/lg × top/right/bottom/left × basic/description/shortcut/full |
+| **Toast** | 2 layouts × 5 intents × 5 action types × 3 states = **150 variants** — Compact/Full width × Info/Success/Warning/Error/Neutral × None/Text/Primary/Close/Text+Close × Default/Loading/Busy |
 
 The Button component set matches exactly what's in `src/components/Button.tsx` — same 11 hierarchies, same 5 sizes, same corner radius (`rounded-md` = 6px), same shadow (`shadow-xs`). Primary gradient uses a linear 180° gradient from `#FF7918` at the top to `#E5610A` at the bottom.
 
@@ -135,7 +137,7 @@ Figma's REST API can't create components (only read them). The Plugin API is the
 Open the file. You should see:
 - **Variables panel** (right sidebar in Design mode) showing `primitives` and `semantic` collections
 - **🎨 Icons** page with all icon components
-- **🧩 Components** page with 5 component sets (Button, Badge, Avatar, Input, Card) arranged vertically inside a `Base Components` section frame
+- **🧩 Components** page with 7 component sets (Button, Badge, Avatar, Input, Card, Tooltip, Toast) arranged vertically inside a `Base Components` section frame
 
 Click any Button instance → in the right panel you'll see variant dropdowns for `hierarchy` and `size`.
 

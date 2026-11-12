@@ -4,7 +4,50 @@ A chronological journal of what was built and why.
 
 ---
 
-## v0.2.0 · current (June 2026)
+## v0.3.0 · current (November 2026)
+
+### Components shipped
+- **Toast** (`src/components/Toast.tsx`) — Radix-backed notification primitive
+  - Intents: `info` · `success` · `warning` · `error` · `neutral`
+  - Layouts: `compact` (self-sizing, max-w 560) · `full` (fills container)
+  - States: `default` · `loading` (spinner swap, no timer, no close) · `busy` (action shows spinner + disabled)
+  - Anatomy: icon → subject (bold) + message → optional count `×N` pill → text action and/or close
+  - Primary CTA option: `actionVariant="primary"` inlines a `primary-gradient` Button inside the toast
+  - Single-line truncation by default with `title` tooltip; `wrap` prop allows 2-line clamp with top-aligned icon
+  - WCAG: warning icon uses `warning-700` (600 fails 3:1 against white)
+- **Toaster** (`src/components/Toaster.tsx`) — the mount point + imperative API
+  - `<Toaster />` wraps Radix Provider + Viewport; mounts once at the app root
+  - `toast(input)` returns `{ id, update, dismiss }` — fire from anywhere
+  - `toast.loading(input)` for in-progress operations; call `.update({ intent: "success", ... })` to swap in place
+  - `toast.dismiss(id)` and `toast.clear()` control the stack
+  - `dedupeKey` merges repeated toasts into one with an ×N count + timer restart
+  - Auto-dismiss: 5s default, 7s with an action, Infinity when `persistent | loading | busy`
+  - Promise-returning `onAction` flips the toast to `busy` until the promise settles (prevents double-submit)
+  - Compact + full in the same viewport: full-width toasts sink to the bottom, compact stacked above
+  - Mobile (<640px) reflows the viewport to a full-width bar with 16px side insets
+  - `insetLeft` / `insetRight` / `bottomOffset` props for drawers and bottom nav
+  - Store caps at `max` (default 3); oldest drops when a new one arrives
+
+### Figma plugin — Toast scaffold
+- New `buildToastSet(parent)` in `figma-export/figma-plugin/code.js`
+- Variant axes: `Layout` (Compact / Full width) × `Intent` (Info / Success / Warning / Error / Neutral) × `Action` (None / Text / Primary / Close / Text + Close) × `State` (Default / Loading / Busy) = **150 variants**
+- Component props: `Subject` (TEXT) · `Message` (TEXT) · `Action label` (TEXT) · `Show count` (BOOLEAN) · `Count` (TEXT)
+- Icons rendered as a coloured 20px badge with a placeholder glyph (designers can replace with real Lucide via the Lucide Figma plugin)
+- Re-running the builder removes any existing "Toast" variant set first, so it's idempotent
+
+### Housekeeping
+- Added `@radix-ui/react-toast@^1.2.2` to `dependencies`
+- Bumped version to `0.3.0` in `package.json` and the Showcase footer
+- `USAGE.md`: `toast()` example; install command now includes `@radix-ui/react-toast`
+- `FIGMA_SETUP.md`: Toast added to the scaffolded components list
+
+### Deferred to v0.3.1
+- Clicking the overflow pill to expand the stack (current behavior: cap-and-drop oldest)
+- Separate caps for compact (3) vs full (2) — current cap is combined
+
+---
+
+## v0.2.0 · (June 2026)
 
 ### Identity
 - **Renamed** from "Scienaptic Design System" → **PULSE Design System**
