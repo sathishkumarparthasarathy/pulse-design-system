@@ -1,6 +1,8 @@
 // Scienaptic DS — Component Builder
-// Scaffolds Button, Badge, Avatar, Input, Card on a "Components" page.
-// Run once from Plugins → Development → "Scienaptic DS — Component Builder".
+// Scaffolds Button, Badge, Avatar, Input, Card, Tooltip, Toast on a
+// "Components" page. Run once from Plugins → Development → "Scienaptic
+// DS — Component Builder". The Toast builder is idempotent (removes an
+// existing "Toast" set before rebuilding) so re-runs are safe.
 
 /* ─── Colors (mirror of tokens.json — kept inline so the plugin runs offline) ─── */
 const COLORS = {
@@ -731,6 +733,300 @@ async function buildTooltipSet(parent) {
   return set;
 }
 
+/* ─── Toast ───────────────────────────────────────────────────────
+   Mirrors src/components/Toast.tsx + the 15 edge cases in the
+   Showcase. Variant axes let designers compose every case directly:
+
+   - Layout : Compact (hug 240..560) / Full width (fill container)
+   - Intent : Info / Success / Warning / Error / Neutral (no icon)
+   - Action : None / Text / Primary / Close / Text + Close
+   - State  : Default / Loading (spinner swap) / Busy (action spins)
+
+   Component properties (TEXT + BOOLEAN) let designers edit subject,
+   message, action label, and the count pill without detaching.
+   --------------------------------------------------------------- */
+
+const TOAST_LAYOUTS = [
+  { id: "compact",    label: "Compact",    padX: 16, minW: 240, maxW: 560, fill: false, actionPadX: 18 },
+  { id: "full-width", label: "Full width", padX: 20, minW: 320, maxW: 960, fill: true,  actionPadX: 20 },
+];
+
+// Semantic colors matching src/components/Toast.tsx (intent icon strokes)
+const TOAST_INTENTS = [
+  { id: "info",    label: "Info",    hasIcon: true,  color: "#1570EF", glyph: "i" },
+  { id: "success", label: "Success", hasIcon: true,  color: "#059669", glyph: "✓" },
+  // warning-700 — 600 fails WCAG 3:1 against white
+  { id: "warning", label: "Warning", hasIcon: true,  color: "#A16207", glyph: "!" },
+  { id: "error",   label: "Error",   hasIcon: true,  color: "#DC2626", glyph: "✕" },
+  { id: "neutral", label: "Neutral", hasIcon: false, color: COLORS.gray[500], glyph: "" },
+];
+
+const TOAST_ACTIONS = [
+  { id: "none",           label: "None",           text: false, primary: false, close: false },
+  { id: "text",           label: "Text",           text: true,  primary: false, close: false },
+  { id: "primary",        label: "Primary",        text: false, primary: true,  close: false },
+  { id: "close",          label: "Close",          text: false, primary: false, close: true  },
+  { id: "text-and-close", label: "Text + Close",   text: true,  primary: false, close: true  },
+];
+
+const TOAST_STATES = [
+  { id: "default", label: "Default", spinner: false, actionBusy: false },
+  { id: "loading", label: "Loading", spinner: true,  actionBusy: false },
+  { id: "busy",    label: "Busy",    spinner: false, actionBusy: true  },
+];
+
+// Tailwind shadow-lg · matches the React component
+const TOAST_SHADOW = [
+  dropShadow(0, 4,  6, "#101828", 0.03),
+  dropShadow(0, 12, 16, "#101828", 0.08),
+];
+
+// 20px colored disc with a glyph placeholder — designers can swap for a
+// real Lucide icon via the Lucide Figma plugin (same pattern as Button).
+function createToastIconBadge(intent) {
+  const badge = figma.createFrame();
+  badge.name = "icon";
+  badge.resize(20, 20);
+  badge.cornerRadius = 10;
+  badge.fills = solid(intent.color);
+  badge.layoutMode = "HORIZONTAL";
+  badge.primaryAxisAlignItems = "CENTER";
+  badge.counterAxisAlignItems = "CENTER";
+  badge.primaryAxisSizingMode = "FIXED";
+  badge.counterAxisSizingMode = "FIXED";
+  if (intent.glyph) {
+    const g = text(intent.glyph, { size: 11, weight: "Bold", color: COLORS.white });
+    badge.appendChild(g);
+  }
+  return badge;
+}
+
+function createToastSpinner() {
+  const s = createSpinnerSlot("spinner", 20, COLORS.gray[500]);
+  s.visible = false;
+  return s;
+}
+
+// Count pill (×N) — rounded gray chip, toggled by the Show-count boolean
+function createToastCountPill() {
+  const pill = autoFrame("count", "HORIZONTAL", {
+    px: 8, py: 0, radius: 9999, fill: COLORS.gray[100],
+  });
+  pill.primaryAxisSizingMode = "AUTO";
+  pill.counterAxisSizingMode = "FIXED";
+  pill.resize(32, 20);
+  pill.visible = false;
+  const t = text("×2", { size: 12, weight: "Semi Bold", color: COLORS.gray[700] });
+  t.name = "count-label";
+  pill.appendChild(t);
+  return pill;
+}
+
+// Message row — subject (bold) and message (regular gray-600)
+function createToastMessageRow() {
+  const row = autoFrame("message-row", "HORIZONTAL", { gap: 4, fill: null });
+  row.layoutAlign = "STRETCH";
+  row.primaryAxisSizingMode = "AUTO";
+  row.counterAxisSizingMode = "AUTO";
+  row.counterAxisAlignItems = "CENTER";
+  row.layoutGrow = 1;
+  const subject = text("Saved.", { size: 14, weight: "Semi Bold", color: COLORS.gray[900] });
+  subject.name = "subject";
+  row.appendChild(subject);
+  const message = text("Your changes are safe.", { size: 14, weight: "Regular", color: COLORS.gray[600] });
+  message.name = "message";
+  row.appendChild(message);
+  return row;
+}
+
+// A 1px-wide vertical divider — used between content rail / action / close
+function createDivider() {
+  const d = figma.createFrame();
+  d.name = "divider";
+  d.resize(1, 48);
+  d.layoutAlign = "STRETCH";
+  d.fills = solid(COLORS.gray[200]);
+  return d;
+}
+
+// Action zone — text button (divider-separated) OR inset primary button
+function createToastAction(action, state, layout) {
+  if (action.text) {
+    const wrap = autoFrame("action", "HORIZONTAL", {
+      px: layout.actionPadX, py: 0, fill: null,
+    });
+    wrap.primaryAxisSizingMode = "AUTO";
+    wrap.counterAxisSizingMode = "STRETCH";
+    wrap.counterAxisAlignItems = "CENTER";
+    const label = text("Retry", { size: 14, weight: "Semi Bold", color: COLORS.gray[900] });
+    label.name = "action-label";
+    wrap.appendChild(label);
+    if (state.actionBusy) wrap.opacity = 0.6;
+    return wrap;
+  }
+  if (action.primary) {
+    // Inset gradient CTA — 6px padding on three sides, 8px gap to content
+    const inset = autoFrame("action", "HORIZONTAL", {
+      px: 8, py: 6, fill: null,
+    });
+    inset.primaryAxisSizingMode = "AUTO";
+    inset.counterAxisSizingMode = "STRETCH";
+    inset.counterAxisAlignItems = "CENTER";
+    inset.paddingLeft = 8;
+    inset.paddingRight = 6;
+    inset.paddingTop = 6;
+    inset.paddingBottom = 6;
+    const btn = autoFrame("primary-cta", "HORIZONTAL", {
+      px: 14, py: 0, radius: 8, fill: null, shadow: SHADOW_XS,
+    });
+    btn.fills = gradientBrandVertical();
+    btn.strokes = solid(COLORS.brand[600]);
+    btn.strokeWeight = 1;
+    btn.strokeAlign = "INSIDE";
+    btn.primaryAxisSizingMode = "AUTO";
+    btn.counterAxisSizingMode = "FIXED";
+    btn.resize(btn.width || 100, 36);
+    btn.counterAxisAlignItems = "CENTER";
+    const label = text("Update rates", { size: 14, weight: "Semi Bold", color: COLORS.white });
+    label.name = "action-label";
+    btn.appendChild(label);
+    if (state.actionBusy) btn.opacity = 0.6;
+    inset.appendChild(btn);
+    return inset;
+  }
+  return null;
+}
+
+// Close zone — 32px X button with its own left divider
+function createToastClose() {
+  const wrap = autoFrame("close", "HORIZONTAL", { px: 8, py: 0, fill: null });
+  wrap.primaryAxisSizingMode = "AUTO";
+  wrap.counterAxisSizingMode = "STRETCH";
+  wrap.counterAxisAlignItems = "CENTER";
+  const x = text("✕", { size: 14, weight: "Medium", color: COLORS.gray[500] });
+  x.name = "close-glyph";
+  wrap.appendChild(x);
+  return wrap;
+}
+
+async function buildToastSet(parent) {
+  // Idempotent — tear down an existing Toast set before rebuilding
+  for (const child of parent.children.slice()) {
+    if (child.name === "Toast") child.remove();
+  }
+
+  const variants = [];
+  for (const layout of TOAST_LAYOUTS) {
+    for (const intent of TOAST_INTENTS) {
+      for (const action of TOAST_ACTIONS) {
+        for (const state of TOAST_STATES) {
+          const cmp = figma.createComponent();
+          cmp.name = `Layout=${layout.label}, Intent=${intent.label}, Action=${action.label}, State=${state.label}`;
+
+          cmp.layoutMode = "HORIZONTAL";
+          cmp.primaryAxisAlignItems = "MIN";
+          cmp.counterAxisAlignItems = "CENTER";
+          cmp.primaryAxisSizingMode = layout.fill ? "FIXED" : "AUTO";
+          cmp.counterAxisSizingMode = "AUTO";
+          cmp.minWidth = layout.minW;
+          cmp.maxWidth = layout.maxW;
+          if (layout.fill) cmp.resize(layout.minW, cmp.height || 48);
+          cmp.itemSpacing = 0;
+          cmp.cornerRadius = 12;
+          cmp.fills = solid(COLORS.white);
+          cmp.strokes = solid(COLORS.gray[200]);
+          cmp.strokeWeight = 1;
+          cmp.strokeAlign = "INSIDE";
+          cmp.effects = TOAST_SHADOW;
+
+          // ─ Content rail — icon + message + count pill
+          const rail = autoFrame("content", "HORIZONTAL", {
+            px: layout.padX, py: 12, gap: 10, fill: null,
+          });
+          rail.primaryAxisSizingMode = "AUTO";
+          rail.counterAxisSizingMode = "STRETCH";
+          rail.counterAxisAlignItems = "CENTER";
+          rail.layoutGrow = 1;
+
+          // Icon: colored disc (hidden on neutral) · spinner (loading only)
+          const icon = createToastIconBadge(intent);
+          icon.visible = intent.hasIcon && !state.spinner;
+          rail.appendChild(icon);
+          const spinner = createToastSpinner();
+          spinner.visible = state.spinner;
+          rail.appendChild(spinner);
+
+          // Message column — subject + message
+          rail.appendChild(createToastMessageRow());
+
+          // Count pill (shown via Show-count boolean below)
+          rail.appendChild(createToastCountPill());
+
+          cmp.appendChild(rail);
+
+          // ─ Action zone
+          const actionNode = createToastAction(action, state, layout);
+          if (actionNode) {
+            // Divider before the action (text variants only; primary is inset)
+            if (action.text) cmp.appendChild(createDivider());
+            cmp.appendChild(actionNode);
+          }
+
+          // ─ Close zone (hidden during loading)
+          if (action.close && !state.spinner) {
+            cmp.appendChild(createDivider());
+            cmp.appendChild(createToastClose());
+          }
+
+          cmp.resize(cmp.width || layout.minW, cmp.height || 48);
+          variants.push(cmp);
+        }
+      }
+    }
+  }
+
+  // Combine into the variant set
+  const set = figma.combineAsVariants(variants, parent);
+  set.name = "Toast";
+  set.description =
+    "PULSE Toast · 2 layouts × 5 intents × 5 action types × 3 states · properties: Subject, Message, Action label, Show count, Count";
+  set.layoutMode = "VERTICAL";
+  set.primaryAxisSizingMode = "AUTO";
+  set.counterAxisSizingMode = "AUTO";
+  set.itemSpacing = 12;
+  set.paddingTop = 32; set.paddingBottom = 32; set.paddingLeft = 32; set.paddingRight = 32;
+  set.fills = solid(COLORS.gray[50]);
+  set.cornerRadius = 16;
+  set.strokes = solid(COLORS.gray[200]);
+  set.strokeWeight = 1;
+
+  // Shared component properties — bound recursively since text nodes are
+  // nested inside the auto-layout rows
+  const subjectProp   = set.addComponentProperty("Subject",      "TEXT",    "Saved.");
+  const messageProp   = set.addComponentProperty("Message",      "TEXT",    "Your changes are safe.");
+  const actionProp    = set.addComponentProperty("Action label", "TEXT",    "Retry");
+  const showCountProp = set.addComponentProperty("Show count",   "BOOLEAN", false);
+  const countProp     = set.addComponentProperty("Count",        "TEXT",    "×2");
+
+  function bindToast(node) {
+    if (node.type === "TEXT") {
+      if (node.name === "subject")      node.componentPropertyReferences = { characters: subjectProp };
+      if (node.name === "message")      node.componentPropertyReferences = { characters: messageProp };
+      if (node.name === "action-label") node.componentPropertyReferences = { characters: actionProp };
+      if (node.name === "count-label")  node.componentPropertyReferences = { characters: countProp };
+    }
+    if (node.name === "count") {
+      node.componentPropertyReferences = { visible: showCountProp };
+    }
+    if ("children" in node) {
+      for (const child of node.children) bindToast(child);
+    }
+  }
+  for (const variant of variants) bindToast(variant);
+
+  return set;
+}
+
 /* ─── Gradients (paint styles) ────────────────────────────────────
    Gradients can't live in tokens.json cleanly (Tokens Studio's gradient
    support is partial), so they're created here as native Figma paint
@@ -868,6 +1164,7 @@ async function main() {
   await buildInput(section);
   await buildCard(section);
   await buildTooltipSet(section);
+  await buildToastSet(section);
 
   // Create paint styles for all gradients (Brand · Soft · Multi · Radial · Bg = 47 total)
   const gradientCount = await buildGradientStyles();
@@ -875,7 +1172,7 @@ async function main() {
   // Center on the new section
   figma.viewport.scrollAndZoomIntoView([section]);
 
-  figma.notify(`✓ Scaffolded 6 component sets · ${gradientCount} gradient paint styles created`);
+  figma.notify(`✓ Scaffolded 7 component sets · ${gradientCount} gradient paint styles created`);
   figma.closePlugin();
 }
 
