@@ -25,6 +25,8 @@ import {
   TooltipTrigger,
   TooltipContent,
   TooltipRich,
+  Toast,
+  Bell,
   ArrowRight,
   Search,
   Mail,
@@ -66,7 +68,7 @@ type PageId =
   | "colors" | "shadows-blurs" | "spacing-grids" | "typography" | "icons"
   | "buttons" | "button-group" | "social-buttons" | "close-button"
   | "badges" | "badge-groups" | "status-pills" | "forms" | "cards"
-  | "avatars" | "tooltips";
+  | "avatars" | "tooltips" | "toasts";
 
 type IconCmp = React.ComponentType<React.SVGProps<SVGSVGElement>>;
 type NavItem =
@@ -93,6 +95,7 @@ const NAV: NavItem[] = [
   { kind: "link", id: "forms",          label: "Forms & inputs",  icon: Edit },
   { kind: "link", id: "cards",          label: "Cards",           icon: Folder },
   { kind: "link", id: "tooltips",       label: "Tooltips",        icon: InfoCircle },
+  { kind: "link", id: "toasts",         label: "Toasts",          icon: Bell },
 ];
 
 // Adapt the `usePageRoute` validator below to read from the new shape
@@ -2321,6 +2324,327 @@ function TooltipsPage() {
 }
 
 /* =========================================================================
+   Toasts page
+   ========================================================================= */
+
+function ToastDemoBox({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="min-h-[88px] flex items-center justify-center px-4 py-5 bg-gray-50 border border-gray-100 rounded-lg">
+      {children}
+    </div>
+  );
+}
+
+function ToastsPage() {
+  return (
+    <section data-page="toasts">
+      <PageHeader
+        title="Toasts"
+        subtitle="Non-blocking status messages · 14 edge cases from the Pulse spec · compact (240–560px) + full-width variants"
+      />
+
+      <div className="space-y-4">
+        {/* 01 · Very short message */}
+        <NumberedSection
+          num={1}
+          title="Very short message"
+          description="Min width 240px, so a one-word toast never shrinks into a chip."
+        >
+          <ToastDemoBox>
+            <Toast intent="success" subject="Saved" onClose={() => {}} />
+          </ToastDemoBox>
+        </NumberedSection>
+
+        {/* 02 · Long message — truncate */}
+        <NumberedSection
+          num={2}
+          title="Long message — truncate"
+          description="Max width 560px, one line. Overflow ends in an ellipsis; full text shows on hover."
+        >
+          <ToastDemoBox>
+            <Toast
+              intent="info"
+              subject="Bulk decision"
+              message="sent for 248 applications across 6 branches; members get an email and SMS within the hour"
+              action="View"
+              onAction={() => {}}
+              title="Bulk decision sent for 248 applications across 6 branches; members get an email and SMS within the hour"
+            />
+          </ToastDemoBox>
+        </NumberedSection>
+
+        {/* 03 · Long message — wrap */}
+        <NumberedSection
+          num={3}
+          title="Long message — wrap"
+          description="When the full sentence matters, wrap to 2 lines max. Icon pins to the first line; action stays centered."
+        >
+          <ToastDemoBox>
+            <Toast
+              intent="warning"
+              subject="Credit report"
+              message="is over 30 days old. Re-pull it before giving a final decision on this application."
+              action="Re-pull"
+              onAction={() => {}}
+              wrap
+              className="max-w-[460px]"
+            />
+          </ToastDemoBox>
+        </NumberedSection>
+
+        {/* 04 · Long subject */}
+        <NumberedSection
+          num={4}
+          title="Long subject"
+          description="Names and IDs truncate first, at 200px, so the verb — what happened — always stays visible."
+        >
+          <ToastDemoBox>
+            <Toast
+              intent="success"
+              subject="Jonathan Alexander Whitfield-Ramirez"
+              message="moved to manual review"
+              action="Open"
+              onAction={() => {}}
+              title="Jonathan Alexander Whitfield-Ramirez moved to manual review"
+            />
+          </ToastDemoBox>
+        </NumberedSection>
+
+        {/* 05 · Long action label */}
+        <NumberedSection
+          num={5}
+          title="Long action label"
+          description="2 words, ~16 characters max. Never truncate the action — shorten the copy instead."
+        >
+          <ToastDemoBox>
+            <Toast
+              intent="info"
+              subject="Income verification"
+              message="is pending"
+              action="View application"
+              onAction={() => {}}
+            />
+          </ToastDemoBox>
+        </NumberedSection>
+
+        {/* 06 · No icon */}
+        <NumberedSection
+          num={6}
+          title="No icon"
+          description="Neutral confirmations may drop the icon. Status toasts (success, warning, error) always keep it."
+        >
+          <ToastDemoBox>
+            <Toast
+              intent="neutral"
+              subject="Draft"
+              message="saved"
+              action="Undo"
+              onAction={() => {}}
+            />
+          </ToastDemoBox>
+        </NumberedSection>
+
+        {/* 07 · Persistent — action + close */}
+        <NumberedSection
+          num={7}
+          title="Persistent — action + close"
+          description="Errors that block work don't auto-close. They show the fix action and a close button."
+        >
+          <ToastDemoBox>
+            <Toast
+              intent="error"
+              subject="Bureau pull"
+              message="failed, connection timed out"
+              action="Retry"
+              onAction={() => {}}
+              onClose={() => {}}
+            />
+          </ToastDemoBox>
+        </NumberedSection>
+
+        {/* 08 · Loading */}
+        <NumberedSection
+          num={8}
+          title="Loading"
+          description="Long tasks: spinner, no timer, no close. It swaps in place to success or error when done."
+        >
+          <ToastDemoBox>
+            <Toast
+              state="loading"
+              subject="Exporting"
+              message="1,240 applications…"
+              action="Cancel"
+              onAction={() => {}}
+            />
+          </ToastDemoBox>
+        </NumberedSection>
+
+        {/* 09 · Action in progress */}
+        <NumberedSection
+          num={9}
+          title="Action in progress"
+          description="After a tap the action shows a spinner and disables, so a slow network can't trigger it twice."
+        >
+          <ToastDemoBox>
+            <Toast
+              intent="info"
+              subject="Amount range"
+              message="filter removed"
+              action="Undoing…"
+              state="busy"
+              onAction={() => {}}
+            />
+          </ToastDemoBox>
+        </NumberedSection>
+
+        {/* 10 · Same event repeats */}
+        <NumberedSection
+          num={10}
+          title="Same event repeats"
+          description="Identical messages merge into one toast with a count, and the timer restarts. No duplicate stack."
+        >
+          <ToastDemoBox>
+            <Toast
+              intent="error"
+              subject="Bureau pull"
+              message="failed"
+              count={3}
+              action="Retry"
+              onAction={() => {}}
+            />
+          </ToastDemoBox>
+        </NumberedSection>
+
+        {/* 11 · Keyboard & hover */}
+        <NumberedSection
+          num={11}
+          title="Keyboard & hover"
+          description="Toasts never steal focus. Tabbed action gets the 4px brand ring. Hover or focus pauses the timer; Esc closes."
+        >
+          <ToastDemoBox>
+            {/* The design spec shows the action pre-focused — we inline a
+                static mock here so the ring is visible without actually
+                stealing focus. */}
+            <div className="inline-flex items-stretch min-h-[48px] bg-white border border-gray-200 rounded-xl shadow-lg">
+              <div className="flex items-center gap-2.5 px-4 py-3">
+                <InfoCircle className="h-5 w-5 text-info-600 shrink-0" aria-hidden />
+                <div className="text-sm leading-5 text-gray-600 whitespace-nowrap">
+                  <strong className="font-semibold text-gray-900">Amount range</strong> filter removed
+                </div>
+              </div>
+              <div className="flex items-center p-1.5 border-l border-gray-200">
+                <button
+                  type="button"
+                  className="h-9 px-3 rounded-md bg-gray-50 text-sm font-semibold text-gray-900 shadow-ring-brand"
+                >
+                  Undo
+                </button>
+              </div>
+            </div>
+          </ToastDemoBox>
+        </NumberedSection>
+
+        {/* 12 · Primary CTA */}
+        <NumberedSection
+          num={12}
+          title="Primary CTA"
+          description="Gradient button only for time-sensitive, high-value actions. One per screen, never on errors."
+        >
+          <ToastDemoBox>
+            <Toast
+              intent="warning"
+              subject="Rate sheet"
+              message="expires on [DATE]"
+              action="Update rates"
+              actionVariant="primary"
+              onAction={() => {}}
+            />
+          </ToastDemoBox>
+        </NumberedSection>
+
+        {/* 13 · Too many at once */}
+        <NumberedSection
+          num={13}
+          title="Too many at once"
+          description="Max 3 visible (compact) / 2 visible (full-width), newest at the bottom. Older fold into a '+N more' pill."
+        >
+          <div className="min-h-[88px] flex flex-col items-center gap-2 px-4 py-5 bg-gray-50 border border-gray-100 rounded-lg">
+            <button
+              type="button"
+              className="h-7 px-3 rounded-full bg-white border border-gray-200 shadow-xs text-xs font-semibold text-gray-700 hover:bg-gray-100"
+            >
+              +2 more
+            </button>
+            <Toast intent="success" subject="Application 3" message="approved" />
+            <Toast intent="success" subject="Application 4" message="approved" />
+            <Toast intent="success" subject="Application 5" message="approved" />
+          </div>
+        </NumberedSection>
+
+        {/* 14 · Small screens (360px) */}
+        <NumberedSection
+          num={14}
+          title="Small screens (360px)"
+          description="Full width minus 16px margins, at the bottom above any nav. Text may wrap to 2 lines; the action never wraps."
+        >
+          <div className="min-h-[88px] flex items-center justify-center px-4 py-5 bg-gray-50 border border-gray-100 rounded-lg">
+            <div
+              className="box-border flex flex-col justify-end p-4 bg-gray-100 border border-gray-200 rounded-2xl"
+              style={{ width: 360, height: 240 }}
+            >
+              <Toast
+                layout="full"
+                intent="warning"
+                subject="Amount range"
+                message="filter removed from this view"
+                action="Undo"
+                onAction={() => {}}
+                wrap
+              />
+            </div>
+          </div>
+        </NumberedSection>
+
+        {/* 15 · Placement in a page (full-width only) */}
+        <NumberedSection
+          num={15}
+          title="Placement in a page"
+          description="Spans the content column, not the viewport: 24px in from its edges, clear of the side nav, above any sticky footer."
+        >
+          <div className="min-h-[88px] flex items-center justify-center px-4 py-5 bg-gray-50 border border-gray-100 rounded-lg">
+            <div className="w-full h-[240px] box-border flex border border-gray-200 rounded-xl overflow-hidden bg-white">
+              {/* Faux side nav */}
+              <div className="shrink-0 w-[120px] box-border px-3 py-4 flex flex-col gap-2.5 border-r border-gray-200 bg-gray-50">
+                <div className="h-2.5 w-3/5 rounded bg-gray-300" />
+                <div className="h-2 w-4/5 rounded bg-gray-200" />
+                <div className="h-2 w-[70%] rounded bg-gray-200" />
+                <div className="h-2 w-3/4 rounded bg-gray-200" />
+              </div>
+              {/* Faux content area with the toast floating above the sticky footer */}
+              <div className="flex-1 min-w-0 relative px-6 py-4 flex flex-col gap-2 bg-gray-50">
+                <div className="h-3 w-2/5 rounded bg-gray-300" />
+                <div className="h-7 rounded-md bg-white border border-gray-200" />
+                <div className="h-7 rounded-md bg-white border border-gray-200" />
+                <div className="absolute left-6 right-6 bottom-4">
+                  <Toast
+                    layout="full"
+                    intent="success"
+                    subject="Rule set v4"
+                    message="published"
+                    action="View"
+                    onAction={() => {}}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </NumberedSection>
+      </div>
+    </section>
+  );
+}
+
+/* =========================================================================
    Root
    ========================================================================= */
 
@@ -2351,6 +2675,7 @@ export function Showcase() {
             {page === "forms" && <FormsPage />}
             {page === "cards" && <CardsPage />}
             {page === "tooltips" && <TooltipsPage />}
+            {page === "toasts" && <ToastsPage />}
           </main>
         </div>
 
