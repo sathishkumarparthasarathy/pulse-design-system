@@ -4,10 +4,18 @@
 //   🧩 Buttons · 🧩 Badges · 🧩 Avatars · 🧩 Inputs · 🧩 Cards
 //   🧩 Tooltips · 🧩 Toasts
 // Designers jump straight to what they need via Figma's page sidebar.
-// Run from Plugins → Development → "Scienaptic DS — Component Builder".
-// Re-runs are safe: each page's "Base Components" section is torn down
-// and rebuilt from scratch, so palettes / variants / props always stay
-// in sync with this file.
+//
+// Running:
+//   Plugins → Development → Scienaptic DS — Component Builder
+//     → Scaffold ALL              → rebuilds every page (safe default)
+//     → 🧩 Toasts only (etc.)     → rebuilds JUST that page; the rest
+//                                   stay untouched. Useful once the
+//                                   library has shipped and you only
+//                                   want to iterate on one component.
+//
+// Re-runs are safe: each selected page's "Base Components" section is
+// torn down and rebuilt from scratch, so palettes / variants / props
+// stay in sync with this file.
 
 /* ─── Colors (mirror of tokens.json — kept inline so the plugin runs offline) ─── */
 const COLORS = {
@@ -1422,19 +1430,22 @@ async function buildTypographyPage(parent) {
 // One page per component, so designers can jump straight to Buttons or
 // Toasts in Figma's page sidebar. The 🧩 prefix keeps them grouped and
 // alphabetically ordered together.
+// `command` matches the manifest.json menu entries so designers can rebuild
+// a single page without touching the rest. Running the plugin from the top
+// level (no submenu click) rebuilds everything (same as "all").
 const COMPONENT_PAGES = [
   // Foundations come first so designers land on the palette / type scale
   // before they dive into components.
-  { name: "🎨 Colors",     build: buildColorsPage,    kind: "foundation" },
-  { name: "🔤 Typography", build: buildTypographyPage, kind: "foundation" },
+  { name: "🎨 Colors",     build: buildColorsPage,     kind: "foundation", command: "colors" },
+  { name: "🔤 Typography", build: buildTypographyPage, kind: "foundation", command: "typography" },
   // Components
-  { name: "🧩 Buttons",    build: buildButtonSet  },
-  { name: "🧩 Badges",     build: buildBadgeSet   },
-  { name: "🧩 Avatars",    build: buildAvatarSet  },
-  { name: "🧩 Inputs",     build: buildInput      },
-  { name: "🧩 Cards",      build: buildCard       },
-  { name: "🧩 Tooltips",   build: buildTooltipSet },
-  { name: "🧩 Toasts",     build: buildToastSet   },
+  { name: "🧩 Buttons",    build: buildButtonSet,  command: "buttons"  },
+  { name: "🧩 Badges",     build: buildBadgeSet,   command: "badges"   },
+  { name: "🧩 Avatars",    build: buildAvatarSet,  command: "avatars"  },
+  { name: "🧩 Inputs",     build: buildInput,      command: "inputs"   },
+  { name: "🧩 Cards",      build: buildCard,       command: "cards"    },
+  { name: "🧩 Tooltips",   build: buildTooltipSet, command: "tooltips" },
+  { name: "🧩 Toasts",     build: buildToastSet,   command: "toasts"   },
 ];
 
 async function ensurePage(name) {
@@ -1465,12 +1476,25 @@ async function ensureComponentSection(pageName) {
 async function main() {
   await loadFonts();
 
-  // Build each component on its own page. Each iteration is isolated so
-  // one page's failure never blocks the rest — Toasts (the last item) was
-  // getting skipped when an earlier page threw.
+  // Filter by the manifest menu command (empty string / "all" → everything).
+  // When a user runs e.g. "🧩 Toasts only" from the plugin menu we rebuild
+  // JUST that one page and leave everything else untouched.
+  const cmd = figma.command || "all";
+  const pagesToBuild = cmd === "all"
+    ? COMPONENT_PAGES
+    : COMPONENT_PAGES.filter(cfg => cfg.command === cmd);
+
+  if (pagesToBuild.length === 0) {
+    figma.notify(`✗ No page matches command "${cmd}"`, { error: true });
+    figma.closePlugin();
+    return;
+  }
+
+  // Build each selected page. Each iteration is isolated so one page's
+  // failure never blocks the rest.
   const builtPages = [];
   const failed = [];
-  for (const cfg of COMPONENT_PAGES) {
+  for (const cfg of pagesToBuild) {
     try {
       const { page, section } = await ensureComponentSection(cfg.name);
       await cfg.build(section);
@@ -1481,13 +1505,16 @@ async function main() {
     }
   }
 
-  // Create paint styles for all gradients (Brand · Soft · Multi · Radial · Bg = 47 total)
-  const gradientCount = await buildGradientStyles();
+  // Gradient paint styles are expensive to regen and the API doesn't
+  // dedupe them — only rebuild them on a full "all" run.
+  const gradientCount = cmd === "all" ? await buildGradientStyles() : 0;
 
-  // Center on the Buttons page so designers land somewhere familiar
-  const first = builtPages[0];
-  await figma.setCurrentPageAsync(first.page);
-  figma.viewport.scrollAndZoomIntoView([first.section]);
+  // Center on the first page we built so the designer lands on it
+  if (builtPages.length) {
+    const first = builtPages[0];
+    await figma.setCurrentPageAsync(first.page);
+    figma.viewport.scrollAndZoomIntoView([first.section]);
+  }
 
   // Mention the legacy single "🧩 Components" page so the user can delete it
   const legacy = figma.root.children.find(p => p.name === "🧩 Components");
@@ -1497,9 +1524,12 @@ async function main() {
   const components = builtPages.length - foundations;
   if (failed.length) {
     const names = failed.map(f => f.name).join(", ");
-    figma.notify(`⚠ Shipped ${foundations}+${components} pages · ${failed.length} failed: ${names} (see console)`, { timeout: 8000, error: true });
-  } else {
+    figma.notify(`⚠ ${builtPages.length} ok · ${failed.length} failed: ${names} (see console)`, { timeout: 8000, error: true });
+  } else if (cmd === "all") {
     figma.notify(`✓ Scaffolded ${foundations} Foundation + ${components} Component pages · ${gradientCount} gradient paint styles${legacyNote}`);
+  } else {
+    // Single-page run
+    figma.notify(`✓ Rebuilt ${builtPages[0].cfg.name} (other pages left untouched)`);
   }
   figma.closePlugin();
 }

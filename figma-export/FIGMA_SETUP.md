@@ -84,6 +84,8 @@ Programmatic scaffolding — runs the Plugin API to create Foundation pages (Col
 ### Run it
 1. Make sure you're in your design file (Pulse)
 2. **Menu → Plugins → Development → Scienaptic DS — Component Builder**
+   - Clicking the top-level menu item or **"Scaffold ALL"** → rebuilds every page
+   - Clicking a specific submenu item (e.g. **"🧩 Toasts only"**) → rebuilds just that page and leaves every other page untouched. Perfect once your Figma library is established and you only want to iterate on one component.
 3. Wait ~5 seconds — a toast confirms scaffolding is done
 4. The plugin creates one page per Foundation/Component. Foundations come first in the sidebar so designers land on the palette / type scale before diving into components:
    - **🎨 Colors** — 13 palette scales × 11 steps with WCAG contrast badges

@@ -5,5 +5,19 @@
   "main": "code.js",
   "editorType": ["figma"],
   "documentAccess": "dynamic-page",
-  "networkAccess": { "allowedDomains": ["none"] }
+  "networkAccess": { "allowedDomains": ["none"] },
+  "menu": [
+    { "name": "Scaffold ALL (Foundations + Components)", "command": "all" },
+    { "separator": true },
+    { "name": "🎨 Colors only",     "command": "colors" },
+    { "name": "🔤 Typography only", "command": "typography" },
+    { "separator": true },
+    { "name": "🧩 Buttons only",    "command": "buttons" },
+    { "name": "🧩 Badges only",     "command": "badges" },
+    { "name": "🧩 Avatars only",    "command": "avatars" },
+    { "name": "🧩 Inputs only",     "command": "inputs" },
+    { "name": "🧩 Cards only",      "command": "cards" },
+    { "name": "🧩 Tooltips only",   "command": "tooltips" },
+    { "name": "🧩 Toasts only",     "command": "toasts" }
+  ]
 }
