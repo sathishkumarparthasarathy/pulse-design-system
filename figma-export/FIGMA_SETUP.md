@@ -74,7 +74,7 @@ These are color-filled (not stroke) and aren't in Lucide. We ship them as standa
 
 ## Step 3 · Components (10 min)
 
-Programmatic scaffolding — runs the Plugin API to create Button, Badge, Avatar, Input, Card, Tooltip, and Toast component sets with proper auto-layout, padding, fills, and variant properties.
+Programmatic scaffolding — runs the Plugin API to create Foundation pages (Colors, Typography) and Component sets (Button, Badge, Avatar, Input, Card, Tooltip, Toast) with proper auto-layout, padding, fills, and variant properties.
 
 ### One-time plugin install
 1. In Figma desktop, go to **Menu → Plugins → Development → Import plugin from manifest…**
@@ -85,7 +85,12 @@ Programmatic scaffolding — runs the Plugin API to create Button, Badge, Avatar
 1. Make sure you're in your design file (Pulse)
 2. **Menu → Plugins → Development → Scienaptic DS — Component Builder**
 3. Wait ~5 seconds — a toast confirms scaffolding is done
-4. The plugin creates one page per component (**🧩 Buttons**, **🧩 Badges**, **🧩 Avatars**, **🧩 Inputs**, **🧩 Cards**, **🧩 Tooltips**, **🧩 Toasts**) and lands you on the Buttons page
+4. The plugin creates one page per Foundation/Component. Foundations come first in the sidebar so designers land on the palette / type scale before diving into components:
+   - **🎨 Colors** — 13 palette scales × 11 steps with WCAG contrast badges
+   - **🔤 Typography** — Inter specimen + 11 sizes × 4 weights
+   - **🧩 Buttons**, **🧩 Badges**, **🧩 Avatars**, **🧩 Inputs**, **🧩 Cards**, **🧩 Tooltips**, **🧩 Toasts**
+   
+   You land on the Colors page.
 
 ### What it creates
 | Component | Variants |
@@ -137,7 +142,8 @@ Figma's REST API can't create components (only read them). The Plugin API is the
 Open the file. You should see:
 - **Variables panel** (right sidebar in Design mode) showing `primitives` and `semantic` collections
 - **🎨 Icons** page with all icon components
-- **7 component pages** (🧩 Buttons, 🧩 Badges, 🧩 Avatars, 🧩 Inputs, 🧩 Cards, 🧩 Tooltips, 🧩 Toasts) — each holds a `Base Components` section with that component's variant set
+- **2 Foundation pages** — 🎨 Colors (13 scales × 11 steps with WCAG contrast badges) and 🔤 Typography (Inter specimen + 11 sizes × 4 weights)
+- **7 Component pages** (🧩 Buttons, 🧩 Badges, 🧩 Avatars, 🧩 Inputs, 🧩 Cards, 🧩 Tooltips, 🧩 Toasts) — each holds a `Base Components` section with that component's variant set
 - Older single `🧩 Components` page from a previous plugin run can be deleted manually
 
 Click any Button instance → in the right panel you'll see variant dropdowns for `hierarchy` and `size`.

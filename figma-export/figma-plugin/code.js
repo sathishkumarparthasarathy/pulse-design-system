@@ -1,11 +1,13 @@
 // Scienaptic DS — Component Builder
-// Scaffolds each component onto its OWN page (🧩 Buttons, 🧩 Badges,
-// 🧩 Avatars, 🧩 Inputs, 🧩 Cards, 🧩 Tooltips, 🧩 Toasts) so designers
-// can jump straight to a component via Figma's page sidebar. Run from
-// Plugins → Development → "Scienaptic DS — Component Builder". Re-runs
-// are safe: each page's "Base Components" section is torn down and
-// rebuilt from scratch, so variant counts / props stay in sync with
-// this file.
+// Scaffolds each Foundation + Component onto its OWN page in Figma:
+//   🎨 Colors · 🔤 Typography
+//   🧩 Buttons · 🧩 Badges · 🧩 Avatars · 🧩 Inputs · 🧩 Cards
+//   🧩 Tooltips · 🧩 Toasts
+// Designers jump straight to what they need via Figma's page sidebar.
+// Run from Plugins → Development → "Scienaptic DS — Component Builder".
+// Re-runs are safe: each page's "Base Components" section is torn down
+// and rebuilt from scratch, so palettes / variants / props always stay
+// in sync with this file.
 
 /* ─── Colors (mirror of tokens.json — kept inline so the plugin runs offline) ─── */
 const COLORS = {
@@ -1139,18 +1141,298 @@ async function buildGradientStyles() {
   return count;
 }
 
+/* ─── Foundations · Colors ───────────────────────────────────────
+   Visual color library — 13 scales × 11 steps with WCAG contrast
+   ratios against white rendered inline on each swatch. Mirrors the
+   Colors page on the Vercel Showcase so designers see the same
+   palette in Figma.
+   --------------------------------------------------------------- */
+
+const FOUNDATION_SCALES = {
+  primary: [
+    { id: "gray",    label: "Gray",    desc: "Neutral — text, UI chrome, dividers." },
+    { id: "brand",   label: "Brand",   desc: "Scienaptic orange — primary interactive color." },
+    { id: "error",   label: "Error",   desc: "Destructive and failure states." },
+    { id: "warning", label: "Warning", desc: "Risk and in-review states." },
+    { id: "success", label: "Success", desc: "Positive confirmations." },
+  ],
+  secondary: [
+    { id: "blue",      label: "Blue",       desc: "Info and informational pills." },
+    { id: "blueLight", label: "Blue light", desc: "Cool highlight accents." },
+    { id: "indigo",    label: "Indigo",     desc: "Feature callouts." },
+    { id: "purple",    label: "Purple",     desc: "AI / decisioning flags." },
+    { id: "pink",      label: "Pink",       desc: "Human accents and tags." },
+    { id: "rose",      label: "Rose",       desc: "Soft destructive variants." },
+    { id: "orange",    label: "Orange",     desc: "Warm highlights not mapped to brand." },
+    { id: "teal",      label: "Teal",       desc: "Analytics and chart categories." },
+  ],
+};
+
+const SCALE_STEPS = ["25","50","100","200","300","400","500","600","700","800","900"];
+
+// Full 11-step palettes mirroring preview/index.html
+const FOUNDATION_COLORS = {
+  gray:      {25:"#FCFCFD",50:"#F8FAFC",100:"#EEF2F6",200:"#E3E8EF",300:"#CDD5DF",400:"#9AA4B2",500:"#697586",600:"#4B5565",700:"#364152",800:"#202939",900:"#121926"},
+  brand:     {25:"#FFF7F0",50:"#FFEEDD",100:"#FFDFC2",200:"#FFC094",300:"#FFA168",400:"#FF8C45",500:"#FF7918",600:"#E5610A",700:"#BB4D08",800:"#913C0C",900:"#6D2D0E"},
+  error:     {25:"#FFFBFA",50:"#FEF2F2",100:"#FEE2E2",200:"#FECACA",300:"#FCA5A5",400:"#F87171",500:"#EF4444",600:"#DC2626",700:"#B91C1C",800:"#991B1B",900:"#7F1D1D"},
+  warning:   {25:"#FFFDF2",50:"#FEFCE8",100:"#FEF9C3",200:"#FEF08A",300:"#FDE047",400:"#FACC15",500:"#EAB308",600:"#CA8504",700:"#A16207",800:"#854D0E",900:"#713F12"},
+  success:   {25:"#F6FDF9",50:"#ECFDF5",100:"#D1FAE5",200:"#A7F3D0",300:"#6EE7B7",400:"#34D399",500:"#10B981",600:"#059669",700:"#047857",800:"#065F46",900:"#064E3B"},
+  blue:      {25:"#F5FAFF",50:"#EFF8FF",100:"#D1E9FF",200:"#B2DDFF",300:"#84CAFF",400:"#53B1FD",500:"#2E90FA",600:"#1570EF",700:"#175CD3",800:"#1849A9",900:"#194185"},
+  blueLight: {25:"#F5FBFF",50:"#F0F9FF",100:"#E0F2FE",200:"#B9E6FE",300:"#7CD4FD",400:"#36BFFA",500:"#0BA5EC",600:"#0086C9",700:"#026AA2",800:"#065986",900:"#0B4A6F"},
+  indigo:    {25:"#F5F8FF",50:"#EEF4FF",100:"#E0EAFF",200:"#C7D7FE",300:"#A4BCFD",400:"#8098F9",500:"#6172F3",600:"#444CE7",700:"#3538CD",800:"#2D31A6",900:"#2D3282"},
+  purple:    {25:"#FAFAFF",50:"#F4F3FF",100:"#EBE9FE",200:"#D9D6FE",300:"#BDB4FE",400:"#9B8AFB",500:"#7A5AF8",600:"#6938EF",700:"#5925DC",800:"#4A1FB8",900:"#3E1C96"},
+  pink:      {25:"#FEF6FB",50:"#FDF2FA",100:"#FCE7F6",200:"#FCCEEE",300:"#FAA7E0",400:"#F670C7",500:"#EE46BC",600:"#DD2590",700:"#C11574",800:"#9E165F",900:"#851651"},
+  rose:      {25:"#FFF5F6",50:"#FFF1F3",100:"#FFE4E8",200:"#FECDD6",300:"#FEA3B4",400:"#FD6F8E",500:"#F63D68",600:"#E31B54",700:"#C01048",800:"#A11043",900:"#89123E"},
+  orange:    {25:"#FEFAF5",50:"#FEF6EE",100:"#FDEAD7",200:"#F9DBAF",300:"#F7B27A",400:"#F38744",500:"#EF6820",600:"#E04F16",700:"#B93815",800:"#932F19",900:"#772917"},
+  teal:      {25:"#F6FEFC",50:"#F0FDF9",100:"#CCFBEF",200:"#99F6E0",300:"#5FE9D0",400:"#2ED3B7",500:"#15B79E",600:"#0E9384",700:"#107569",800:"#125D56",900:"#134E48"},
+};
+
+// WCAG 2.1 contrast ratio against white
+function relLuminance(hex) {
+  const h = hex.replace("#","");
+  const r = parseInt(h.slice(0,2),16)/255;
+  const g = parseInt(h.slice(2,4),16)/255;
+  const b = parseInt(h.slice(4,6),16)/255;
+  const f = c => c <= 0.03928 ? c/12.92 : Math.pow((c+0.055)/1.055, 2.4);
+  return 0.2126*f(r) + 0.7152*f(g) + 0.0722*f(b);
+}
+function contrastVsWhite(hex) {
+  return 1.05 / (relLuminance(hex) + 0.05);
+}
+function contrastBadge(hex) {
+  const r = contrastVsWhite(hex);
+  const txt = r.toFixed(2);
+  if (r >= 7.0) return { label: "AAA " + txt, onDark: true };
+  if (r >= 4.5) return { label: "AA " + txt,  onDark: true };
+  if (r >= 3.0) return { label: txt,          onDark: false };
+  return { label: txt, onDark: false };
+}
+
+function createColorSwatch(hex, step) {
+  // Outer column — color block on top, meta row below
+  const col = autoFrame(`swatch-${step}`, "VERTICAL", { px: 0, py: 0, gap: 6, fill: null });
+  col.primaryAxisSizingMode = "AUTO";
+  col.counterAxisSizingMode = "FIXED";
+  col.resize(84, 100);
+
+  // Color block
+  const block = figma.createFrame();
+  block.name = "color";
+  block.resize(84, 60);
+  block.cornerRadius = 6;
+  block.fills = solid(hex);
+  block.strokes = solid(COLORS.gray[200]);
+  block.strokeWeight = 1;
+  block.strokeAlign = "INSIDE";
+
+  // Contrast badge overlayed on the color block (top-left)
+  const b = contrastBadge(hex);
+  const badgeText = text(b.label, {
+    size: 9,
+    weight: "Semi Bold",
+    color: b.onDark ? COLORS.white : COLORS.gray[800],
+  });
+  badgeText.name = "contrast";
+  badgeText.x = 8;
+  badgeText.y = 8;
+  block.appendChild(badgeText);
+  col.appendChild(block);
+
+  // Meta — step + hex
+  const meta = autoFrame(`meta-${step}`, "VERTICAL", { px: 0, py: 0, gap: 1, fill: null });
+  meta.primaryAxisSizingMode = "AUTO";
+  meta.counterAxisSizingMode = "STRETCH";
+  const stepLbl = text(step, { size: 11, weight: "Semi Bold", color: COLORS.gray[900] });
+  const hexLbl = text(hex, { size: 9, weight: "Regular", color: COLORS.gray[500] });
+  meta.appendChild(stepLbl);
+  meta.appendChild(hexLbl);
+  col.appendChild(meta);
+
+  return col;
+}
+
+function createScaleRow(scale) {
+  const row = autoFrame(`scale-${scale.id}`, "HORIZONTAL", { px: 0, py: 0, gap: 24, fill: null });
+  row.primaryAxisSizingMode = "AUTO";
+  row.counterAxisSizingMode = "AUTO";
+  row.counterAxisAlignItems = "MIN";
+
+  // Left — name + description
+  const label = autoFrame(`lbl-${scale.id}`, "VERTICAL", { px: 0, py: 4, gap: 4, fill: null });
+  label.primaryAxisSizingMode = "AUTO";
+  label.counterAxisSizingMode = "FIXED";
+  label.resize(160, 60);
+  label.appendChild(text(scale.label, { size: 14, weight: "Semi Bold", color: COLORS.gray[900] }));
+  label.appendChild(text(scale.desc, { size: 11, weight: "Regular", color: COLORS.gray[500] }));
+  row.appendChild(label);
+
+  // Swatches
+  const swatchRow = autoFrame(`sw-${scale.id}`, "HORIZONTAL", { px: 0, py: 0, gap: 8, fill: null });
+  swatchRow.primaryAxisSizingMode = "AUTO";
+  swatchRow.counterAxisSizingMode = "AUTO";
+  const palette = FOUNDATION_COLORS[scale.id] || {};
+  for (const step of SCALE_STEPS) {
+    const hex = palette[step];
+    if (hex) swatchRow.appendChild(createColorSwatch(hex, step));
+  }
+  row.appendChild(swatchRow);
+
+  return row;
+}
+
+function sectionHeading(label, descText) {
+  const h = autoFrame(`sh-${label}`, "VERTICAL", { px: 0, py: 0, gap: 4, fill: null });
+  h.primaryAxisSizingMode = "AUTO";
+  h.counterAxisSizingMode = "AUTO";
+  h.appendChild(text(label, { size: 20, weight: "Semi Bold", color: COLORS.gray[900] }));
+  if (descText) {
+    h.appendChild(text(descText, { size: 12, weight: "Regular", color: COLORS.gray[600] }));
+  }
+  return h;
+}
+
+async function buildColorsPage(parent) {
+  // Replace the plugin's standard "Base Components" section fill since
+  // Foundations pages read better on a light background.
+  parent.fills = solid(COLORS.white);
+
+  // Page header
+  const header = autoFrame("page-header", "VERTICAL", { px: 0, py: 0, gap: 8, fill: null });
+  header.primaryAxisSizingMode = "AUTO";
+  header.counterAxisSizingMode = "AUTO";
+  header.appendChild(text("Colors", { size: 30, weight: "Semi Bold", color: COLORS.gray[900] }));
+  header.appendChild(text(
+    "The full Pulse color system — 13 scales × 11 steps. Each swatch includes its WCAG contrast ratio against white.",
+    { size: 14, weight: "Regular", color: COLORS.gray[600] }
+  ));
+  parent.appendChild(header);
+
+  // Primary
+  parent.appendChild(sectionHeading("Primary colors", "The main colors that make up most of the design system."));
+  for (const scale of FOUNDATION_SCALES.primary) {
+    parent.appendChild(createScaleRow(scale));
+  }
+
+  // Secondary
+  parent.appendChild(sectionHeading("Secondary colors", "Accents used sparingly for pills, alerts, chart categories."));
+  for (const scale of FOUNDATION_SCALES.secondary) {
+    parent.appendChild(createScaleRow(scale));
+  }
+}
+
+/* ─── Foundations · Typography ───────────────────────────────────
+   Inter type specimen — 11 sizes × 4 weights = 44 styles, each with
+   a sample word and its size/line-height/letter-spacing spec row,
+   mirroring Untitled UI's specimen format.
+   --------------------------------------------------------------- */
+
+const TYPE_SCALE = [
+  { label: "Display 2xl", size: 72, lh: 90, ls: -2 },
+  { label: "Display xl",  size: 60, lh: 72, ls: -2 },
+  { label: "Display lg",  size: 48, lh: 60, ls: -2 },
+  { label: "Display md",  size: 36, lh: 44, ls: -2 },
+  { label: "Display sm",  size: 30, lh: 38, ls: 0  },
+  { label: "Display xs",  size: 24, lh: 32, ls: 0  },
+  { label: "Text xl",     size: 20, lh: 30, ls: 0  },
+  { label: "Text lg",     size: 18, lh: 28, ls: 0  },
+  { label: "Text md",     size: 16, lh: 24, ls: 0  },
+  { label: "Text sm",     size: 14, lh: 20, ls: 0  },
+  { label: "Text xs",     size: 12, lh: 18, ls: 0  },
+];
+
+const TYPE_WEIGHTS = [
+  { label: "Regular",  weight: "Regular" },
+  { label: "Medium",   weight: "Medium" },
+  { label: "Semibold", weight: "Semi Bold" },
+  { label: "Bold",     weight: "Bold" },
+];
+
+function createTypeRow(spec) {
+  const wrap = autoFrame(`type-${spec.label}`, "VERTICAL", { px: 0, py: 0, gap: 8, fill: null });
+  wrap.primaryAxisSizingMode = "AUTO";
+  wrap.counterAxisSizingMode = "AUTO";
+
+  // Meta row — label left, specs right
+  const meta = autoFrame(`meta-${spec.label}`, "HORIZONTAL", { px: 0, py: 0, gap: 16, fill: null });
+  meta.primaryAxisSizingMode = "AUTO";
+  meta.counterAxisSizingMode = "AUTO";
+  meta.counterAxisAlignItems = "CENTER";
+  meta.appendChild(text(spec.label, { size: 10, weight: "Regular", color: COLORS.gray[500] }));
+  const specsStr =
+    `Font size: ${spec.size}px / ${(spec.size/16).toFixed(3)}rem  ·  ` +
+    `Line height: ${spec.lh}px / ${(spec.lh/16).toFixed(3)}rem` +
+    (spec.ls ? `  ·  Letter spacing: ${spec.ls}%` : "");
+  meta.appendChild(text(specsStr, { size: 10, weight: "Regular", color: COLORS.gray[500] }));
+  wrap.appendChild(meta);
+
+  // Sample row — 4 weights side by side
+  const samples = autoFrame(`samples-${spec.label}`, "HORIZONTAL", { px: 0, py: 0, gap: 24, fill: null });
+  samples.primaryAxisSizingMode = "AUTO";
+  samples.counterAxisSizingMode = "AUTO";
+  samples.counterAxisAlignItems = "MIN";
+
+  for (const w of TYPE_WEIGHTS) {
+    const col = autoFrame(`${spec.label}-${w.weight}`, "VERTICAL", { px: 0, py: 0, gap: 2, fill: null });
+    col.primaryAxisSizingMode = "AUTO";
+    col.counterAxisSizingMode = "FIXED";
+    col.resize(280, Math.max(60, spec.lh + 24));
+    col.appendChild(text(spec.label, { size: spec.size, weight: w.weight, color: COLORS.gray[900], letterSpacing: spec.ls }));
+    col.appendChild(text(w.label, { size: 13, weight: "Regular", color: COLORS.gray[600] }));
+    samples.appendChild(col);
+  }
+  wrap.appendChild(samples);
+
+  return wrap;
+}
+
+async function buildTypographyPage(parent) {
+  parent.fills = solid(COLORS.white);
+
+  // Header
+  const header = autoFrame("page-header", "VERTICAL", { px: 0, py: 0, gap: 8, fill: null });
+  header.primaryAxisSizingMode = "AUTO";
+  header.counterAxisSizingMode = "AUTO";
+  header.appendChild(text("Typography", { size: 30, weight: "Semi Bold", color: COLORS.gray[900] }));
+  header.appendChild(text(
+    "Pulse's typographic scale — Inter across 11 sizes × 4 weights = 44 styles. Same scale as the Vercel Showcase.",
+    { size: 14, weight: "Regular", color: COLORS.gray[600] }
+  ));
+  parent.appendChild(header);
+
+  // "Inter" specimen
+  const fontBlock = autoFrame("font-specimen", "VERTICAL", { px: 0, py: 0, gap: 16, fill: null });
+  fontBlock.primaryAxisSizingMode = "AUTO";
+  fontBlock.counterAxisSizingMode = "AUTO";
+  fontBlock.appendChild(text("Inter", { size: 20, weight: "Regular", color: COLORS.gray[500] }));
+  fontBlock.appendChild(text("Ag", { size: 96, weight: "Regular", color: COLORS.gray[900] }));
+  fontBlock.appendChild(text("ABCDEFGHIJKLMNOPQRSTUVWXYZ", { size: 18, weight: "Regular", color: COLORS.gray[700] }));
+  fontBlock.appendChild(text("abcdefghijklmnopqrstuvwxyz", { size: 18, weight: "Regular", color: COLORS.gray[700] }));
+  fontBlock.appendChild(text("0123456789  !@#$%^&*()", { size: 18, weight: "Regular", color: COLORS.gray[700] }));
+  parent.appendChild(fontBlock);
+
+  // Type scale rows
+  for (const spec of TYPE_SCALE) {
+    parent.appendChild(createTypeRow(spec));
+  }
+}
+
 /* ─── Page setup + execute ───────────────────────────────────────── */
 // One page per component, so designers can jump straight to Buttons or
 // Toasts in Figma's page sidebar. The 🧩 prefix keeps them grouped and
 // alphabetically ordered together.
 const COMPONENT_PAGES = [
-  { name: "🧩 Buttons",  build: buildButtonSet  },
-  { name: "🧩 Badges",   build: buildBadgeSet   },
-  { name: "🧩 Avatars",  build: buildAvatarSet  },
-  { name: "🧩 Inputs",   build: buildInput      },
-  { name: "🧩 Cards",    build: buildCard       },
-  { name: "🧩 Tooltips", build: buildTooltipSet },
-  { name: "🧩 Toasts",   build: buildToastSet   },
+  // Foundations come first so designers land on the palette / type scale
+  // before they dive into components.
+  { name: "🎨 Colors",     build: buildColorsPage,    kind: "foundation" },
+  { name: "🔤 Typography", build: buildTypographyPage, kind: "foundation" },
+  // Components
+  { name: "🧩 Buttons",    build: buildButtonSet  },
+  { name: "🧩 Badges",     build: buildBadgeSet   },
+  { name: "🧩 Avatars",    build: buildAvatarSet  },
+  { name: "🧩 Inputs",     build: buildInput      },
+  { name: "🧩 Cards",      build: buildCard       },
+  { name: "🧩 Tooltips",   build: buildTooltipSet },
+  { name: "🧩 Toasts",     build: buildToastSet   },
 ];
 
 async function ensurePage(name) {
@@ -1201,7 +1483,9 @@ async function main() {
   const legacy = figma.root.children.find(p => p.name === "🧩 Components");
   const legacyNote = legacy ? " · legacy 🧩 Components page can now be deleted" : "";
 
-  figma.notify(`✓ Scaffolded ${builtPages.length} component pages · ${gradientCount} gradient paint styles created${legacyNote}`);
+  const foundations = builtPages.filter(p => p.cfg.kind === "foundation").length;
+  const components = builtPages.length - foundations;
+  figma.notify(`✓ Scaffolded ${foundations} Foundation + ${components} Component pages · ${gradientCount} gradient paint styles${legacyNote}`);
   figma.closePlugin();
 }
 
