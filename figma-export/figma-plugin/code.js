@@ -55,22 +55,79 @@ function solid(hex, opacity = 1, varPath) {
   return [paint];
 }
 
-// Variable lookup cache so we don't scan every local variable for every
-// paint. Populated on first use.
+// Variable lookup cache — populated once per plugin run via
+// loadColorVariables() so individual builders can look up variables
+// synchronously. In documentAccess:"dynamic-page" mode only the async
+// variants of getLocalVariables are available, so we warm the cache
+// at main() start.
 const _colorVarCache = new Map();
-function getCachedColorVariable(name) {
-  if (_colorVarCache.has(name)) return _colorVarCache.get(name);
-  let found = null;
+let _colorVarLoaded = false;
+let _colorVarCount = 0;
+
+async function loadColorVariables() {
+  _colorVarCache.clear();
+  _colorVarLoaded = false;
+  _colorVarCount = 0;
   try {
-    if (figma.variables && figma.variables.getLocalVariables) {
-      const all = figma.variables.getLocalVariables("COLOR");
-      for (const v of all) {
-        if (v.name === name) { found = v; break; }
-      }
+    let all = [];
+    if (figma.variables && figma.variables.getLocalVariablesAsync) {
+      all = await figma.variables.getLocalVariablesAsync("COLOR");
+    } else if (figma.variables && figma.variables.getLocalVariables) {
+      all = figma.variables.getLocalVariables("COLOR");
     }
-  } catch (e) { /* ignore */ }
-  _colorVarCache.set(name, found);
-  return found;
+    for (const v of all) {
+      // Index by the variable's full name as Figma reports it. Tokens
+      // Studio emits names like "color/gray/600" inside the "primitives"
+      // collection (tokens.json hierarchy preserved, slashes between
+      // levels).
+      _colorVarCache.set(v.name, v);
+    }
+    _colorVarCount = all.length;
+    _colorVarLoaded = true;
+    return all.length;
+  } catch (e) {
+    console.warn("[DS Builder] loadColorVariables failed:", e);
+    return 0;
+  }
+}
+
+// Synchronous lookup — the cache has already been loaded by main().
+// Tries several name shapes because Tokens Studio emits variables in
+// slightly different formats depending on the user's "nest with slashes"
+// setting and whether a collection prefix is included.
+function getCachedColorVariable(name) {
+  if (!_colorVarLoaded) return null;
+  // Candidate names to try, in order:
+  //   color/gray/600                 — our canonical form
+  //   gray/600                       — "color" prefix stripped
+  //   primitives/color/gray/600      — full path including collection
+  //   color.gray.600                 — dot-separated flavour
+  //   gray.600                       — dot-separated short
+  const stripped = name.replace(/^color\//, "");
+  const dotted   = name.replace(/\//g, ".");
+  const strippedDotted = stripped.replace(/\//g, ".");
+  const candidates = [
+    name,
+    stripped,
+    `primitives/${name}`,
+    dotted,
+    strippedDotted,
+  ];
+  for (const candidate of candidates) {
+    if (_colorVarCache.has(candidate)) return _colorVarCache.get(candidate);
+  }
+  return null;
+}
+
+// Diagnostic: returns a sample of the first N variable names. Called once
+// from main() so the user can see what format Tokens Studio emitted.
+function sampleVariableNames(limit = 5) {
+  const names = [];
+  for (const name of _colorVarCache.keys()) {
+    names.push(name);
+    if (names.length >= limit) break;
+  }
+  return names;
 }
 function dropShadow(x, y, blur, hex, alpha) {
   const c = hexToRgb(hex);
@@ -1503,6 +1560,15 @@ async function ensureComponentSection(pageName) {
 
 async function main() {
   await loadFonts();
+  // Warm the variable cache so individual builders can bind paints to
+  // Pulse tokens synchronously. 0 = user hasn't imported tokens.json yet.
+  const varCount = await loadColorVariables();
+  if (varCount > 0) {
+    // Log a sample so the user can confirm the format Tokens Studio used.
+    console.log(`[DS Builder] Loaded ${varCount} color variables. Sample names:`, sampleVariableNames(10));
+  } else {
+    console.log("[DS Builder] No color variables found — import figma-export/tokens.json via Tokens Studio to enable binding.");
+  }
 
   // Filter by the manifest menu command (empty string / "all" → everything).
   // When a user runs e.g. "🧩 Toasts only" from the plugin menu we rebuild
@@ -1558,10 +1624,11 @@ async function main() {
     const shortMsg = msg.length > 120 ? msg.slice(0, 117) + "…" : msg;
     figma.notify(`⚠ ${first.name} failed · ${shortMsg}`, { timeout: 12000, error: true });
   } else if (cmd === "all") {
-    figma.notify(`✓ Scaffolded ${foundations} Foundation + ${components} Component pages · ${gradientCount} gradient paint styles${legacyNote}`);
+    figma.notify(`✓ Scaffolded ${foundations} Foundation + ${components} Component pages · ${gradientCount} gradient styles · ${varCount} Pulse variables bound${legacyNote}`);
   } else {
     // Single-page run
-    figma.notify(`✓ Rebuilt ${builtPages[0].cfg.name} (other pages left untouched)`);
+    const varNote = varCount > 0 ? ` · ${varCount} Pulse variables bound` : " · (no Pulse variables found — import tokens.json via Tokens Studio to bind)";
+    figma.notify(`✓ Rebuilt ${builtPages[0].cfg.name}${varNote}`);
   }
   figma.closePlugin();
 }
