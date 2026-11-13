@@ -799,14 +799,16 @@ const TOAST_SHADOW = [
 function createToastIconBadge(intent) {
   const badge = figma.createFrame();
   badge.name = "icon";
-  badge.resize(20, 20);
-  badge.cornerRadius = 10;
-  badge.fills = solid(intent.color);
+  // Order matters: set layoutMode + FIXED sizing BEFORE resize, otherwise
+  // AUTO sizing collapses the frame to 0x0 when children get added.
   badge.layoutMode = "HORIZONTAL";
   badge.primaryAxisAlignItems = "CENTER";
   badge.counterAxisAlignItems = "CENTER";
   badge.primaryAxisSizingMode = "FIXED";
   badge.counterAxisSizingMode = "FIXED";
+  badge.resize(20, 20);
+  badge.cornerRadius = 10;
+  badge.fills = solid(intent.color);
   if (intent.glyph) {
     const g = text(intent.glyph, { size: 11, weight: "Bold", color: COLORS.white });
     badge.appendChild(g);
@@ -823,11 +825,12 @@ function createToastSpinner() {
 // Count pill (×N) — rounded gray chip, toggled by the Show-count boolean
 function createToastCountPill() {
   const pill = autoFrame("count", "HORIZONTAL", {
-    px: 8, py: 0, radius: 9999, fill: COLORS.gray[100],
+    px: 8, py: 2, radius: 9999, fill: COLORS.gray[100],
   });
   pill.primaryAxisSizingMode = "AUTO";
-  pill.counterAxisSizingMode = "FIXED";
-  pill.resize(32, 20);
+  pill.counterAxisSizingMode = "AUTO";
+  pill.primaryAxisAlignItems = "CENTER";
+  pill.counterAxisAlignItems = "CENTER";
   pill.visible = false;
   const t = text("×2", { size: 12, weight: "Semi Bold", color: COLORS.gray[700] });
   t.name = "count-label";
@@ -890,15 +893,15 @@ function createToastAction(action, state, layout) {
     inset.paddingTop = 6;
     inset.paddingBottom = 6;
     const btn = autoFrame("primary-cta", "HORIZONTAL", {
-      px: 14, py: 0, radius: 8, fill: null, shadow: SHADOW_XS,
+      px: 14, py: 8, radius: 8, fill: null, shadow: SHADOW_XS,
     });
     btn.fills = gradientBrandVertical();
     btn.strokes = solid(COLORS.brand[600]);
     btn.strokeWeight = 1;
     btn.strokeAlign = "INSIDE";
     btn.primaryAxisSizingMode = "AUTO";
-    btn.counterAxisSizingMode = "FIXED";
-    btn.resize(btn.width || 100, 36);
+    btn.counterAxisSizingMode = "AUTO";
+    btn.primaryAxisAlignItems = "CENTER";
     btn.counterAxisAlignItems = "CENTER";
     const label = text("Update rates", { size: 14, weight: "Semi Bold", color: COLORS.white });
     label.name = "action-label";
@@ -939,13 +942,12 @@ async function buildToastSet(parent) {
           cmp.layoutMode = "HORIZONTAL";
           cmp.primaryAxisAlignItems = "MIN";
           cmp.counterAxisAlignItems = "CENTER";
-          cmp.primaryAxisSizingMode = layout.fill ? "FIXED" : "AUTO";
+          // Auto-size on both axes — Figma throws when resize() is called
+          // on a FIXED/AUTO combination for ComponentNodes. Designers can
+          // stretch a full-width instance via layoutAlign="STRETCH" when
+          // dropping it into an auto-layout parent.
+          cmp.primaryAxisSizingMode = "AUTO";
           cmp.counterAxisSizingMode = "AUTO";
-          // Full-width toasts get sized to their layout's min; compact
-          // toasts auto-size to content. (minWidth/maxWidth on components
-          // isn't universally supported — designers can constrain the
-          // instance manually if needed.)
-          if (layout.fill) cmp.resize(layout.minW, 48);
           cmp.itemSpacing = 0;
           cmp.cornerRadius = 12;
           cmp.fills = solid(COLORS.white);
@@ -993,7 +995,8 @@ async function buildToastSet(parent) {
             cmp.appendChild(createToastClose());
           }
 
-          cmp.resize(cmp.width || layout.minW, cmp.height || 48);
+          // No explicit resize — auto-layout determines the final size
+          // from the content rail + action + close children.
           variants.push(cmp);
         }
       }
@@ -1523,8 +1526,12 @@ async function main() {
   const foundations = builtPages.filter(p => p.cfg.kind === "foundation").length;
   const components = builtPages.length - foundations;
   if (failed.length) {
-    const names = failed.map(f => f.name).join(", ");
-    figma.notify(`⚠ ${builtPages.length} ok · ${failed.length} failed: ${names} (see console)`, { timeout: 8000, error: true });
+    // Surface the first error message directly in the toast so the user
+    // doesn't have to open the Figma console to see what went wrong.
+    const first = failed[0];
+    const msg = (first.err && (first.err.message || String(first.err))) || "unknown error";
+    const shortMsg = msg.length > 120 ? msg.slice(0, 117) + "…" : msg;
+    figma.notify(`⚠ ${first.name} failed · ${shortMsg}`, { timeout: 12000, error: true });
   } else if (cmd === "all") {
     figma.notify(`✓ Scaffolded ${foundations} Foundation + ${components} Component pages · ${gradientCount} gradient paint styles${legacyNote}`);
   } else {
