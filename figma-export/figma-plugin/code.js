@@ -1463,12 +1463,20 @@ async function ensureComponentSection(pageName) {
 async function main() {
   await loadFonts();
 
-  // Build each component on its own page
+  // Build each component on its own page. Each iteration is isolated so
+  // one page's failure never blocks the rest — Toasts (the last item) was
+  // getting skipped when an earlier page threw.
   const builtPages = [];
+  const failed = [];
   for (const cfg of COMPONENT_PAGES) {
-    const { page, section } = await ensureComponentSection(cfg.name);
-    await cfg.build(section);
-    builtPages.push({ cfg, page, section });
+    try {
+      const { page, section } = await ensureComponentSection(cfg.name);
+      await cfg.build(section);
+      builtPages.push({ cfg, page, section });
+    } catch (err) {
+      console.error(`[DS Builder] ${cfg.name} failed:`, err);
+      failed.push({ name: cfg.name, err });
+    }
   }
 
   // Create paint styles for all gradients (Brand · Soft · Multi · Radial · Bg = 47 total)
@@ -1485,7 +1493,12 @@ async function main() {
 
   const foundations = builtPages.filter(p => p.cfg.kind === "foundation").length;
   const components = builtPages.length - foundations;
-  figma.notify(`✓ Scaffolded ${foundations} Foundation + ${components} Component pages · ${gradientCount} gradient paint styles${legacyNote}`);
+  if (failed.length) {
+    const names = failed.map(f => f.name).join(", ");
+    figma.notify(`⚠ Shipped ${foundations}+${components} pages · ${failed.length} failed: ${names} (see console)`, { timeout: 8000, error: true });
+  } else {
+    figma.notify(`✓ Scaffolded ${foundations} Foundation + ${components} Component pages · ${gradientCount} gradient paint styles${legacyNote}`);
+  }
   figma.closePlugin();
 }
 
