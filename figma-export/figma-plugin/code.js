@@ -933,9 +933,11 @@ async function buildToastSet(parent) {
           cmp.counterAxisAlignItems = "CENTER";
           cmp.primaryAxisSizingMode = layout.fill ? "FIXED" : "AUTO";
           cmp.counterAxisSizingMode = "AUTO";
-          cmp.minWidth = layout.minW;
-          cmp.maxWidth = layout.maxW;
-          if (layout.fill) cmp.resize(layout.minW, cmp.height || 48);
+          // Full-width toasts get sized to their layout's min; compact
+          // toasts auto-size to content. (minWidth/maxWidth on components
+          // isn't universally supported — designers can constrain the
+          // instance manually if needed.)
+          if (layout.fill) cmp.resize(layout.minW, 48);
           cmp.itemSpacing = 0;
           cmp.cornerRadius = 12;
           cmp.fills = solid(COLORS.white);
@@ -1209,23 +1211,27 @@ function contrastBadge(hex) {
 }
 
 function createColorSwatch(hex, step) {
-  // Outer column — color block on top, meta row below
-  const col = autoFrame(`swatch-${step}`, "VERTICAL", { px: 0, py: 0, gap: 6, fill: null });
+  // Outer column — color block on top, contrast badge, step, hex
+  const col = autoFrame(`swatch-${step}`, "VERTICAL", { px: 0, py: 0, gap: 4, fill: null });
   col.primaryAxisSizingMode = "AUTO";
   col.counterAxisSizingMode = "FIXED";
   col.resize(84, 100);
 
-  // Color block
-  const block = figma.createFrame();
-  block.name = "color";
+  // Color block — auto-layout so the badge sits top-left cleanly
+  const block = autoFrame(`color-${step}`, "HORIZONTAL", {
+    px: 8, py: 8, fill: hex, radius: 6,
+  });
+  block.primaryAxisSizingMode = "FIXED";
+  block.counterAxisSizingMode = "FIXED";
   block.resize(84, 60);
-  block.cornerRadius = 6;
-  block.fills = solid(hex);
+  block.primaryAxisAlignItems = "MIN";
+  block.counterAxisAlignItems = "MIN";
   block.strokes = solid(COLORS.gray[200]);
   block.strokeWeight = 1;
   block.strokeAlign = "INSIDE";
 
-  // Contrast badge overlayed on the color block (top-left)
+  // Contrast badge — just plain text at the top-left, 9px semibold.
+  // Colors near white get dark text so it's legible.
   const b = contrastBadge(hex);
   const badgeText = text(b.label, {
     size: 9,
@@ -1233,20 +1239,16 @@ function createColorSwatch(hex, step) {
     color: b.onDark ? COLORS.white : COLORS.gray[800],
   });
   badgeText.name = "contrast";
-  badgeText.x = 8;
-  badgeText.y = 8;
   block.appendChild(badgeText);
   col.appendChild(block);
 
   // Meta — step + hex
-  const meta = autoFrame(`meta-${step}`, "VERTICAL", { px: 0, py: 0, gap: 1, fill: null });
-  meta.primaryAxisSizingMode = "AUTO";
-  meta.counterAxisSizingMode = "STRETCH";
   const stepLbl = text(step, { size: 11, weight: "Semi Bold", color: COLORS.gray[900] });
+  stepLbl.name = "step";
+  col.appendChild(stepLbl);
   const hexLbl = text(hex, { size: 9, weight: "Regular", color: COLORS.gray[500] });
-  meta.appendChild(stepLbl);
-  meta.appendChild(hexLbl);
-  col.appendChild(meta);
+  hexLbl.name = "hex";
+  col.appendChild(hexLbl);
 
   return col;
 }
