@@ -794,12 +794,14 @@ const TOAST_SHADOW = [
   dropShadow(0, 12, 16, "#101828", 0.08),
 ];
 
-// 20px colored disc with a glyph placeholder — designers can swap for a
-// real Lucide icon via the Lucide Figma plugin (same pattern as Button).
-function createToastIconBadge(intent) {
+// ─── Helpers — simple, auto-sized, no STRETCH/layoutGrow gymnastics ─────
+
+// 20px colored disc with a glyph placeholder — designers swap for a real
+// Lucide icon via the Lucide Figma plugin (same pattern as Button).
+function createToastIcon(intent) {
   const badge = figma.createFrame();
   badge.name = "icon";
-  // Order matters: set layoutMode + FIXED sizing BEFORE resize, otherwise
+  // Order matters: layoutMode + FIXED sizing BEFORE resize, otherwise
   // AUTO sizing collapses the frame to 0x0 when children get added.
   badge.layoutMode = "HORIZONTAL";
   badge.primaryAxisAlignItems = "CENTER";
@@ -817,15 +819,13 @@ function createToastIconBadge(intent) {
 }
 
 function createToastSpinner() {
-  const s = createSpinnerSlot("spinner", 20, COLORS.gray[500]);
-  s.visible = false;
-  return s;
+  return createSpinnerSlot("spinner", 20, COLORS.gray[500]);
 }
 
-// Count pill (×N) — rounded gray chip, toggled by the Show-count boolean
+// Count pill (×N) — rounded gray chip, toggled by the Show-count prop.
 function createToastCountPill() {
   const pill = autoFrame("count", "HORIZONTAL", {
-    px: 8, py: 2, radius: 9999, fill: COLORS.gray[100],
+    px: 8, py: 2, radius: 9999, fill: COLORS.gray[100], gap: 0,
   });
   pill.primaryAxisSizingMode = "AUTO";
   pill.counterAxisSizingMode = "AUTO";
@@ -841,11 +841,10 @@ function createToastCountPill() {
 // Message row — subject (bold) and message (regular gray-600)
 function createToastMessageRow() {
   const row = autoFrame("message-row", "HORIZONTAL", { gap: 4, fill: null });
-  row.layoutAlign = "STRETCH";
   row.primaryAxisSizingMode = "AUTO";
   row.counterAxisSizingMode = "AUTO";
+  row.primaryAxisAlignItems = "MIN";
   row.counterAxisAlignItems = "CENTER";
-  row.layoutGrow = 1;
   const subject = text("Saved.", { size: 14, weight: "Semi Bold", color: COLORS.gray[900] });
   subject.name = "subject";
   row.appendChild(subject);
@@ -855,72 +854,68 @@ function createToastMessageRow() {
   return row;
 }
 
-// A 1px-wide vertical divider — used between content rail / action / close
-function createDivider() {
+// 1px vertical divider. Regular (non-autolayout) frame with explicit size
+// so the parent HORIZONTAL auto-layout accepts it without any STRETCH
+// trickery — the height matches the toast's natural 48px content rail.
+function createVerticalDivider() {
   const d = figma.createFrame();
   d.name = "divider";
   d.resize(1, 48);
-  d.layoutAlign = "STRETCH";
   d.fills = solid(COLORS.gray[200]);
   return d;
 }
 
-// Action zone — text button (divider-separated) OR inset primary button
-function createToastAction(action, state, layout) {
-  if (action.text) {
-    const wrap = autoFrame("action", "HORIZONTAL", {
-      px: layout.actionPadX, py: 0, fill: null,
-    });
-    wrap.primaryAxisSizingMode = "AUTO";
-    wrap.counterAxisSizingMode = "AUTO";
-    wrap.layoutAlign = "STRETCH";
-    wrap.counterAxisAlignItems = "CENTER";
-    const label = text("Retry", { size: 14, weight: "Semi Bold", color: COLORS.gray[900] });
-    label.name = "action-label";
-    wrap.appendChild(label);
-    if (state.actionBusy) wrap.opacity = 0.6;
-    return wrap;
-  }
-  if (action.primary) {
-    // Inset gradient CTA — 6px padding on three sides, 8px gap to content
-    const inset = autoFrame("action", "HORIZONTAL", {
-      px: 8, py: 6, fill: null,
-    });
-    inset.primaryAxisSizingMode = "AUTO";
-    inset.counterAxisSizingMode = "AUTO";
-    inset.layoutAlign = "STRETCH";
-    inset.counterAxisAlignItems = "CENTER";
-    inset.paddingLeft = 8;
-    inset.paddingRight = 6;
-    inset.paddingTop = 6;
-    inset.paddingBottom = 6;
-    const btn = autoFrame("primary-cta", "HORIZONTAL", {
-      px: 14, py: 8, radius: 8, fill: null, shadow: SHADOW_XS,
-    });
-    btn.fills = gradientBrandVertical();
-    btn.strokes = solid(COLORS.brand[600]);
-    btn.strokeWeight = 1;
-    btn.strokeAlign = "INSIDE";
-    btn.primaryAxisSizingMode = "AUTO";
-    btn.counterAxisSizingMode = "AUTO";
-    btn.primaryAxisAlignItems = "CENTER";
-    btn.counterAxisAlignItems = "CENTER";
-    const label = text("Update rates", { size: 14, weight: "Semi Bold", color: COLORS.white });
-    label.name = "action-label";
-    btn.appendChild(label);
-    if (state.actionBusy) btn.opacity = 0.6;
-    inset.appendChild(btn);
-    return inset;
-  }
-  return null;
-}
-
-// Close zone — 32px X button with its own left divider
-function createToastClose() {
-  const wrap = autoFrame("close", "HORIZONTAL", { px: 8, py: 0, fill: null });
+// Action zones — text (divider-separated) OR inset primary CTA
+function createToastTextAction(busy, padX) {
+  const wrap = autoFrame("action", "HORIZONTAL", {
+    px: padX, py: 14, fill: null, gap: 8,
+  });
   wrap.primaryAxisSizingMode = "AUTO";
   wrap.counterAxisSizingMode = "AUTO";
-  wrap.layoutAlign = "STRETCH";
+  wrap.primaryAxisAlignItems = "CENTER";
+  wrap.counterAxisAlignItems = "CENTER";
+  const label = text("Retry", { size: 14, weight: "Semi Bold", color: COLORS.gray[900] });
+  label.name = "action-label";
+  wrap.appendChild(label);
+  if (busy) wrap.opacity = 0.6;
+  return wrap;
+}
+
+function createToastPrimaryCTA(busy) {
+  const inset = autoFrame("action", "HORIZONTAL", {
+    px: 8, py: 6, fill: null, gap: 0,
+  });
+  inset.primaryAxisSizingMode = "AUTO";
+  inset.counterAxisSizingMode = "AUTO";
+  inset.primaryAxisAlignItems = "CENTER";
+  inset.counterAxisAlignItems = "CENTER";
+  const btn = autoFrame("primary-cta", "HORIZONTAL", {
+    px: 14, py: 8, radius: 8, fill: null, shadow: SHADOW_XS, gap: 0,
+  });
+  btn.fills = gradientBrandVertical();
+  btn.strokes = solid(COLORS.brand[600]);
+  btn.strokeWeight = 1;
+  btn.strokeAlign = "INSIDE";
+  btn.primaryAxisSizingMode = "AUTO";
+  btn.counterAxisSizingMode = "AUTO";
+  btn.primaryAxisAlignItems = "CENTER";
+  btn.counterAxisAlignItems = "CENTER";
+  const label = text("Update rates", { size: 14, weight: "Semi Bold", color: COLORS.white });
+  label.name = "action-label";
+  btn.appendChild(label);
+  if (busy) btn.opacity = 0.6;
+  inset.appendChild(btn);
+  return inset;
+}
+
+// Close zone — 32px X button
+function createToastClose() {
+  const wrap = autoFrame("close", "HORIZONTAL", {
+    px: 12, py: 12, fill: null, gap: 0,
+  });
+  wrap.primaryAxisSizingMode = "AUTO";
+  wrap.counterAxisSizingMode = "AUTO";
+  wrap.primaryAxisAlignItems = "CENTER";
   wrap.counterAxisAlignItems = "CENTER";
   const x = text("✕", { size: 14, weight: "Medium", color: COLORS.gray[500] });
   x.name = "close-glyph";
@@ -929,11 +924,6 @@ function createToastClose() {
 }
 
 async function buildToastSet(parent) {
-  // Idempotent — tear down an existing Toast set before rebuilding
-  for (const child of parent.children.slice()) {
-    if (child.name === "Toast") child.remove();
-  }
-
   const variants = [];
   for (const layout of TOAST_LAYOUTS) {
     for (const intent of TOAST_INTENTS) {
@@ -942,13 +932,13 @@ async function buildToastSet(parent) {
           const cmp = figma.createComponent();
           cmp.name = `Layout=${layout.label}, Intent=${intent.label}, Action=${action.label}, State=${state.label}`;
 
+          // Plain HORIZONTAL auto-layout, both axes AUTO. Matches the
+          // Tooltip builder pattern exactly — no resize, no STRETCH, no
+          // layoutGrow. The toast hugs its content; the ComponentSet
+          // stacks variants vertically.
           cmp.layoutMode = "HORIZONTAL";
           cmp.primaryAxisAlignItems = "MIN";
           cmp.counterAxisAlignItems = "CENTER";
-          // Auto-size on both axes — Figma throws when resize() is called
-          // on a FIXED/AUTO combination for ComponentNodes. Designers can
-          // stretch a full-width instance via layoutAlign="STRETCH" when
-          // dropping it into an auto-layout parent.
           cmp.primaryAxisSizingMode = "AUTO";
           cmp.counterAxisSizingMode = "AUTO";
           cmp.itemSpacing = 0;
@@ -959,55 +949,48 @@ async function buildToastSet(parent) {
           cmp.strokeAlign = "INSIDE";
           cmp.effects = TOAST_SHADOW;
 
-          // ─ Content rail — icon + message + count pill
+          // Content rail — icon + message + count pill
           const rail = autoFrame("content", "HORIZONTAL", {
             px: layout.padX, py: 12, gap: 10, fill: null,
           });
           rail.primaryAxisSizingMode = "AUTO";
           rail.counterAxisSizingMode = "AUTO";
-          rail.layoutAlign = "STRETCH";
+          rail.primaryAxisAlignItems = "MIN";
           rail.counterAxisAlignItems = "CENTER";
-          rail.layoutGrow = 1;
 
-          // Icon: colored disc (hidden on neutral) · spinner (loading only)
-          const icon = createToastIconBadge(intent);
+          const icon = createToastIcon(intent);
           icon.visible = intent.hasIcon && !state.spinner;
           rail.appendChild(icon);
           const spinner = createToastSpinner();
           spinner.visible = state.spinner;
           rail.appendChild(spinner);
 
-          // Message column — subject + message
           rail.appendChild(createToastMessageRow());
-
-          // Count pill (shown via Show-count boolean below)
           rail.appendChild(createToastCountPill());
 
           cmp.appendChild(rail);
 
-          // ─ Action zone
-          const actionNode = createToastAction(action, state, layout);
-          if (actionNode) {
-            // Divider before the action (text variants only; primary is inset)
-            if (action.text) cmp.appendChild(createDivider());
-            cmp.appendChild(actionNode);
+          // Action zone
+          if (action.text) {
+            cmp.appendChild(createVerticalDivider());
+            cmp.appendChild(createToastTextAction(state.actionBusy, layout.actionPadX));
+          } else if (action.primary) {
+            cmp.appendChild(createToastPrimaryCTA(state.actionBusy));
           }
 
-          // ─ Close zone (hidden during loading)
+          // Close zone (hidden during loading)
           if (action.close && !state.spinner) {
-            cmp.appendChild(createDivider());
+            cmp.appendChild(createVerticalDivider());
             cmp.appendChild(createToastClose());
           }
 
-          // No explicit resize — auto-layout determines the final size
-          // from the content rail + action + close children.
           variants.push(cmp);
         }
       }
     }
   }
 
-  // Combine into the variant set
+  // Combine into the variant set, stacked vertically
   const set = figma.combineAsVariants(variants, parent);
   set.name = "Toast";
   set.description =
@@ -1015,6 +998,8 @@ async function buildToastSet(parent) {
   set.layoutMode = "VERTICAL";
   set.primaryAxisSizingMode = "AUTO";
   set.counterAxisSizingMode = "AUTO";
+  set.primaryAxisAlignItems = "MIN";
+  set.counterAxisAlignItems = "MIN";
   set.itemSpacing = 12;
   set.paddingTop = 32; set.paddingBottom = 32; set.paddingLeft = 32; set.paddingRight = 32;
   set.fills = solid(COLORS.gray[50]);
@@ -1022,8 +1007,7 @@ async function buildToastSet(parent) {
   set.strokes = solid(COLORS.gray[200]);
   set.strokeWeight = 1;
 
-  // Shared component properties — bound recursively since text nodes are
-  // nested inside the auto-layout rows
+  // Shared component properties (recursive binding)
   const subjectProp   = set.addComponentProperty("Subject",      "TEXT",    "Saved.");
   const messageProp   = set.addComponentProperty("Message",      "TEXT",    "Your changes are safe.");
   const actionProp    = set.addComponentProperty("Action label", "TEXT",    "Retry");
