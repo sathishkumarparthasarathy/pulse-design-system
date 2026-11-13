@@ -37,8 +37,40 @@ function hexToRgb(hex) {
   const h = hex.replace("#", "");
   return { r: parseInt(h.slice(0,2),16)/255, g: parseInt(h.slice(2,4),16)/255, b: parseInt(h.slice(4,6),16)/255 };
 }
-function solid(hex, opacity = 1) {
-  return [{ type: "SOLID", color: hexToRgb(hex), opacity }];
+function solid(hex, opacity = 1, varPath) {
+  // Build the paint, then bind it to the Pulse token variable if one
+  // exists (the user must have imported figma-export/tokens.json via
+  // Tokens Studio first). Falls back silently to raw hex when no
+  // matching variable is found — so the plugin still works on fresh
+  // files that haven't been seeded with tokens yet.
+  let paint = { type: "SOLID", color: hexToRgb(hex), opacity };
+  if (varPath) {
+    const variable = getCachedColorVariable(varPath);
+    if (variable && figma.variables && figma.variables.setBoundVariableForPaint) {
+      try {
+        paint = figma.variables.setBoundVariableForPaint(paint, "color", variable);
+      } catch (e) { /* swallow — keep raw-hex fallback */ }
+    }
+  }
+  return [paint];
+}
+
+// Variable lookup cache so we don't scan every local variable for every
+// paint. Populated on first use.
+const _colorVarCache = new Map();
+function getCachedColorVariable(name) {
+  if (_colorVarCache.has(name)) return _colorVarCache.get(name);
+  let found = null;
+  try {
+    if (figma.variables && figma.variables.getLocalVariables) {
+      const all = figma.variables.getLocalVariables("COLOR");
+      for (const v of all) {
+        if (v.name === name) { found = v; break; }
+      }
+    }
+  } catch (e) { /* ignore */ }
+  _colorVarCache.set(name, found);
+  return found;
 }
 function dropShadow(x, y, blur, hex, alpha) {
   const c = hexToRgb(hex);
@@ -60,7 +92,9 @@ function text(content, opts = {}) {
   t.fontName = { family: "Inter", style: opts.weight || "Semi Bold" };
   t.fontSize = opts.size || 14;
   t.characters = content;
-  if (opts.color) t.fills = solid(opts.color);
+  // opts.colorVar is the Pulse token path (e.g. "color/gray/900"); the fill
+  // gets bound to that Figma Variable when it exists, otherwise raw hex.
+  if (opts.color) t.fills = solid(opts.color, 1, opts.colorVar);
   if (opts.letterSpacing !== undefined) t.letterSpacing = { value: opts.letterSpacing, unit: "PERCENT" };
   return t;
 }
@@ -765,13 +799,16 @@ const TOAST_LAYOUTS = [
 ];
 
 // Semantic colors matching src/components/Toast.tsx (intent icon strokes)
+// `varPath` is the Figma variable path created by Tokens Studio when the
+// user imports figma-export/tokens.json. Fills get bound to it when
+// present, otherwise the raw hex falls through.
 const TOAST_INTENTS = [
-  { id: "info",    label: "Info",    hasIcon: true,  color: "#1570EF", glyph: "i" },
-  { id: "success", label: "Success", hasIcon: true,  color: "#059669", glyph: "✓" },
+  { id: "info",    label: "Info",    hasIcon: true,  color: "#1570EF", varPath: "color/info/600",    glyph: "i" },
+  { id: "success", label: "Success", hasIcon: true,  color: "#059669", varPath: "color/success/600", glyph: "✓" },
   // warning-700 — 600 fails WCAG 3:1 against white
-  { id: "warning", label: "Warning", hasIcon: true,  color: "#A16207", glyph: "!" },
-  { id: "error",   label: "Error",   hasIcon: true,  color: "#DC2626", glyph: "✕" },
-  { id: "neutral", label: "Neutral", hasIcon: false, color: COLORS.gray[500], glyph: "" },
+  { id: "warning", label: "Warning", hasIcon: true,  color: "#A16207", varPath: "color/warning/700", glyph: "!" },
+  { id: "error",   label: "Error",   hasIcon: true,  color: "#DC2626", varPath: "color/error/600",   glyph: "✕" },
+  { id: "neutral", label: "Neutral", hasIcon: false, color: COLORS.gray[500], varPath: "color/gray/500", glyph: "" },
 ];
 
 const TOAST_ACTIONS = [
@@ -810,7 +847,7 @@ function createToastIcon(intent) {
   badge.counterAxisSizingMode = "FIXED";
   badge.resize(20, 20);
   badge.cornerRadius = 10;
-  badge.fills = solid(intent.color);
+  badge.fills = solid(intent.color, 1, intent.varPath);
   if (intent.glyph) {
     const g = text(intent.glyph, { size: 11, weight: "Bold", color: COLORS.white });
     badge.appendChild(g);
@@ -832,7 +869,7 @@ function createToastCountPill() {
   pill.primaryAxisAlignItems = "CENTER";
   pill.counterAxisAlignItems = "CENTER";
   pill.visible = false;
-  const t = text("×2", { size: 12, weight: "Semi Bold", color: COLORS.gray[700] });
+  const t = text("×2", { size: 12, weight: "Semi Bold", color: COLORS.gray[700], colorVar: "color/gray/700" });
   t.name = "count-label";
   pill.appendChild(t);
   return pill;
@@ -845,10 +882,10 @@ function createToastMessageRow() {
   row.counterAxisSizingMode = "AUTO";
   row.primaryAxisAlignItems = "MIN";
   row.counterAxisAlignItems = "CENTER";
-  const subject = text("Saved.", { size: 14, weight: "Semi Bold", color: COLORS.gray[900] });
+  const subject = text("Saved.", { size: 14, weight: "Semi Bold", color: COLORS.gray[900], colorVar: "color/gray/900" });
   subject.name = "subject";
   row.appendChild(subject);
-  const message = text("Your changes are safe.", { size: 14, weight: "Regular", color: COLORS.gray[600] });
+  const message = text("Your changes are safe.", { size: 14, weight: "Regular", color: COLORS.gray[600], colorVar: "color/gray/600" });
   message.name = "message";
   row.appendChild(message);
   return row;
@@ -861,7 +898,7 @@ function createVerticalDivider() {
   const d = figma.createFrame();
   d.name = "divider";
   d.resize(1, 48);
-  d.fills = solid(COLORS.gray[200]);
+  d.fills = solid(COLORS.gray[200], 1, "color/gray/200");
   return d;
 }
 
@@ -874,7 +911,7 @@ function createToastTextAction(busy, padX) {
   wrap.counterAxisSizingMode = "AUTO";
   wrap.primaryAxisAlignItems = "CENTER";
   wrap.counterAxisAlignItems = "CENTER";
-  const label = text("Retry", { size: 14, weight: "Semi Bold", color: COLORS.gray[900] });
+  const label = text("Retry", { size: 14, weight: "Semi Bold", color: COLORS.gray[900], colorVar: "color/gray/900" });
   label.name = "action-label";
   wrap.appendChild(label);
   if (busy) wrap.opacity = 0.6;
@@ -893,7 +930,7 @@ function createToastPrimaryCTA(busy) {
     px: 14, py: 8, radius: 8, fill: null, shadow: SHADOW_XS, gap: 0,
   });
   btn.fills = gradientBrandVertical();
-  btn.strokes = solid(COLORS.brand[600]);
+  btn.strokes = solid(COLORS.brand[600], 1, "color/brand/600");
   btn.strokeWeight = 1;
   btn.strokeAlign = "INSIDE";
   btn.primaryAxisSizingMode = "AUTO";
@@ -917,7 +954,7 @@ function createToastClose() {
   wrap.counterAxisSizingMode = "AUTO";
   wrap.primaryAxisAlignItems = "CENTER";
   wrap.counterAxisAlignItems = "CENTER";
-  const x = text("✕", { size: 14, weight: "Medium", color: COLORS.gray[500] });
+  const x = text("✕", { size: 14, weight: "Medium", color: COLORS.gray[500], colorVar: "color/gray/500" });
   x.name = "close-glyph";
   wrap.appendChild(x);
   return wrap;
@@ -943,8 +980,8 @@ async function buildToastSet(parent) {
           cmp.counterAxisSizingMode = "AUTO";
           cmp.itemSpacing = 0;
           cmp.cornerRadius = 12;
-          cmp.fills = solid(COLORS.white);
-          cmp.strokes = solid(COLORS.gray[200]);
+          cmp.fills = solid(COLORS.white);  // no token for pure white; raw hex is fine
+          cmp.strokes = solid(COLORS.gray[200], 1, "color/gray/200");
           cmp.strokeWeight = 1;
           cmp.strokeAlign = "INSIDE";
           cmp.effects = TOAST_SHADOW;
@@ -1002,9 +1039,9 @@ async function buildToastSet(parent) {
   set.counterAxisAlignItems = "MIN";
   set.itemSpacing = 12;
   set.paddingTop = 32; set.paddingBottom = 32; set.paddingLeft = 32; set.paddingRight = 32;
-  set.fills = solid(COLORS.gray[50]);
+  set.fills = solid(COLORS.gray[50], 1, "color/gray/50");
   set.cornerRadius = 16;
-  set.strokes = solid(COLORS.gray[200]);
+  set.strokes = solid(COLORS.gray[200], 1, "color/gray/200");
   set.strokeWeight = 1;
 
   // Shared component properties (recursive binding)
