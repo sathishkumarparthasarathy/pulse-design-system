@@ -1,8 +1,11 @@
 // Scienaptic DS — Component Builder
-// Scaffolds Button, Badge, Avatar, Input, Card, Tooltip, Toast on a
-// "Components" page. Run once from Plugins → Development → "Scienaptic
-// DS — Component Builder". The Toast builder is idempotent (removes an
-// existing "Toast" set before rebuilding) so re-runs are safe.
+// Scaffolds each component onto its OWN page (🧩 Buttons, 🧩 Badges,
+// 🧩 Avatars, 🧩 Inputs, 🧩 Cards, 🧩 Tooltips, 🧩 Toasts) so designers
+// can jump straight to a component via Figma's page sidebar. Run from
+// Plugins → Development → "Scienaptic DS — Component Builder". Re-runs
+// are safe: each page's "Base Components" section is torn down and
+// rebuilt from scratch, so variant counts / props stay in sync with
+// this file.
 
 /* ─── Colors (mirror of tokens.json — kept inline so the plugin runs offline) ─── */
 const COLORS = {
@@ -1137,42 +1140,68 @@ async function buildGradientStyles() {
 }
 
 /* ─── Page setup + execute ───────────────────────────────────────── */
-async function ensureComponentsPage() {
-  let page = figma.root.children.find(p => p.name === "🧩 Components");
+// One page per component, so designers can jump straight to Buttons or
+// Toasts in Figma's page sidebar. The 🧩 prefix keeps them grouped and
+// alphabetically ordered together.
+const COMPONENT_PAGES = [
+  { name: "🧩 Buttons",  build: buildButtonSet  },
+  { name: "🧩 Badges",   build: buildBadgeSet   },
+  { name: "🧩 Avatars",  build: buildAvatarSet  },
+  { name: "🧩 Inputs",   build: buildInput      },
+  { name: "🧩 Cards",    build: buildCard       },
+  { name: "🧩 Tooltips", build: buildTooltipSet },
+  { name: "🧩 Toasts",   build: buildToastSet   },
+];
+
+async function ensurePage(name) {
+  let page = figma.root.children.find(p => p.name === name);
   if (!page) {
     page = figma.createPage();
-    page.name = "🧩 Components";
+    page.name = name;
   }
-  await figma.setCurrentPageAsync(page);
   return page;
 }
 
-async function main() {
-  await loadFonts();
-  const page = await ensureComponentsPage();
-
-  // Section frame to hold everything
+// Prepares a fresh "Base Components" section on the given page. If one
+// already exists (re-run), it's torn down so the rebuild stays clean.
+async function ensureComponentSection(pageName) {
+  const page = await ensurePage(pageName);
+  await figma.setCurrentPageAsync(page);
+  for (const child of page.children.slice()) {
+    if (child.name === "Base Components") child.remove();
+  }
   const section = autoFrame("Base Components", "VERTICAL", { gap: 32, px: 32, py: 32, fill: COLORS.gray[50], radius: 16 });
   section.primaryAxisSizingMode = "AUTO";
   section.counterAxisSizingMode = "AUTO";
   section.layoutAlign = "MIN";
   page.appendChild(section);
+  return { page, section };
+}
 
-  await buildButtonSet(section);
-  await buildBadgeSet(section);
-  await buildAvatarSet(section);
-  await buildInput(section);
-  await buildCard(section);
-  await buildTooltipSet(section);
-  await buildToastSet(section);
+async function main() {
+  await loadFonts();
+
+  // Build each component on its own page
+  const builtPages = [];
+  for (const cfg of COMPONENT_PAGES) {
+    const { page, section } = await ensureComponentSection(cfg.name);
+    await cfg.build(section);
+    builtPages.push({ cfg, page, section });
+  }
 
   // Create paint styles for all gradients (Brand · Soft · Multi · Radial · Bg = 47 total)
   const gradientCount = await buildGradientStyles();
 
-  // Center on the new section
-  figma.viewport.scrollAndZoomIntoView([section]);
+  // Center on the Buttons page so designers land somewhere familiar
+  const first = builtPages[0];
+  await figma.setCurrentPageAsync(first.page);
+  figma.viewport.scrollAndZoomIntoView([first.section]);
 
-  figma.notify(`✓ Scaffolded 7 component sets · ${gradientCount} gradient paint styles created`);
+  // Mention the legacy single "🧩 Components" page so the user can delete it
+  const legacy = figma.root.children.find(p => p.name === "🧩 Components");
+  const legacyNote = legacy ? " · legacy 🧩 Components page can now be deleted" : "";
+
+  figma.notify(`✓ Scaffolded ${builtPages.length} component pages · ${gradientCount} gradient paint styles created${legacyNote}`);
   figma.closePlugin();
 }
 

@@ -85,7 +85,7 @@ Programmatic scaffolding — runs the Plugin API to create Button, Badge, Avatar
 1. Make sure you're in your design file (Pulse)
 2. **Menu → Plugins → Development → Scienaptic DS — Component Builder**
 3. Wait ~5 seconds — a toast confirms scaffolding is done
-4. The viewport jumps to a new **🧩 Components** page with all 7 component sets laid out
+4. The plugin creates one page per component (**🧩 Buttons**, **🧩 Badges**, **🧩 Avatars**, **🧩 Inputs**, **🧩 Cards**, **🧩 Tooltips**, **🧩 Toasts**) and lands you on the Buttons page
 
 ### What it creates
 | Component | Variants |
@@ -137,7 +137,8 @@ Figma's REST API can't create components (only read them). The Plugin API is the
 Open the file. You should see:
 - **Variables panel** (right sidebar in Design mode) showing `primitives` and `semantic` collections
 - **🎨 Icons** page with all icon components
-- **🧩 Components** page with 7 component sets (Button, Badge, Avatar, Input, Card, Tooltip, Toast) arranged vertically inside a `Base Components` section frame
+- **7 component pages** (🧩 Buttons, 🧩 Badges, 🧩 Avatars, 🧩 Inputs, 🧩 Cards, 🧩 Tooltips, 🧩 Toasts) — each holds a `Base Components` section with that component's variant set
+- Older single `🧩 Components` page from a previous plugin run can be deleted manually
 
 Click any Button instance → in the right panel you'll see variant dropdowns for `hierarchy` and `size`.
 
@@ -174,7 +175,7 @@ When you add new tokens or components in code:
 | Tokens Studio import says "Invalid JSON" | Make sure you selected the right file — `figma-export/tokens.json`, not the `tokens/` folder |
 | Plugin shows "Error: cannot read property X" | You're in the wrong editor type — Figma design file required (not FigJam) |
 | Variables don't appear in the Variables panel | Click **"Push to Figma"** in Tokens Studio — import alone doesn't sync; you need the push step |
-| Plugin runs but no components appear | Check the page list (top-left sidebar) — it created **🧩 Components** as a new page; switch to it |
+| Plugin runs but no components appear | Check the page list (top-left sidebar) — the plugin creates one page per component prefixed with **🧩** (Buttons, Badges, Avatars, Inputs, Cards, Tooltips, Toasts); switch to the one you want |
 
 ---
 
