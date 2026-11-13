@@ -872,7 +872,8 @@ function createToastAction(action, state, layout) {
       px: layout.actionPadX, py: 0, fill: null,
     });
     wrap.primaryAxisSizingMode = "AUTO";
-    wrap.counterAxisSizingMode = "STRETCH";
+    wrap.counterAxisSizingMode = "AUTO";
+    wrap.layoutAlign = "STRETCH";
     wrap.counterAxisAlignItems = "CENTER";
     const label = text("Retry", { size: 14, weight: "Semi Bold", color: COLORS.gray[900] });
     label.name = "action-label";
@@ -886,7 +887,8 @@ function createToastAction(action, state, layout) {
       px: 8, py: 6, fill: null,
     });
     inset.primaryAxisSizingMode = "AUTO";
-    inset.counterAxisSizingMode = "STRETCH";
+    inset.counterAxisSizingMode = "AUTO";
+    inset.layoutAlign = "STRETCH";
     inset.counterAxisAlignItems = "CENTER";
     inset.paddingLeft = 8;
     inset.paddingRight = 6;
@@ -917,7 +919,8 @@ function createToastAction(action, state, layout) {
 function createToastClose() {
   const wrap = autoFrame("close", "HORIZONTAL", { px: 8, py: 0, fill: null });
   wrap.primaryAxisSizingMode = "AUTO";
-  wrap.counterAxisSizingMode = "STRETCH";
+  wrap.counterAxisSizingMode = "AUTO";
+  wrap.layoutAlign = "STRETCH";
   wrap.counterAxisAlignItems = "CENTER";
   const x = text("✕", { size: 14, weight: "Medium", color: COLORS.gray[500] });
   x.name = "close-glyph";
@@ -961,7 +964,8 @@ async function buildToastSet(parent) {
             px: layout.padX, py: 12, gap: 10, fill: null,
           });
           rail.primaryAxisSizingMode = "AUTO";
-          rail.counterAxisSizingMode = "STRETCH";
+          rail.counterAxisSizingMode = "AUTO";
+          rail.layoutAlign = "STRETCH";
           rail.counterAxisAlignItems = "CENTER";
           rail.layoutGrow = 1;
 
