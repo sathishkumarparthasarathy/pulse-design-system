@@ -151,7 +151,16 @@ function text(content, opts = {}) {
   t.characters = content;
   // opts.colorVar is the Pulse token path (e.g. "color/gray/900"); the fill
   // gets bound to that Figma Variable when it exists, otherwise raw hex.
-  if (opts.color) t.fills = solid(opts.color, 1, opts.colorVar);
+  if (opts.color) {
+    const paints = solid(opts.color, 1, opts.colorVar);
+    t.fills = paints;
+    // TextNodes need the bound-variable paint applied to the character
+    // range as well — setting `fills` alone doesn't propagate the
+    // binding to the characters in some Figma builds.
+    if (opts.colorVar && t.setRangeFills && content.length > 0) {
+      try { t.setRangeFills(0, content.length, paints); } catch (e) { /* ignore */ }
+    }
+  }
   if (opts.letterSpacing !== undefined) t.letterSpacing = { value: opts.letterSpacing, unit: "PERCENT" };
   return t;
 }
