@@ -401,6 +401,101 @@ function createSpinnerSlot(name, size, color) {
   return f;
 }
 
+// Arranges the 240 Button variants inside the ComponentSet into a
+// scannable grouped grid:
+//   • Each hierarchy (primary / primary-solid / secondary-navy / …) is
+//     its own horizontal group with a Semi Bold text header above it.
+//   • Within a group, the 5 sizes (sm → 2xl) run left-to-right as
+//     columns; the 4 states (default / hover / focused / disabled) run
+//     top-to-bottom as rows.
+//   • Groups stack vertically down the page with a gap between them.
+// Resizes the ComponentSet to fit the content.
+function layoutButtonVariantGrid(set, variants) {
+  // Column width per size — wide enough for the widest button at
+  // that size (2xl icon-trailing can hit ~150px).
+  const COL_WIDTH = { sm: 108, md: 114, lg: 124, xl: 136, "2xl": 156 };
+  const COL_GAP = 20;
+  const ROW_HEIGHT = 72;
+  const HEADER_HEIGHT = 36;
+  const GROUP_GAP = 28;
+  const PAD = 48;
+
+  // Cumulative X per column (keyed by size id)
+  const colX = {};
+  {
+    let x = PAD;
+    for (const s of BUTTON_SIZES) {
+      colX[s.id] = x;
+      x += COL_WIDTH[s.id] + COL_GAP;
+    }
+    var contentRight = x - COL_GAP; // used for set width below
+  }
+
+  const groupHeight = HEADER_HEIGHT + BUTTON_STATES.length * ROW_HEIGHT;
+  const totalHeight = PAD + BUTTON_HIERARCHIES.length * (groupHeight + GROUP_GAP) - GROUP_GAP + PAD;
+
+  // Position each variant into its (hierarchy, size, state) slot
+  const nameRe = /Hierarchy=([^,]+), Size=([^,]+), State=([^,]+)/;
+  for (const v of variants) {
+    const m = v.name.match(nameRe);
+    if (!m) continue;
+    const [, hId, sId, stId] = m;
+    const hIdx  = BUTTON_HIERARCHIES.findIndex(h => h.id === hId);
+    const stIdx = BUTTON_STATES.findIndex(st => st.id === stId);
+    if (hIdx < 0 || stIdx < 0 || colX[sId] === undefined) continue;
+
+    const groupY = PAD + hIdx * (groupHeight + GROUP_GAP);
+    v.x = colX[sId];
+    v.y = groupY + HEADER_HEIGHT + stIdx * ROW_HEIGHT;
+  }
+
+  // Add a header TextNode per hierarchy, so the sheet is self-labelling.
+  // These sit inside the ComponentSet as non-variant decorative children —
+  // Figma allows that, and designers can hide them via the layer list if
+  // they want a cleaner library view.
+  const HEADER_LABELS = {
+    "primary":               "Primary (gradient)",
+    "primary-solid":         "Primary solid",
+    "secondary-navy":        "Secondary navy",
+    "secondary-gray":        "Secondary gray",
+    "secondary-color":       "Secondary color",
+    "tertiary-gray":         "Tertiary gray",
+    "tertiary-color":        "Tertiary color",
+    "link-color":            "Link color",
+    "link-gray":             "Link gray",
+    "destructive-primary":   "Destructive primary",
+    "destructive-secondary": "Destructive secondary",
+    "destructive-tertiary":  "Destructive tertiary",
+  };
+  for (let hIdx = 0; hIdx < BUTTON_HIERARCHIES.length; hIdx++) {
+    const h = BUTTON_HIERARCHIES[hIdx];
+    const label = text(HEADER_LABELS[h.id] || h.id, {
+      size: 14, weight: "Semi Bold",
+      color: COLORS.gray[900], colorVar: "color/gray/900",
+    });
+    label.name = `group-header-${h.id}`;
+    label.x = PAD;
+    label.y = PAD + hIdx * (groupHeight + GROUP_GAP);
+    set.appendChild(label);
+  }
+
+  // Also add a small size-column caption row above the first group so
+  // designers see "sm · md · lg · xl · 2xl" column labels once.
+  for (const s of BUTTON_SIZES) {
+    const col = text(s.id, {
+      size: 10, weight: "Medium",
+      color: COLORS.gray[500], colorVar: "color/gray/500",
+    });
+    col.name = `col-header-${s.id}`;
+    col.x = colX[s.id];
+    col.y = PAD - 20;
+    set.appendChild(col);
+  }
+
+  // Resize the ComponentSet to fit the grid + outer padding.
+  set.resize(contentRight + PAD, totalHeight);
+}
+
 async function buildButtonSet(parent) {
   // Step 1 — create the base Icon Placeholder component (used by INSTANCE_SWAP)
   const iconBase = createIconBaseComponent();
@@ -483,15 +578,17 @@ async function buildButtonSet(parent) {
   const set = figma.combineAsVariants(variants, parent);
   set.name = "Button";
   set.description = "PULSE Button · 12 hierarchies × 5 sizes × 4 states · properties: Label, Show/pick Leading & Trailing icon, Loading";
-  set.layoutMode = "VERTICAL";
-  set.primaryAxisSizingMode = "AUTO";
-  set.counterAxisSizingMode = "AUTO";
-  set.itemSpacing = 16;
-  set.paddingTop = 32; set.paddingBottom = 32; set.paddingLeft = 32; set.paddingRight = 32;
+  // Auto-layout off — we position each variant manually in a
+  // grouped-grid pattern (hierarchy = group, sizes = columns,
+  // states = rows) so designers can scan the whole 240-variant
+  // set at a glance.
+  set.layoutMode = "NONE";
   set.fills = solid(COLORS.gray[50], 1, "color/gray/50");
   set.cornerRadius = 16;
   set.strokes = solid(COLORS.gray[200], 1, "color/gray/200");
   set.strokeWeight = 1;
+
+  layoutButtonVariantGrid(set, variants);
 
   /* ─── Component properties — shared across all 55 variants ─── */
   const labelProp         = set.addComponentProperty("Label",              "TEXT",          "Button");
