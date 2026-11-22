@@ -190,7 +190,7 @@ function autoFrame(name, direction, opts = {}) {
 }
 
 /* ─── Button ──────────────────────────────────────────────────────── */
-// Vertical gradient #FF7918 (top) → #E5610A (bottom) for primary-gradient variant
+// Vertical gradient #FF7918 (top) → #E5610A (bottom) — fill for the default `primary` variant
 function gradientBrandVertical() {
   const top = hexToRgb("#FF7918");
   const bot = hexToRgb("#E5610A");
@@ -204,7 +204,7 @@ function gradientBrandVertical() {
   }];
 }
 
-// Hover gradient #E5610A (top) → #BB4D08 (bottom) for primary-gradient hover state
+// Hover gradient #E5610A (top) → #BB4D08 (bottom) — hover fill for `primary`
 function gradientBrandVerticalHover() {
   const top = hexToRgb("#E5610A");
   const bot = hexToRgb("#BB4D08");
@@ -221,8 +221,8 @@ function gradientBrandVerticalHover() {
 // isLink=true → no fill/border, no shadow, text-only styling (link-* variants)
 // isFilled → shadow-xs on filled variants
 const BUTTON_HIERARCHIES = [
-  { id: "primary",               fill: COLORS.brand[600],  text: COLORS.white,       stroke: COLORS.brand[600] },
-  { id: "primary-gradient",      fillPaint: gradientBrandVertical, text: COLORS.white, stroke: COLORS.brand[600] },
+  { id: "primary",               fillPaint: gradientBrandVertical, text: COLORS.white, stroke: COLORS.brand[600] },
+  { id: "primary-solid",         fill: COLORS.brand[600],  text: COLORS.white,       stroke: COLORS.brand[600] },
   { id: "secondary-navy",        fill: COLORS.gray[800],   text: COLORS.white,       stroke: COLORS.gray[800] },
   { id: "secondary-gray",        fill: COLORS.white,       text: COLORS.gray[700],   stroke: COLORS.gray[300] },
   { id: "secondary-color",       fill: COLORS.brand[50],   text: COLORS.brand[700],  stroke: COLORS.brand[50] },
@@ -246,8 +246,8 @@ const BUTTON_STATES = [
 
 // Hover overrides per hierarchy — matches src/components/Button.tsx hover: classes
 const HOVER_OVERRIDES = {
-  "primary":               { fill: COLORS.brand[700],  stroke: COLORS.brand[700] },
-  "primary-gradient":      { fillPaint: gradientBrandVerticalHover, stroke: COLORS.brand[700] },
+  "primary":               { fillPaint: gradientBrandVerticalHover, stroke: COLORS.brand[700] },
+  "primary-solid":         { fill: COLORS.brand[700],  stroke: COLORS.brand[700] },
   "secondary-navy":        { fill: COLORS.gray[900],   stroke: COLORS.gray[900] },
   "secondary-gray":        { fill: COLORS.gray[50],    text: COLORS.gray[800],  stroke: COLORS.gray[300] },
   "secondary-color":       { fill: COLORS.brand[100],  text: COLORS.brand[800], stroke: COLORS.brand[100] },
@@ -264,7 +264,7 @@ const HOVER_OVERRIDES = {
 function focusRingHex(h) {
   if (h.id.startsWith("destructive")) return "#DC2626"; // error-600
   if (h.id.includes("gray") || h.id === "secondary-navy") return "#697586"; // gray-500
-  return "#FF7918"; // brand-500 (primary / primary-gradient / secondary-color / tertiary-color / link-color)
+  return "#FF7918"; // brand-500 (primary / primary-solid / secondary-color / tertiary-color / link-color)
 }
 
 // 4px ring @ 24% opacity — matches shadow-ring-* tokens

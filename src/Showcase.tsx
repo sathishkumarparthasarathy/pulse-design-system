@@ -1405,7 +1405,7 @@ function ButtonsPage() {
             </SubGroup>
             <SubGroup label="Gradient · opt-in for hero/landing CTAs · #FF7918 → #E5610A">
               {BTN_SIZES.map((s) => (
-                <Button key={s} hierarchy="primary-gradient" size={s}>{BTN_SIZE_LABEL[s]}</Button>
+                <Button key={s} hierarchy="primary" size={s}>{BTN_SIZE_LABEL[s]}</Button>
               ))}
             </SubGroup>
           </NumberedSection>

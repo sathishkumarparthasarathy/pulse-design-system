@@ -169,7 +169,7 @@ export const Toast = React.forwardRef<HTMLDivElement, ToastProps>(
           // sides, 8px between content and button (matches design spec).
           <div className="shrink-0 flex items-center pr-1.5 pl-2 py-1.5">
             <Button
-              hierarchy="primary-gradient"
+              hierarchy="primary"
               size="sm"
               onClick={onAction}
               loading={isBusy}

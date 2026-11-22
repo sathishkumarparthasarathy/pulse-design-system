@@ -35,20 +35,27 @@ const button = cva(
   {
     variants: {
       hierarchy: {
-        // PRIMARY — Scienaptic orange, the "go" action on a page
+        // PRIMARY — Scienaptic brand gradient (brand-500 → brand-600) · the
+        // default "go" action on every screen. Expressive by design: this is
+        // an AI-decisioning product, and the orange gradient is Scienaptic's
+        // brand signature. Used on Submit, Save, Publish, Continue, Create
+        // — anywhere the user is committing to an action.
         primary: [
-          "bg-brand-600 text-white border border-brand-600 shadow-xs",
-          "hover:bg-brand-700 hover:border-brand-700",
-          "focus:shadow-ring-brand",
-          "disabled:bg-gray-100 disabled:border-gray-200 disabled:text-gray-400",
-        ].join(" "),
-
-        // PRIMARY GRADIENT — vertical brand-500 → brand-600 · opt-in for hero CTAs
-        "primary-gradient": [
           "bg-gradient-to-b from-brand-500 to-brand-600 text-white border border-brand-600 shadow-xs",
           "hover:from-brand-600 hover:to-brand-700 hover:border-brand-700",
           "focus:shadow-ring-brand",
           "disabled:bg-none disabled:bg-gray-100 disabled:border-gray-200 disabled:text-gray-400",
+        ].join(" "),
+
+        // PRIMARY SOLID — flat brand-600 fill · reserved for data-dense
+        // contexts where the gradient reads as visual noise: in-table row
+        // actions, dense list rows, inline cell CTAs. The visual is calmer
+        // but the hierarchy is identical to `primary`.
+        "primary-solid": [
+          "bg-brand-600 text-white border border-brand-600 shadow-xs",
+          "hover:bg-brand-700 hover:border-brand-700",
+          "focus:shadow-ring-brand",
+          "disabled:bg-gray-100 disabled:border-gray-200 disabled:text-gray-400",
         ].join(" "),
 
         // SECONDARY NAVY — filled navy, alternate commit action (Link, Upload)
