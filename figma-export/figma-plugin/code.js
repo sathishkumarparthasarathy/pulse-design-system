@@ -220,19 +220,23 @@ function gradientBrandVerticalHover() {
 
 // isLink=true → no fill/border, no shadow, text-only styling (link-* variants)
 // isFilled → shadow-xs on filled variants
+// varPaths point at Figma Variables created by Tokens Studio from
+// figma-export/tokens.json. Null means the color has no matching token
+// (white is not in primitives/color, and gradient stops cannot bind to
+// individual variables in the current Figma API).
 const BUTTON_HIERARCHIES = [
-  { id: "primary",               fillPaint: gradientBrandVertical, text: COLORS.white, stroke: COLORS.brand[600] },
-  { id: "primary-solid",         fill: COLORS.brand[600],  text: COLORS.white,       stroke: COLORS.brand[600] },
-  { id: "secondary-navy",        fill: COLORS.gray[800],   text: COLORS.white,       stroke: COLORS.gray[800] },
-  { id: "secondary-gray",        fill: COLORS.white,       text: COLORS.gray[700],   stroke: COLORS.gray[300] },
-  { id: "secondary-color",       fill: COLORS.brand[50],   text: COLORS.brand[700],  stroke: COLORS.brand[50] },
-  { id: "tertiary-gray",         fill: null,               text: COLORS.gray[600],   stroke: null },
-  { id: "tertiary-color",        fill: null,               text: COLORS.brand[700],  stroke: null },
-  { id: "link-color",            fill: null,               text: COLORS.brand[700],  stroke: null, isLink: true },
-  { id: "link-gray",             fill: null,               text: COLORS.gray[600],   stroke: null, isLink: true },
-  { id: "destructive-primary",   fill: COLORS.error[600],  text: COLORS.white,       stroke: COLORS.error[600] },
-  { id: "destructive-secondary", fill: COLORS.white,       text: COLORS.error[700],  stroke: COLORS.error[300] },
-  { id: "destructive-tertiary",  fill: null,               text: COLORS.error[700],  stroke: null },
+  { id: "primary",               fillPaint: gradientBrandVertical, text: COLORS.white, stroke: COLORS.brand[600],                         strokeVar: "color/brand/600" },
+  { id: "primary-solid",         fill: COLORS.brand[600],  text: COLORS.white,       stroke: COLORS.brand[600], fillVar: "color/brand/600",                                strokeVar: "color/brand/600" },
+  { id: "secondary-navy",        fill: COLORS.gray[800],   text: COLORS.white,       stroke: COLORS.gray[800],  fillVar: "color/gray/800",                                 strokeVar: "color/gray/800" },
+  { id: "secondary-gray",        fill: COLORS.white,       text: COLORS.gray[700],   stroke: COLORS.gray[300],                            textVar: "color/gray/700",       strokeVar: "color/gray/300" },
+  { id: "secondary-color",       fill: COLORS.brand[50],   text: COLORS.brand[700],  stroke: COLORS.brand[50],  fillVar: "color/brand/50", textVar: "color/brand/700",      strokeVar: "color/brand/50" },
+  { id: "tertiary-gray",         fill: null,               text: COLORS.gray[600],   stroke: null,                                        textVar: "color/gray/600" },
+  { id: "tertiary-color",        fill: null,               text: COLORS.brand[700],  stroke: null,                                        textVar: "color/brand/700" },
+  { id: "link-color",            fill: null,               text: COLORS.brand[700],  stroke: null, isLink: true,                          textVar: "color/brand/700" },
+  { id: "link-gray",             fill: null,               text: COLORS.gray[600],   stroke: null, isLink: true,                          textVar: "color/gray/600" },
+  { id: "destructive-primary",   fill: COLORS.error[600],  text: COLORS.white,       stroke: COLORS.error[600], fillVar: "color/error/600",                                strokeVar: "color/error/600" },
+  { id: "destructive-secondary", fill: COLORS.white,       text: COLORS.error[700],  stroke: COLORS.error[300],                           textVar: "color/error/700",      strokeVar: "color/error/300" },
+  { id: "destructive-tertiary",  fill: null,               text: COLORS.error[700],  stroke: null,                                        textVar: "color/error/700" },
 ];
 
 // States axis — visual states shipped as variants for designer composition
@@ -246,18 +250,18 @@ const BUTTON_STATES = [
 
 // Hover overrides per hierarchy — matches src/components/Button.tsx hover: classes
 const HOVER_OVERRIDES = {
-  "primary":               { fillPaint: gradientBrandVerticalHover, stroke: COLORS.brand[700] },
-  "primary-solid":         { fill: COLORS.brand[700],  stroke: COLORS.brand[700] },
-  "secondary-navy":        { fill: COLORS.gray[900],   stroke: COLORS.gray[900] },
-  "secondary-gray":        { fill: COLORS.gray[50],    text: COLORS.gray[800],  stroke: COLORS.gray[300] },
-  "secondary-color":       { fill: COLORS.brand[100],  text: COLORS.brand[800], stroke: COLORS.brand[100] },
-  "tertiary-gray":         { fill: COLORS.gray[50],    text: COLORS.gray[700] },
-  "tertiary-color":        { fill: COLORS.brand[50],   text: COLORS.brand[700] },
-  "link-color":            { text: COLORS.brand[800] },
-  "link-gray":             { text: COLORS.gray[700] },
-  "destructive-primary":   { fill: COLORS.error[700],  stroke: COLORS.error[700] },
-  "destructive-secondary": { fill: COLORS.error[50],   text: COLORS.error[700], stroke: COLORS.error[300] },
-  "destructive-tertiary":  { fill: COLORS.error[50],   text: COLORS.error[700] },
+  "primary":               { fillPaint: gradientBrandVerticalHover,                                      strokeVar: "color/brand/700",      stroke: COLORS.brand[700] },
+  "primary-solid":         { fill: COLORS.brand[700],  stroke: COLORS.brand[700], fillVar: "color/brand/700", strokeVar: "color/brand/700" },
+  "secondary-navy":        { fill: COLORS.gray[900],   stroke: COLORS.gray[900],  fillVar: "color/gray/900",  strokeVar: "color/gray/900" },
+  "secondary-gray":        { fill: COLORS.gray[50],    text: COLORS.gray[800],  stroke: COLORS.gray[300], fillVar: "color/gray/50",  textVar: "color/gray/800",  strokeVar: "color/gray/300" },
+  "secondary-color":       { fill: COLORS.brand[100],  text: COLORS.brand[800], stroke: COLORS.brand[100], fillVar: "color/brand/100", textVar: "color/brand/800", strokeVar: "color/brand/100" },
+  "tertiary-gray":         { fill: COLORS.gray[50],    text: COLORS.gray[700],  fillVar: "color/gray/50",  textVar: "color/gray/700" },
+  "tertiary-color":        { fill: COLORS.brand[50],   text: COLORS.brand[700], fillVar: "color/brand/50", textVar: "color/brand/700" },
+  "link-color":            { text: COLORS.brand[800], textVar: "color/brand/800" },
+  "link-gray":             { text: COLORS.gray[700],  textVar: "color/gray/700" },
+  "destructive-primary":   { fill: COLORS.error[700],  stroke: COLORS.error[700], fillVar: "color/error/700", strokeVar: "color/error/700" },
+  "destructive-secondary": { fill: COLORS.error[50],   text: COLORS.error[700], stroke: COLORS.error[300], fillVar: "color/error/50", textVar: "color/error/700", strokeVar: "color/error/300" },
+  "destructive-tertiary":  { fill: COLORS.error[50],   text: COLORS.error[700], fillVar: "color/error/50", textVar: "color/error/700" },
 };
 
 // Focus-ring color by hierarchy family — matches focus:shadow-ring-* in Button.tsx
@@ -274,23 +278,37 @@ function focusRingEffect(hex) {
            offset: { x: 0, y: 0 }, radius: 0, spread: 4, visible: true, blendMode: "NORMAL" };
 }
 
-// Resolve per-state style for a hierarchy. Returns { fill, fillPaint, text, stroke, effects }
+// Resolve per-state style for a hierarchy. Returns
+//   { fill, fillPaint, text, stroke, fillVar, textVar, strokeVar, ring }
+// The *Var fields point at Pulse token names so the call sites can bind
+// paints to Figma Variables (see solid()/text() helpers).
 function getStateStyle(h, stateId) {
   // Default — just mirror the hierarchy's base look
   if (stateId === "default") {
-    return { fill: h.fill, fillPaint: h.fillPaint, text: h.text, stroke: h.stroke, ring: false };
+    return {
+      fill: h.fill, fillPaint: h.fillPaint, text: h.text, stroke: h.stroke,
+      fillVar: h.fillVar, textVar: h.textVar, strokeVar: h.strokeVar,
+      ring: false,
+    };
   }
 
   // Disabled — universal: gray fill/text/border for filled & outlined; just gray text for ghost/link
   if (stateId === "disabled") {
     if (h.isLink || h.id.startsWith("tertiary")) {
-      return { fill: null, fillPaint: null, text: COLORS.gray[400], stroke: null, ring: false };
+      return {
+        fill: null, fillPaint: null, text: COLORS.gray[400], stroke: null,
+        textVar: "color/gray/400",
+        ring: false,
+      };
     }
     return {
       fill: COLORS.gray[100],
       fillPaint: null,
       text: COLORS.gray[400],
       stroke: h.stroke ? COLORS.gray[200] : null,
+      fillVar: "color/gray/100",
+      textVar: "color/gray/400",
+      strokeVar: h.stroke ? "color/gray/200" : undefined,
       ring: false,
     };
   }
@@ -303,13 +321,20 @@ function getStateStyle(h, stateId) {
       fillPaint: o.fillPaint !== undefined ? o.fillPaint : h.fillPaint,
       text: o.text !== undefined ? o.text : h.text,
       stroke: o.stroke !== undefined ? o.stroke : h.stroke,
+      fillVar:   o.fillVar   !== undefined ? o.fillVar   : h.fillVar,
+      textVar:   o.textVar   !== undefined ? o.textVar   : h.textVar,
+      strokeVar: o.strokeVar !== undefined ? o.strokeVar : h.strokeVar,
       ring: false,
     };
   }
 
   // Focused — base look + 4px ring effect
   if (stateId === "focused") {
-    return { fill: h.fill, fillPaint: h.fillPaint, text: h.text, stroke: h.stroke, ring: true };
+    return {
+      fill: h.fill, fillPaint: h.fillPaint, text: h.text, stroke: h.stroke,
+      fillVar: h.fillVar, textVar: h.textVar, strokeVar: h.strokeVar,
+      ring: true,
+    };
   }
 
   return { fill: h.fill, fillPaint: h.fillPaint, text: h.text, stroke: h.stroke, ring: false };
@@ -404,14 +429,14 @@ async function buildButtonSet(parent) {
         if (style.fillPaint) {
           cmp.fills = style.fillPaint();
         } else if (style.fill) {
-          cmp.fills = solid(style.fill);
+          cmp.fills = solid(style.fill, 1, style.fillVar);
         } else {
           cmp.fills = [];
         }
 
         // Border — gray/color secondary + destructive secondary — not on tertiary/link
         if (style.stroke) {
-          cmp.strokes = solid(style.stroke);
+          cmp.strokes = solid(style.stroke, 1, style.strokeVar);
           cmp.strokeWeight = 1;
           cmp.strokeAlign = "INSIDE";
         }
@@ -441,7 +466,7 @@ async function buildButtonSet(parent) {
         spinner.visible = false;
         cmp.appendChild(spinner);
 
-        const label = text("Button", { size: s.fs, weight: "Semi Bold", color: style.text });
+        const label = text("Button", { size: s.fs, weight: "Semi Bold", color: style.text, colorVar: style.textVar });
         label.name = "label";
         cmp.appendChild(label);
 
@@ -463,9 +488,9 @@ async function buildButtonSet(parent) {
   set.counterAxisSizingMode = "AUTO";
   set.itemSpacing = 16;
   set.paddingTop = 32; set.paddingBottom = 32; set.paddingLeft = 32; set.paddingRight = 32;
-  set.fills = solid(COLORS.gray[50]);
+  set.fills = solid(COLORS.gray[50], 1, "color/gray/50");
   set.cornerRadius = 16;
-  set.strokes = solid(COLORS.gray[200]);
+  set.strokes = solid(COLORS.gray[200], 1, "color/gray/200");
   set.strokeWeight = 1;
 
   /* ─── Component properties — shared across all 55 variants ─── */
