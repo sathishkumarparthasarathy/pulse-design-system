@@ -97,7 +97,7 @@ Programmatic scaffolding — runs the Plugin API to create Foundation pages (Col
 ### What it creates
 | Component | Variants |
 |-----------|----------|
-| **Button** | 12 hierarchies × 5 sizes × 4 states = **240 variants** — Primary (`brand-600`) · Primary gradient · Secondary navy · Secondary gray · Secondary color · Tertiary gray · Tertiary color · Link color · Link gray · Destructive primary/secondary/tertiary × sm/md/lg/xl/2xl × default/hover/focused/disabled |
+| **Button** | 13 hierarchies × 5 sizes × 4 states = **260 variants** — Primary (gradient) · Primary solid · Primary hero (marketing) · Secondary navy · Secondary gray · Secondary color · Tertiary gray · Tertiary color · Link color · Link gray · Destructive primary/secondary/tertiary × sm/md/lg/xl/2xl × default/hover/focused/disabled |
 | **Badge** | 7 tones (gray, brand, error, warning, success, info, ai) |
 | **Avatar** | 6 sizes (xs → 2xl) |
 | **Input** | 1 default (320×40 with placeholder) |

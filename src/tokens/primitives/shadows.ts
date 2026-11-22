@@ -78,6 +78,25 @@ export const shadow = {
   "ring-error":   "0 0 0 4px rgba(239, 68, 68, 0.24)",
   "ring-success": "0 0 0 4px rgba(16, 185, 129, 0.24)",
   "ring-warning": "0 0 0 4px rgba(234, 179, 8, 0.24)",
+
+  /* ─── Hero CTA — reserved for `primary-hero` Button variant ───
+     Composite of:
+       1. Top highlight (inset, 40% white, 1.5px)       → glossy rim
+       2. Bottom depth  (inset, 14% black, 1.5px)       → slight bevel
+       3. Close brand shadow                            → grounds the button
+       4. Ambient brand shadow                          → lift / glow
+     Only used on the marketing-site hero CTA. Never in product UIs. */
+  "hero-brand":
+    "inset 0 1.5px 0 rgba(255, 255, 255, 0.4), " +
+    "inset 0 -1.5px 0 rgba(0, 0, 0, 0.14), " +
+    "0 4px 6px rgba(227, 97, 10, 0.22), " +
+    "0 12px 28px rgba(227, 97, 10, 0.32)",
+
+  "hero-brand-hover":
+    "inset 0 1.5px 0 rgba(255, 255, 255, 0.45), " +
+    "inset 0 -1.5px 0 rgba(0, 0, 0, 0.18), " +
+    "0 5px 8px rgba(227, 97, 10, 0.28), " +
+    "0 16px 36px rgba(227, 97, 10, 0.38)",
 } as const;
 
 export type ShadowName = keyof typeof shadow;

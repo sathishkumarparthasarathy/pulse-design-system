@@ -3207,6 +3207,7 @@
   const HIER = {
     'primary':               'bg-gradient-to-b from-brand-500 to-brand-600 text-white border border-brand-600 shadow-xs hover:from-brand-600 hover:to-brand-700 hover:border-brand-700',
     'primary-solid':         'bg-brand-600 text-white border border-brand-600 shadow-xs hover:bg-brand-700 hover:border-brand-700',
+    'primary-hero':          'bg-gradient-to-b from-brand-300 via-brand-500 to-brand-700 text-white border-[1.5px] border-brand-700 shadow-hero-brand !rounded-[26px] transition-all duration-150 hover:from-brand-500 hover:via-brand-600 hover:to-brand-900 hover:shadow-hero-brand-hover hover:-translate-y-0.5',
     'secondary-navy':        'bg-gray-800 text-white border border-gray-800 shadow-xs hover:bg-gray-900 hover:border-gray-900',
     'secondary-gray':        'bg-white text-gray-700 border border-gray-300 shadow-xs hover:bg-gray-50',
     'secondary-color':       'bg-brand-50 text-brand-700 border border-brand-50 shadow-xs hover:bg-brand-100',
@@ -3221,7 +3222,7 @@
   const DIS_OUTLINED = 'bg-white text-gray-400 border border-gray-200 shadow-none cursor-not-allowed';
   const DIS_GHOST = 'bg-transparent text-gray-400 cursor-not-allowed';
   const DIS_MAP = {
-    'primary': DIS_FILLED, 'primary-solid': DIS_FILLED, 'destructive-primary': DIS_FILLED, 'secondary-navy': DIS_FILLED,
+    'primary': DIS_FILLED, 'primary-solid': DIS_FILLED, 'primary-hero': DIS_FILLED, 'destructive-primary': DIS_FILLED, 'secondary-navy': DIS_FILLED,
     'secondary-gray': DIS_OUTLINED, 'secondary-color': DIS_OUTLINED, 'destructive-secondary': DIS_OUTLINED,
     'tertiary-gray': DIS_GHOST, 'tertiary-color': DIS_GHOST, 'destructive-tertiary': DIS_GHOST,
     'link-gray': DIS_GHOST, 'link-color': DIS_GHOST,
@@ -3733,6 +3734,7 @@
     { group: 'Primary' },
     { value: 'primary',              label: 'Primary (gradient)' },
     { value: 'primary-solid',        label: 'Primary solid' },
+    { value: 'primary-hero',         label: 'Primary hero (marketing)' },
     { group: 'Secondary' },
     { value: 'secondary-navy',       label: 'Secondary navy' },
     { value: 'secondary-gray',       label: 'Secondary gray' },

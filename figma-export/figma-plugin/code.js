@@ -204,6 +204,54 @@ function gradientBrandVertical() {
   }];
 }
 
+// Vertical 3-stop hero gradient — brand-300 → brand-500 → brand-700 — for
+// the `primary-hero` variant. Reserved for marketing hero CTAs.
+function gradientBrandHero() {
+  const top = hexToRgb("#FFA168"); // brand-300
+  const mid = hexToRgb("#FF7918"); // brand-500
+  const bot = hexToRgb("#BB4D08"); // brand-700
+  return [{
+    type: "GRADIENT_LINEAR",
+    gradientTransform: [[0, 1, 0], [-1, 0, 1]],
+    gradientStops: [
+      { color: { r: top.r, g: top.g, b: top.b, a: 1 }, position: 0 },
+      { color: { r: mid.r, g: mid.g, b: mid.b, a: 1 }, position: 0.42 },
+      { color: { r: bot.r, g: bot.g, b: bot.b, a: 1 }, position: 1 },
+    ],
+  }];
+}
+// Hover variant — one brand-step darker across the three stops
+function gradientBrandHeroHover() {
+  const top = hexToRgb("#FF7918"); // brand-500
+  const mid = hexToRgb("#E5610A"); // brand-600
+  const bot = hexToRgb("#6D2D0E"); // brand-900
+  return [{
+    type: "GRADIENT_LINEAR",
+    gradientTransform: [[0, 1, 0], [-1, 0, 1]],
+    gradientStops: [
+      { color: { r: top.r, g: top.g, b: top.b, a: 1 }, position: 0 },
+      { color: { r: mid.r, g: mid.g, b: mid.b, a: 1 }, position: 0.42 },
+      { color: { r: bot.r, g: bot.g, b: bot.b, a: 1 }, position: 1 },
+    ],
+  }];
+}
+
+// Composite "hero" effect stack — matches shadow-hero-brand tokens.
+// 2 inner highlights (glossy top rim + bottom bevel) + 2 brand-tinted
+// outer shadows (close + ambient).
+const HERO_EFFECTS = [
+  { type: "INNER_SHADOW", color: { r: 1, g: 1, b: 1, a: 0.40 }, offset: { x: 0, y: 1.5 },  radius: 0, spread: 0, visible: true, blendMode: "NORMAL" },
+  { type: "INNER_SHADOW", color: { r: 0, g: 0, b: 0, a: 0.14 }, offset: { x: 0, y: -1.5 }, radius: 0, spread: 0, visible: true, blendMode: "NORMAL" },
+  dropShadow(0, 4,  6, "#E3610A", 0.22),
+  dropShadow(0, 12, 28, "#E3610A", 0.32),
+];
+const HERO_EFFECTS_HOVER = [
+  { type: "INNER_SHADOW", color: { r: 1, g: 1, b: 1, a: 0.45 }, offset: { x: 0, y: 1.5 },  radius: 0, spread: 0, visible: true, blendMode: "NORMAL" },
+  { type: "INNER_SHADOW", color: { r: 0, g: 0, b: 0, a: 0.18 }, offset: { x: 0, y: -1.5 }, radius: 0, spread: 0, visible: true, blendMode: "NORMAL" },
+  dropShadow(0, 5,  8,  "#E3610A", 0.28),
+  dropShadow(0, 16, 36, "#E3610A", 0.38),
+];
+
 // Hover gradient #E5610A (top) → #BB4D08 (bottom) — hover fill for `primary`
 function gradientBrandVerticalHover() {
   const top = hexToRgb("#E5610A");
@@ -227,6 +275,10 @@ function gradientBrandVerticalHover() {
 const BUTTON_HIERARCHIES = [
   { id: "primary",               fillPaint: gradientBrandVertical, text: COLORS.white, stroke: COLORS.brand[600],                         strokeVar: "color/brand/600" },
   { id: "primary-solid",         fill: COLORS.brand[600],  text: COLORS.white,       stroke: COLORS.brand[600], fillVar: "color/brand/600",                                strokeVar: "color/brand/600" },
+  // Primary hero — reserved marketing CTA. Overrides cornerRadius (26px),
+  // strokeWeight (1.5), and effects (HERO_EFFECTS composite stack).
+  { id: "primary-hero",          fillPaint: gradientBrandHero,     text: COLORS.white, stroke: COLORS.brand[700],                         strokeVar: "color/brand/700",
+    cornerRadius: 26, strokeWeight: 1.5, heroEffects: HERO_EFFECTS },
   { id: "secondary-navy",        fill: COLORS.gray[800],   text: COLORS.white,       stroke: COLORS.gray[800],  fillVar: "color/gray/800",                                 strokeVar: "color/gray/800" },
   { id: "secondary-gray",        fill: COLORS.white,       text: COLORS.gray[700],   stroke: COLORS.gray[300],                            textVar: "color/gray/700",       strokeVar: "color/gray/300" },
   { id: "secondary-color",       fill: COLORS.brand[50],   text: COLORS.brand[700],  stroke: COLORS.brand[50],  fillVar: "color/brand/50", textVar: "color/brand/700",      strokeVar: "color/brand/50" },
@@ -252,6 +304,7 @@ const BUTTON_STATES = [
 const HOVER_OVERRIDES = {
   "primary":               { fillPaint: gradientBrandVerticalHover,                                      strokeVar: "color/brand/700",      stroke: COLORS.brand[700] },
   "primary-solid":         { fill: COLORS.brand[700],  stroke: COLORS.brand[700], fillVar: "color/brand/700", strokeVar: "color/brand/700" },
+  "primary-hero":          { fillPaint: gradientBrandHeroHover, stroke: COLORS.brand[700], strokeVar: "color/brand/700", heroEffects: HERO_EFFECTS_HOVER },
   "secondary-navy":        { fill: COLORS.gray[900],   stroke: COLORS.gray[900],  fillVar: "color/gray/900",  strokeVar: "color/gray/900" },
   "secondary-gray":        { fill: COLORS.gray[50],    text: COLORS.gray[800],  stroke: COLORS.gray[300], fillVar: "color/gray/50",  textVar: "color/gray/800",  strokeVar: "color/gray/300" },
   "secondary-color":       { fill: COLORS.brand[100],  text: COLORS.brand[800], stroke: COLORS.brand[100], fillVar: "color/brand/100", textVar: "color/brand/800", strokeVar: "color/brand/100" },
@@ -288,6 +341,7 @@ function getStateStyle(h, stateId) {
     return {
       fill: h.fill, fillPaint: h.fillPaint, text: h.text, stroke: h.stroke,
       fillVar: h.fillVar, textVar: h.textVar, strokeVar: h.strokeVar,
+      heroEffects: h.heroEffects,
       ring: false,
     };
   }
@@ -324,6 +378,7 @@ function getStateStyle(h, stateId) {
       fillVar:   o.fillVar   !== undefined ? o.fillVar   : h.fillVar,
       textVar:   o.textVar   !== undefined ? o.textVar   : h.textVar,
       strokeVar: o.strokeVar !== undefined ? o.strokeVar : h.strokeVar,
+      heroEffects: o.heroEffects !== undefined ? o.heroEffects : h.heroEffects,
       ring: false,
     };
   }
@@ -333,6 +388,7 @@ function getStateStyle(h, stateId) {
     return {
       fill: h.fill, fillPaint: h.fillPaint, text: h.text, stroke: h.stroke,
       fillVar: h.fillVar, textVar: h.textVar, strokeVar: h.strokeVar,
+      heroEffects: h.heroEffects,
       ring: true,
     };
   }
@@ -456,6 +512,7 @@ function layoutButtonVariantGrid(set, variants) {
   const HEADER_LABELS = {
     "primary":               "Primary (gradient)",
     "primary-solid":         "Primary solid",
+    "primary-hero":          "Primary hero — marketing only",
     "secondary-navy":        "Secondary navy",
     "secondary-gray":        "Secondary gray",
     "secondary-color":       "Secondary color",
@@ -518,7 +575,11 @@ async function buildButtonSet(parent) {
         cmp.paddingRight = h.isLink ? 0 : s.px;
         cmp.paddingTop = 0; cmp.paddingBottom = 0;
         cmp.itemSpacing = 6;
-        cmp.cornerRadius = h.isLink ? 0 : 6;
+        // Corner radius — hero hierarchy uses 26px pill; link variants are
+        // flat; everything else uses 6px rounded-md.
+        cmp.cornerRadius = h.cornerRadius !== undefined
+          ? h.cornerRadius
+          : (h.isLink ? 0 : 6);
 
         // Fill: solid, gradient, or none (per-state)
         if (style.fillPaint) {
@@ -532,15 +593,21 @@ async function buildButtonSet(parent) {
         // Border — gray/color secondary + destructive secondary — not on tertiary/link
         if (style.stroke) {
           cmp.strokes = solid(style.stroke, 1, style.strokeVar);
-          cmp.strokeWeight = 1;
+          cmp.strokeWeight = h.strokeWeight !== undefined ? h.strokeWeight : 1;
           cmp.strokeAlign = "INSIDE";
         }
 
-        // Effects — shadow-xs on filled non-tertiary non-link, plus focus ring when state=focused
+        // Effects — hero hierarchy swaps SHADOW_XS for its multi-layer
+        // composite (inner highlights + brand-tinted drop shadows). Focus
+        // ring is additive on either stack.
         const hasFill = !!(style.fill || style.fillPaint);
         const effects = [];
         if (hasFill && !h.id.startsWith("tertiary") && !h.isLink && st.id !== "disabled") {
-          effects.push(...SHADOW_XS);
+          if (style.heroEffects) {
+            effects.push(...style.heroEffects);
+          } else {
+            effects.push(...SHADOW_XS);
+          }
         }
         if (style.ring) {
           effects.push(focusRingEffect(focusRingHex(h)));

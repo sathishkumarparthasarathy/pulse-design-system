@@ -7,15 +7,17 @@ import { cn } from "@/lib/cn";
 /**
  * Untitled UI Button.
  *
- * Hierarchy:
- *   - Primary        — filled Scienaptic orange, white text, the "go" action on a page
- *   - Primary gradient — vertical brand gradient, opt-in for hero CTAs
- *   - Secondary navy — filled navy, used for alternate actions (Link, Upload)
- *   - Secondary gray — outlined gray, used for cancel/back
- *   - Secondary color — soft brand surface, used for emphasis without committing
- *   - Tertiary gray — ghost gray, low-emphasis
- *   - Tertiary color — ghost brand, low-emphasis but on-brand
- *   - Link gray / Link color — inline text actions
+ * Hierarchy (12 total):
+ *   - Primary          — vertical brand gradient, the default "go" action on every screen
+ *   - Primary solid    — flat brand-600, reserved for data-dense contexts (in-row actions)
+ *   - Primary hero     — glossy 3-stop gradient + brand shadow + pill radius,
+ *                        reserved for marketing hero CTAs only
+ *   - Secondary navy   — filled navy, used for alternate actions (Link, Upload)
+ *   - Secondary gray   — outlined gray, used for cancel/back
+ *   - Secondary color  — soft brand surface, used for emphasis without committing
+ *   - Tertiary gray    — ghost gray, low-emphasis
+ *   - Tertiary color   — ghost brand, low-emphasis but on-brand
+ *   - Link gray / color — inline text actions
  *   - Destructive primary / secondary / tertiary — for delete actions
  *
  * Signatures:
@@ -56,6 +58,27 @@ const button = cva(
           "hover:bg-brand-700 hover:border-brand-700",
           "focus:shadow-ring-brand",
           "disabled:bg-gray-100 disabled:border-gray-200 disabled:text-gray-400",
+        ].join(" "),
+
+        // PRIMARY HERO — Scienaptic's reserved marketing-hero CTA · glossy
+        // 3-stop brand gradient (brand-300 → brand-500 → brand-700), top
+        // highlight + bottom depth, brand-tinted drop shadow, 26px pill
+        // radius. Rules of engagement:
+        //   • Marketing / landing / pricing / signup entry points ONLY
+        //   • One per screen, max
+        //   • Never inside the product UI (Iris forms, modals, tables)
+        //   • Prefer size="xl" or "2xl" — the look needs real estate
+        // When in doubt, use `primary` (the gradient) instead.
+        "primary-hero": [
+          "bg-gradient-to-b from-brand-300 via-brand-500 to-brand-700",
+          "text-white border-[1.5px] border-brand-700",
+          "shadow-hero-brand !rounded-[26px]",
+          "transition-all duration-150",
+          "hover:from-brand-500 hover:via-brand-600 hover:to-brand-900",
+          "hover:shadow-hero-brand-hover hover:-translate-y-0.5",
+          "active:translate-y-0 active:shadow-xs",
+          "focus:shadow-ring-brand",
+          "disabled:bg-none disabled:bg-gray-100 disabled:border-gray-200 disabled:text-gray-400 disabled:shadow-none disabled:translate-y-0",
         ].join(" "),
 
         // SECONDARY NAVY — filled navy, alternate commit action (Link, Upload)
