@@ -510,49 +510,15 @@ function layoutButtonVariantGrid(set, variants) {
     v.y = groupY + HEADER_HEIGHT + stIdx * ROW_HEIGHT;
   }
 
-  // Add a header TextNode per hierarchy, so the sheet is self-labelling.
-  // These sit inside the ComponentSet as non-variant decorative children —
-  // Figma allows that, and designers can hide them via the layer list if
-  // they want a cleaner library view.
-  const HEADER_LABELS = {
-    "primary":               "Primary (gradient)",
-    "primary-solid":         "Primary solid",
-    "primary-hero":          "Primary hero — marketing only",
-    "secondary-navy":        "Secondary navy",
-    "secondary-gray":        "Secondary gray",
-    "secondary-color":       "Secondary color",
-    "tertiary-gray":         "Tertiary gray",
-    "tertiary-color":        "Tertiary color",
-    "link-color":            "Link color",
-    "link-gray":             "Link gray",
-    "destructive-primary":   "Destructive primary",
-    "destructive-secondary": "Destructive secondary",
-    "destructive-tertiary":  "Destructive tertiary",
-  };
-  for (let hIdx = 0; hIdx < BUTTON_HIERARCHIES.length; hIdx++) {
-    const h = BUTTON_HIERARCHIES[hIdx];
-    const label = text(HEADER_LABELS[h.id] || h.id, {
-      size: 14, weight: "Semi Bold",
-      color: COLORS.gray[900], colorVar: "color/gray/900",
-    });
-    label.name = `group-header-${h.id}`;
-    label.x = PAD;
-    label.y = PAD + hIdx * (groupHeight + GROUP_GAP);
-    set.appendChild(label);
-  }
-
-  // Also add a small size-column caption row above the first group so
-  // designers see "sm · md · lg · xl · 2xl" column labels once.
-  for (const s of BUTTON_SIZES) {
-    const col = text(s.id, {
-      size: 10, weight: "Medium",
-      color: COLORS.gray[500], colorVar: "color/gray/500",
-    });
-    col.name = `col-header-${s.id}`;
-    col.x = colX[s.id];
-    col.y = PAD - 20;
-    set.appendChild(col);
-  }
+  // NOTE: We previously added decorative text headers (per-hierarchy
+  // labels and sm/md/lg/… column captions) inside the ComponentSet.
+  // The Figma API rejects that: a COMPONENT_SET can only contain
+  // COMPONENT children, so `set.appendChild(textNode)` throws
+  // "Cannot move node. A COMPONENT_SET node cannot have children of
+  // type other than COMPONENT". The variant panel's own axis labels
+  // (Hierarchy=/Size=/State=) already serve as self-documentation, so
+  // we skip the inline headers. If we want group separators later,
+  // they belong OUTSIDE the ComponentSet as siblings on the page.
 
   // Resize the ComponentSet to fit the grid + outer padding.
   set.resize(contentRight + PAD, totalHeight);
