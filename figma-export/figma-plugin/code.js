@@ -144,10 +144,111 @@ async function loadFonts() {
   ]);
 }
 
+/* ─── Text styles (typography/*) ──────────────────────────────────────
+ * Tokens Studio imports the composite "typography" tokens from
+ * tokens.json as Figma Text Styles, named `typography/text-sm-semibold`,
+ * `typography/display-lg-bold`, etc.  (44 styles total, matching
+ * our 11 sizes × 4 weights scale.)
+ *
+ * Because `setTextStyleIdAsync` is async and must be used in
+ * dynamic-page mode, we cannot call it from the synchronous `text()`
+ * helper that every component builder relies on.  Instead `text()`
+ * queues a (node, styleName) pair and we flush the queue AFTER the
+ * builder returns — once per main() run, so applying 260 Button
+ * labels + all other text in the library is one post-pass.
+ *
+ * Paints are not affected: textStyleId covers fontFamily, fontWeight,
+ * fontSize, lineHeight, letterSpacing, textCase, textDecoration —
+ * NOT fills.  Our color bindings survive the style application.
+ */
+const _textStyleCache = new Map();
+let _textStyleLoaded = false;
+const _pendingTextStyles = [];
+
+async function loadTextStyles() {
+  _textStyleCache.clear();
+  _textStyleLoaded = false;
+  try {
+    let all = [];
+    if (figma.getLocalTextStylesAsync) {
+      all = await figma.getLocalTextStylesAsync();
+    } else if (figma.getLocalTextStyles) {
+      all = figma.getLocalTextStyles();
+    }
+    for (const s of all) _textStyleCache.set(s.name, s);
+    _textStyleLoaded = true;
+    return all.length;
+  } catch (e) {
+    console.warn("[DS Builder] loadTextStyles failed:", e);
+    return 0;
+  }
+}
+
+// Maps raw px size → the Pulse scale tier.  Values outside the scale
+// (e.g. 10px foundation captions) return null, which falls through to
+// a raw fontName/fontSize on the text node.
+const _SIZE_TIER = {
+  12: "text-xs",
+  14: "text-sm",
+  16: "text-md",
+  18: "text-lg",
+  20: "text-xl",
+  24: "display-xs",
+  30: "display-sm",
+  36: "display-md",
+  48: "display-lg",
+  60: "display-xl",
+  72: "display-2xl",
+};
+const _WEIGHT_SLUG = {
+  "Regular":   "regular",
+  "Medium":    "medium",
+  "Semi Bold": "semibold",
+  "Bold":      "bold",
+};
+function resolvePulseTextStyleName(size, weight) {
+  const tier = _SIZE_TIER[size];
+  const w = _WEIGHT_SLUG[weight || "Semi Bold"];
+  if (!tier || !w) return null;
+  return tier + "-" + w; // e.g. "text-sm-semibold"
+}
+function lookupTextStyle(name) {
+  if (!_textStyleLoaded || !name) return null;
+  // Tokens Studio keeps the token-set prefix, so our styles live under
+  // "typography/…".  Older imports may have landed without the prefix.
+  const candidates = [
+    "typography/" + name,
+    name,
+    "pulse/typography/" + name,
+  ];
+  for (const c of candidates) {
+    if (_textStyleCache.has(c)) return _textStyleCache.get(c);
+  }
+  return null;
+}
+async function flushPendingTextStyles() {
+  if (!_pendingTextStyles.length) return 0;
+  let applied = 0;
+  for (const entry of _pendingTextStyles) {
+    const style = lookupTextStyle(entry.styleName);
+    if (!style) continue;
+    try {
+      if (entry.node.setTextStyleIdAsync) {
+        await entry.node.setTextStyleIdAsync(style.id);
+        applied++;
+      }
+    } catch (e) { /* node may be gone; ignore */ }
+  }
+  _pendingTextStyles.length = 0;
+  return applied;
+}
+
 function text(content, opts = {}) {
   const t = figma.createText();
-  t.fontName = { family: "Inter", style: opts.weight || "Semi Bold" };
-  t.fontSize = opts.size || 14;
+  const weight = opts.weight || "Semi Bold";
+  const size = opts.size || 14;
+  t.fontName = { family: "Inter", style: weight };
+  t.fontSize = size;
   t.characters = content;
   // opts.colorVar is the Pulse token path (e.g. "color/gray/900"); the fill
   // gets bound to that Figma Variable when it exists, otherwise raw hex.
@@ -162,6 +263,10 @@ function text(content, opts = {}) {
     }
   }
   if (opts.letterSpacing !== undefined) t.letterSpacing = { value: opts.letterSpacing, unit: "PERCENT" };
+  // Queue a text-style binding.  Caller may pass an explicit styleName
+  // (e.g. "text-sm-semibold") or let us derive it from size + weight.
+  const styleName = opts.styleName || resolvePulseTextStyleName(size, weight);
+  if (styleName) _pendingTextStyles.push({ node: t, styleName });
   return t;
 }
 
@@ -1738,6 +1843,14 @@ async function main() {
   } else {
     console.log("[DS Builder] No color variables found — import figma-export/tokens.json via Tokens Studio to enable binding.");
   }
+  // Warm the text-style cache so text() can queue typography/* style
+  // bindings for flushing after the build.
+  const textStyleCount = await loadTextStyles();
+  if (textStyleCount > 0) {
+    console.log(`[DS Builder] Loaded ${textStyleCount} text styles.`);
+  } else {
+    console.log("[DS Builder] No text styles found — import figma-export/tokens.json via Tokens Studio to enable typography binding.");
+  }
 
   // Filter by the manifest menu command (empty string / "all" → everything).
   // When a user runs e.g. "🧩 Toasts only" from the plugin menu we rebuild
@@ -1768,6 +1881,15 @@ async function main() {
     }
   }
 
+  // Flush queued typography/* text-style bindings for every text node
+  // the builders created in this run.  Sync `text()` could not call
+  // setTextStyleIdAsync itself (dynamic-page mode requires async), so
+  // we drain the queue here after the builders have returned.
+  const textStylesApplied = await flushPendingTextStyles();
+  if (textStylesApplied > 0) {
+    console.log(`[DS Builder] Applied ${textStylesApplied} typography/* text-style bindings.`);
+  }
+
   // Gradient paint styles are expensive to regen and the API doesn't
   // dedupe them — only rebuild them on a full "all" run.
   const gradientCount = cmd === "all" ? await buildGradientStyles() : 0;
@@ -1793,11 +1915,12 @@ async function main() {
     const shortMsg = msg.length > 120 ? msg.slice(0, 117) + "…" : msg;
     figma.notify(`⚠ ${first.name} failed · ${shortMsg}`, { timeout: 12000, error: true });
   } else if (cmd === "all") {
-    figma.notify(`✓ Scaffolded ${foundations} Foundation + ${components} Component pages · ${gradientCount} gradient styles · ${varCount} Pulse variables bound${legacyNote}`);
+    figma.notify(`✓ Scaffolded ${foundations} Foundation + ${components} Component pages · ${gradientCount} gradient styles · ${varCount} color variables · ${textStylesApplied} text-styles bound${legacyNote}`);
   } else {
     // Single-page run
-    const varNote = varCount > 0 ? ` · ${varCount} Pulse variables bound` : " · (no Pulse variables found — import tokens.json via Tokens Studio to bind)";
-    figma.notify(`✓ Rebuilt ${builtPages[0].cfg.name}${varNote}`);
+    const varNote = varCount > 0 ? ` · ${varCount} color vars` : " · (no Pulse color vars — import tokens.json)";
+    const tsNote  = textStylesApplied > 0 ? ` · ${textStylesApplied} text-styles bound` : "";
+    figma.notify(`✓ Rebuilt ${builtPages[0].cfg.name}${varNote}${tsNote}`);
   }
   figma.closePlugin();
 }
