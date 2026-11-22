@@ -190,9 +190,12 @@ function autoFrame(name, direction, opts = {}) {
 }
 
 /* ─── Button ──────────────────────────────────────────────────────── */
-// Vertical gradient #FF7918 (top) → #E5610A (bottom) — fill for the default `primary` variant
+// Vertical gradient #FF8C45 (brand-400, top) → #E5610A (brand-600, bottom)
+// — fill for the default `primary` variant. The widened stops (one step
+// lighter at the top) make the gradient read as "gradient" rather than
+// "polished solid" at 40px button heights.
 function gradientBrandVertical() {
-  const top = hexToRgb("#FF7918");
+  const top = hexToRgb("#FF8C45");
   const bot = hexToRgb("#E5610A");
   return [{
     type: "GRADIENT_LINEAR",
@@ -252,9 +255,11 @@ const HERO_EFFECTS_HOVER = [
   dropShadow(0, 16, 36, "#E3610A", 0.38),
 ];
 
-// Hover gradient #E5610A (top) → #BB4D08 (bottom) — hover fill for `primary`
+// Hover gradient #FF7918 (brand-500, top) → #BB4D08 (brand-700, bottom)
+// — hover fill for `primary`. Each stop steps one brand step darker from
+// the resting state.
 function gradientBrandVerticalHover() {
-  const top = hexToRgb("#E5610A");
+  const top = hexToRgb("#FF7918");
   const bot = hexToRgb("#BB4D08");
   return [{
     type: "GRADIENT_LINEAR",

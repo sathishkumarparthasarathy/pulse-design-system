@@ -43,8 +43,8 @@ const button = cva(
         // brand signature. Used on Submit, Save, Publish, Continue, Create
         // — anywhere the user is committing to an action.
         primary: [
-          "bg-gradient-to-b from-brand-500 to-brand-600 text-white border border-brand-600 shadow-xs",
-          "hover:from-brand-600 hover:to-brand-700 hover:border-brand-700",
+          "bg-gradient-to-b from-brand-400 to-brand-600 text-white border border-brand-600 shadow-xs",
+          "hover:from-brand-500 hover:to-brand-700 hover:border-brand-700",
           "focus:shadow-ring-brand",
           "disabled:bg-none disabled:bg-gray-100 disabled:border-gray-200 disabled:text-gray-400",
         ].join(" "),
