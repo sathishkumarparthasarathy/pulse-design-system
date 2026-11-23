@@ -284,9 +284,12 @@ function autoFrame(name, direction, opts = {}) {
   f.paddingTop = opts.py !== undefined ? opts.py : 0;
   f.paddingBottom = opts.py !== undefined ? opts.py : 0;
   f.cornerRadius = opts.radius || 0;
-  f.fills = opts.fill ? solid(opts.fill) : [];
+  // Pulse variable bindings propagate through fillVar / strokeVar — if
+  // the caller passes a token path like "color/gray/900" the paint gets
+  // bound to that Figma Variable, otherwise it falls back to a raw hex.
+  f.fills = opts.fill ? solid(opts.fill, 1, opts.fillVar) : [];
   if (opts.stroke) {
-    f.strokes = solid(opts.stroke);
+    f.strokes = solid(opts.stroke, 1, opts.strokeVar);
     f.strokeWeight = 1;
     f.strokeAlign = "INSIDE";
   }
@@ -380,24 +383,24 @@ function gradientBrandVerticalHover() {
 // isFilled → shadow-xs on filled variants
 // varPaths point at Figma Variables created by Tokens Studio from
 // figma-export/tokens.json. Null means the color has no matching token
-// (white is not in primitives/color, and gradient stops cannot bind to
-// individual variables in the current Figma API).
+// White now binds to color/base/white (added to tokens.json).
+// Gradient stops still cannot bind to individual variables (Figma API).
 const BUTTON_HIERARCHIES = [
-  { id: "primary",               fillPaint: gradientBrandVertical, text: COLORS.white, stroke: COLORS.brand[600],                         strokeVar: "color/brand/600" },
-  { id: "primary-solid",         fill: COLORS.brand[600],  text: COLORS.white,       stroke: COLORS.brand[600], fillVar: "color/brand/600",                                strokeVar: "color/brand/600" },
+  { id: "primary",               fillPaint: gradientBrandVertical, text: COLORS.white, textVar: "color/base/white", stroke: COLORS.brand[600],                         strokeVar: "color/brand/600" },
+  { id: "primary-solid",         fill: COLORS.brand[600],  text: COLORS.white,       textVar: "color/base/white", stroke: COLORS.brand[600], fillVar: "color/brand/600",                                strokeVar: "color/brand/600" },
   // Primary hero — reserved marketing CTA. Overrides cornerRadius (26px),
   // strokeWeight (1.5), and effects (HERO_EFFECTS composite stack).
-  { id: "primary-hero",          fillPaint: gradientBrandHero,     text: COLORS.white, stroke: COLORS.brand[700],                         strokeVar: "color/brand/700",
+  { id: "primary-hero",          fillPaint: gradientBrandHero,     text: COLORS.white, textVar: "color/base/white", stroke: COLORS.brand[700],                         strokeVar: "color/brand/700",
     cornerRadius: 26, strokeWeight: 1.5, heroEffects: HERO_EFFECTS },
-  { id: "secondary-navy",        fill: COLORS.gray[800],   text: COLORS.white,       stroke: COLORS.gray[800],  fillVar: "color/gray/800",                                 strokeVar: "color/gray/800" },
-  { id: "secondary-gray",        fill: COLORS.white,       text: COLORS.gray[700],   stroke: COLORS.gray[300],                            textVar: "color/gray/700",       strokeVar: "color/gray/300" },
+  { id: "secondary-navy",        fill: COLORS.gray[800],   text: COLORS.white,       textVar: "color/base/white", stroke: COLORS.gray[800],  fillVar: "color/gray/800",                                 strokeVar: "color/gray/800" },
+  { id: "secondary-gray",        fill: COLORS.white,       text: COLORS.gray[700],   stroke: COLORS.gray[300],  fillVar: "color/base/white", textVar: "color/gray/700",       strokeVar: "color/gray/300" },
   { id: "secondary-color",       fill: COLORS.brand[50],   text: COLORS.brand[700],  stroke: COLORS.brand[50],  fillVar: "color/brand/50", textVar: "color/brand/700",      strokeVar: "color/brand/50" },
   { id: "tertiary-gray",         fill: null,               text: COLORS.gray[600],   stroke: null,                                        textVar: "color/gray/600" },
   { id: "tertiary-color",        fill: null,               text: COLORS.brand[700],  stroke: null,                                        textVar: "color/brand/700" },
   { id: "link-color",            fill: null,               text: COLORS.brand[700],  stroke: null, isLink: true,                          textVar: "color/brand/700" },
   { id: "link-gray",             fill: null,               text: COLORS.gray[600],   stroke: null, isLink: true,                          textVar: "color/gray/600" },
-  { id: "destructive-primary",   fill: COLORS.error[600],  text: COLORS.white,       stroke: COLORS.error[600], fillVar: "color/error/600",                                strokeVar: "color/error/600" },
-  { id: "destructive-secondary", fill: COLORS.white,       text: COLORS.error[700],  stroke: COLORS.error[300],                           textVar: "color/error/700",      strokeVar: "color/error/300" },
+  { id: "destructive-primary",   fill: COLORS.error[600],  text: COLORS.white,       textVar: "color/base/white", stroke: COLORS.error[600], fillVar: "color/error/600",                                strokeVar: "color/error/600" },
+  { id: "destructive-secondary", fill: COLORS.white,       text: COLORS.error[700],  stroke: COLORS.error[300], fillVar: "color/base/white", textVar: "color/error/700",      strokeVar: "color/error/300" },
   { id: "destructive-tertiary",  fill: null,               text: COLORS.error[700],  stroke: null,                                        textVar: "color/error/700" },
 ];
 
@@ -766,14 +769,17 @@ async function buildButtonSet(parent) {
 }
 
 /* ─── Badge ───────────────────────────────────────────────────────── */
+// Each tone carries the hex AND its Pulse variable path (bgVar/textVar/
+// borderVar) so the paints bind to color/* variables the same way Button
+// does. Unbound tones were the Badge binding gap flagged in the audit.
 const BADGE_TONES = [
-  { id: "gray",    bg: COLORS.gray[100],    text: COLORS.gray[700],    border: COLORS.gray[200] },
-  { id: "brand",   bg: COLORS.brand[50],    text: COLORS.brand[700],   border: COLORS.brand[200] },
-  { id: "error",   bg: COLORS.error[50],    text: COLORS.error[700],   border: COLORS.error[300] },
-  { id: "warning", bg: COLORS.warning[50],  text: COLORS.warning[700], border: COLORS.warning[500] },
-  { id: "success", bg: COLORS.success[50],  text: COLORS.success[700], border: COLORS.success[500] },
-  { id: "info",    bg: COLORS.info[50],     text: COLORS.info[700],    border: COLORS.info[500] },
-  { id: "ai",      bg: COLORS.purple[50],   text: COLORS.purple[700],  border: COLORS.purple[500] },
+  { id: "gray",    bg: COLORS.gray[100],    bgVar: "color/gray/100",    text: COLORS.gray[700],    textVar: "color/gray/700",    border: COLORS.gray[200],    borderVar: "color/gray/200" },
+  { id: "brand",   bg: COLORS.brand[50],    bgVar: "color/brand/50",    text: COLORS.brand[700],   textVar: "color/brand/700",   border: COLORS.brand[200],   borderVar: "color/brand/200" },
+  { id: "error",   bg: COLORS.error[50],    bgVar: "color/error/50",    text: COLORS.error[700],   textVar: "color/error/700",   border: COLORS.error[300],   borderVar: "color/error/300" },
+  { id: "warning", bg: COLORS.warning[50],  bgVar: "color/warning/50",  text: COLORS.warning[700], textVar: "color/warning/700", border: COLORS.warning[500], borderVar: "color/warning/500" },
+  { id: "success", bg: COLORS.success[50],  bgVar: "color/success/50",  text: COLORS.success[700], textVar: "color/success/700", border: COLORS.success[500], borderVar: "color/success/500" },
+  { id: "info",    bg: COLORS.info[50],     bgVar: "color/info/50",     text: COLORS.info[700],    textVar: "color/info/700",    border: COLORS.info[500],    borderVar: "color/info/500" },
+  { id: "ai",      bg: COLORS.purple[50],   bgVar: "color/purple/50",   text: COLORS.purple[700],  textVar: "color/purple/700",  border: COLORS.purple[500],  borderVar: "color/purple/500" },
 ];
 
 async function buildBadgeSet(parent) {
@@ -786,9 +792,9 @@ async function buildBadgeSet(parent) {
     cmp.counterAxisSizingMode = "AUTO";
     cmp.paddingLeft = 10; cmp.paddingRight = 10;
     cmp.cornerRadius = 9999;  // pill
-    cmp.fills = solid(t.bg);
-    cmp.strokes = solid(t.border); cmp.strokeWeight = 1; cmp.strokeAlign = "INSIDE";
-    const label = text(t.id.charAt(0).toUpperCase() + t.id.slice(1), { size: 12, weight: "Medium", color: t.text });
+    cmp.fills = solid(t.bg, 1, t.bgVar);
+    cmp.strokes = solid(t.border, 1, t.borderVar); cmp.strokeWeight = 1; cmp.strokeAlign = "INSIDE";
+    const label = text(t.id.charAt(0).toUpperCase() + t.id.slice(1), { size: 12, weight: "Medium", color: t.text, colorVar: t.textVar });
     cmp.appendChild(label);
     cmp.resize(cmp.width || 80, 24);
     cmp.counterAxisSizingMode = "FIXED";
@@ -821,14 +827,14 @@ async function buildAvatarSet(parent) {
     cmp.name = `size=${s.id}`;
     cmp.resize(s.px, s.px);
     cmp.cornerRadius = s.px / 2;
-    cmp.fills = solid(COLORS.brand[500]);
+    cmp.fills = solid(COLORS.brand[500], 1, "color/brand/500");
     cmp.clipsContent = true;
     cmp.layoutMode = "HORIZONTAL";
     cmp.primaryAxisAlignItems = "CENTER";
     cmp.counterAxisAlignItems = "CENTER";
     cmp.primaryAxisSizingMode = "FIXED";
     cmp.counterAxisSizingMode = "FIXED";
-    const label = text("OR", { size: s.fs, weight: "Semi Bold", color: COLORS.white });
+    const label = text("OR", { size: s.fs, weight: "Semi Bold", color: COLORS.white, colorVar: "color/base/white" });
     cmp.appendChild(label);
     variants.push(cmp);
   }
@@ -854,11 +860,11 @@ async function buildInput(parent) {
   cmp.paddingLeft = 14; cmp.paddingRight = 14;
   cmp.itemSpacing = 8;
   cmp.cornerRadius = 8;
-  cmp.fills = solid(COLORS.white);
-  cmp.strokes = solid(COLORS.gray[300]); cmp.strokeWeight = 1; cmp.strokeAlign = "INSIDE";
+  cmp.fills = solid(COLORS.white, 1, "color/base/white");
+  cmp.strokes = solid(COLORS.gray[300], 1, "color/gray/300"); cmp.strokeWeight = 1; cmp.strokeAlign = "INSIDE";
   cmp.effects = SHADOW_XS;
   cmp.resize(320, 40);
-  const placeholder = text("Placeholder", { size: 16, weight: "Regular", color: COLORS.gray[500] });
+  const placeholder = text("Placeholder", { size: 16, weight: "Regular", color: COLORS.gray[500], colorVar: "color/gray/500" });
   cmp.appendChild(placeholder);
   parent.appendChild(cmp);
   return cmp;
@@ -873,8 +879,8 @@ async function buildCard(parent) {
   cmp.counterAxisSizingMode = "FIXED";
   cmp.itemSpacing = 0;
   cmp.cornerRadius = 12;
-  cmp.fills = solid(COLORS.white);
-  cmp.strokes = solid(COLORS.gray[200]); cmp.strokeWeight = 1; cmp.strokeAlign = "INSIDE";
+  cmp.fills = solid(COLORS.white, 1, "color/base/white");
+  cmp.strokes = solid(COLORS.gray[200], 1, "color/gray/200"); cmp.strokeWeight = 1; cmp.strokeAlign = "INSIDE";
   cmp.effects = SHADOW_XS;
   cmp.clipsContent = true;
   cmp.resize(360, 200);
@@ -914,9 +920,11 @@ async function buildCard(parent) {
    - shadow-md Tailwind drop shadow
    - 11×5 arrow (Radix TooltipPrimitive.Arrow defaults)
    --------------------------------------------------------------- */
+// bgVar / textVar / borderVar bind the bubble's paints to Pulse
+// variables. White now binds to color/base/white (added in tokens.json).
 const TOOLTIP_VARIANTS = [
-  { id: "dark",  bg: COLORS.gray[900], text: COLORS.white,     border: null             },
-  { id: "light", bg: COLORS.white,     text: COLORS.gray[900], border: COLORS.gray[200] },
+  { id: "dark",  bg: COLORS.gray[900], bgVar: "color/gray/900", text: COLORS.white,     textVar: "color/base/white", border: null,             borderVar: null },
+  { id: "light", bg: COLORS.white,     bgVar: "color/base/white", text: COLORS.gray[900], textVar: "color/gray/900",  border: COLORS.gray[200], borderVar: "color/gray/200" },
 ];
 const TOOLTIP_SIZES = [
   { id: "sm", px: 10, py: 6,  fs: 12 }, // Tailwind px-2.5 py-1.5 text-xs
@@ -983,8 +991,8 @@ function buildTooltipBubble(mode, size, variant) {
   const bubble = autoFrame("bubble", "HORIZONTAL", {
     px: size.px, py: size.py,
     radius: 6,
-    fill: variant.bg,
-    stroke: variant.border,
+    fill: variant.bg,     fillVar: variant.bgVar,
+    stroke: variant.border, strokeVar: variant.borderVar,
     shadow: TOOLTIP_SHADOW,
   });
   bubble.primaryAxisSizingMode = "AUTO";
@@ -992,7 +1000,7 @@ function buildTooltipBubble(mode, size, variant) {
 
   // ─ Basic — single text label
   if (mode === "basic") {
-    const label = text("Tooltip", { size: size.fs, weight: "Medium", color: variant.text });
+    const label = text("Tooltip", { size: size.fs, weight: "Medium", color: variant.text, colorVar: variant.textVar });
     label.name = "label";
     bubble.appendChild(label);
     return bubble;
@@ -1002,14 +1010,15 @@ function buildTooltipBubble(mode, size, variant) {
   bubble.layoutMode = "VERTICAL";
   bubble.counterAxisAlignItems = "MIN";
   bubble.itemSpacing = 4;
-  const descColor = variant.id === "light" ? COLORS.gray[600] : COLORS.gray[300];
+  const descColor    = variant.id === "light" ? COLORS.gray[600] : COLORS.gray[300];
+  const descColorVar = variant.id === "light" ? "color/gray/600"  : "color/gray/300";
 
   // Title row — "Semi Bold" title + optional shortcut chips on the right
   const titleRow = autoFrame("title-row", "HORIZONTAL", { gap: 12, fill: null });
   titleRow.primaryAxisSizingMode = "AUTO";
   titleRow.counterAxisSizingMode = "AUTO";
   titleRow.counterAxisAlignItems = "CENTER";
-  const title = text("Save your changes", { size: size.fs, weight: "Semi Bold", color: variant.text });
+  const title = text("Save your changes", { size: size.fs, weight: "Semi Bold", color: variant.text, colorVar: variant.textVar });
   title.name = "label";
   titleRow.appendChild(title);
   if (mode === "shortcut" || mode === "full") {
@@ -1020,7 +1029,7 @@ function buildTooltipBubble(mode, size, variant) {
   if (mode === "description" || mode === "full") {
     const desc = text(
       "Persists to draft. You can still discard before publishing.",
-      { size: size.fs, weight: "Regular", color: descColor }
+      { size: size.fs, weight: "Regular", color: descColor, colorVar: descColorVar }
     );
     desc.name = "description";
     bubble.appendChild(desc);
@@ -1034,9 +1043,9 @@ function createTooltipArrow(side, variant) {
   vec.name = "arrow";
   vec.resize(side.arrowW, side.arrowH);
   vec.vectorPaths = [{ windingRule: "NONZERO", data: side.path }];
-  vec.fills = solid(variant.bg);
+  vec.fills = solid(variant.bg, 1, variant.bgVar);
   if (variant.border) {
-    vec.strokes = solid(variant.border);
+    vec.strokes = solid(variant.border, 1, variant.borderVar);
     vec.strokeWeight = 1;
     vec.strokeAlign = "INSIDE";
   }
@@ -1180,7 +1189,7 @@ function createToastIcon(intent) {
   badge.cornerRadius = 10;
   badge.fills = solid(intent.color, 1, intent.varPath);
   if (intent.glyph) {
-    const g = text(intent.glyph, { size: 11, weight: "Bold", color: COLORS.white });
+    const g = text(intent.glyph, { size: 11, weight: "Bold", color: COLORS.white, colorVar: "color/base/white" });
     badge.appendChild(g);
   }
   return badge;
@@ -1268,7 +1277,7 @@ function createToastPrimaryCTA(busy) {
   btn.counterAxisSizingMode = "AUTO";
   btn.primaryAxisAlignItems = "CENTER";
   btn.counterAxisAlignItems = "CENTER";
-  const label = text("Update rates", { size: 14, weight: "Semi Bold", color: COLORS.white });
+  const label = text("Update rates", { size: 14, weight: "Semi Bold", color: COLORS.white, colorVar: "color/base/white" });
   label.name = "action-label";
   btn.appendChild(label);
   if (busy) btn.opacity = 0.6;
@@ -1311,7 +1320,7 @@ async function buildToastSet(parent) {
           cmp.counterAxisSizingMode = "AUTO";
           cmp.itemSpacing = 0;
           cmp.cornerRadius = 12;
-          cmp.fills = solid(COLORS.white);  // no token for pure white; raw hex is fine
+          cmp.fills = solid(COLORS.white, 1, "color/base/white");
           cmp.strokes = solid(COLORS.gray[200], 1, "color/gray/200");
           cmp.strokeWeight = 1;
           cmp.strokeAlign = "INSIDE";
@@ -1604,6 +1613,7 @@ function createColorSwatch(hex, step) {
     size: 9,
     weight: "Semi Bold",
     color: b.onDark ? COLORS.white : COLORS.gray[800],
+    colorVar: b.onDark ? "color/base/white" : "color/gray/800",
   });
   badgeText.name = "contrast";
   block.appendChild(badgeText);
@@ -1663,7 +1673,7 @@ function sectionHeading(label, descText) {
 async function buildColorsPage(parent) {
   // Replace the plugin's standard "Base Components" section fill since
   // Foundations pages read better on a light background.
-  parent.fills = solid(COLORS.white);
+  parent.fills = solid(COLORS.white, 1, "color/base/white");
 
   // Page header
   const header = autoFrame("page-header", "VERTICAL", { px: 0, py: 0, gap: 8, fill: null });
@@ -1755,7 +1765,7 @@ function createTypeRow(spec) {
 }
 
 async function buildTypographyPage(parent) {
-  parent.fills = solid(COLORS.white);
+  parent.fills = solid(COLORS.white, 1, "color/base/white");
 
   // Header
   const header = autoFrame("page-header", "VERTICAL", { px: 0, py: 0, gap: 8, fill: null });
