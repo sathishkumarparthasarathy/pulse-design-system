@@ -1526,43 +1526,93 @@ async function buildGradientStyles() {
    palette in Figma.
    --------------------------------------------------------------- */
 
+// Section structure mirrors preview/index.html (the Vercel showcase):
+//   Core · Neutrals extended · Semantic · Extended palette · Chart palette
+// Any new scale added to FOUNDATION_COLORS below MUST also be placed in
+// one of these section arrays, or it will not render on the page.
 const FOUNDATION_SCALES = {
-  primary: [
-    { id: "gray",    label: "Gray",    desc: "Neutral — text, UI chrome, dividers." },
-    { id: "brand",   label: "Brand",   desc: "Scienaptic orange — primary interactive color." },
+  core: [
+    { id: "brand", label: "Brand",         desc: "Scienaptic orange — primary interactive color." },
+    { id: "gray",  label: "Gray (modern)", desc: "Neutral — text, UI chrome, dividers." },
+  ],
+  neutralsExtended: [
+    { id: "neutral",  label: "Neutral",    desc: "Pure-gray neutral scale." },
+    { id: "slate",    label: "Slate",      desc: "Cool blue-gray neutral." },
+    { id: "zinc",     label: "Zinc",       desc: "Balanced desaturated gray." },
+    { id: "stone",    label: "Stone",      desc: "Warm beige-gray neutral." },
+    { id: "warmGray", label: "Warm gray",  desc: "Coffee-warm neutral." },
+    { id: "coolGray", label: "Cool gray",  desc: "Cool steel neutral." },
+  ],
+  semantic: [
     { id: "error",   label: "Error",   desc: "Destructive and failure states." },
     { id: "warning", label: "Warning", desc: "Risk and in-review states." },
     { id: "success", label: "Success", desc: "Positive confirmations." },
   ],
-  secondary: [
-    { id: "blue",      label: "Blue",       desc: "Info and informational pills." },
-    { id: "blueLight", label: "Blue light", desc: "Cool highlight accents." },
-    { id: "indigo",    label: "Indigo",     desc: "Feature callouts." },
-    { id: "purple",    label: "Purple",     desc: "AI / decisioning flags." },
-    { id: "pink",      label: "Pink",       desc: "Human accents and tags." },
-    { id: "rose",      label: "Rose",       desc: "Soft destructive variants." },
-    { id: "orange",    label: "Orange",     desc: "Warm highlights not mapped to brand." },
-    { id: "teal",      label: "Teal",       desc: "Analytics and chart categories." },
+  extended: [
+    { id: "blue",       label: "Blue",        desc: "Info and informational pills." },
+    { id: "blueLight",  label: "Blue light",  desc: "Cool highlight accents." },
+    { id: "indigo",     label: "Indigo",      desc: "Feature callouts." },
+    { id: "purple",     label: "Purple",      desc: "AI / decisioning flags." },
+    { id: "violet",     label: "Violet",      desc: "Deeper purple alternate." },
+    { id: "fuchsia",    label: "Fuchsia",     desc: "Vivid magenta accent." },
+    { id: "pink",       label: "Pink",        desc: "Human accents and tags." },
+    { id: "rose",       label: "Rose",        desc: "Soft destructive variants." },
+    { id: "orange",     label: "Orange",      desc: "Warm highlights not mapped to brand." },
+    { id: "yellow",     label: "Yellow",      desc: "Bright attention accent." },
+    { id: "teal",       label: "Teal",        desc: "Analytics and chart categories." },
+    { id: "cyan",       label: "Cyan",        desc: "Cool highlight accent." },
+    { id: "moss",       label: "Moss",        desc: "Organic green neutral." },
+    { id: "greenLight", label: "Green light", desc: "Bright lime-green accent." },
   ],
 };
 
+// 12 distinct categorical hues for data-viz / charts.  Rendered as a
+// single row of swatches (not an 11-step scale).
+const CHART_PALETTE = [
+  { name: "chart-1",  hex: "#FF7918", hue: "Brand orange" },
+  { name: "chart-2",  hex: "#2E90FA", hue: "Blue" },
+  { name: "chart-3",  hex: "#10B981", hue: "Emerald" },
+  { name: "chart-4",  hex: "#7A5AF8", hue: "Purple" },
+  { name: "chart-5",  hex: "#F63D68", hue: "Rose" },
+  { name: "chart-6",  hex: "#EAB308", hue: "Amber" },
+  { name: "chart-7",  hex: "#15B79E", hue: "Teal" },
+  { name: "chart-8",  hex: "#6172F3", hue: "Indigo" },
+  { name: "chart-9",  hex: "#DD2590", hue: "Pink" },
+  { name: "chart-10", hex: "#06AED4", hue: "Cyan" },
+  { name: "chart-11", hex: "#66C61C", hue: "Green light" },
+  { name: "chart-12", hex: "#BA24D5", hue: "Fuchsia" },
+];
+
 const SCALE_STEPS = ["25","50","100","200","300","400","500","600","700","800","900"];
 
-// Full 11-step palettes mirroring preview/index.html
+// Full 11-step palettes mirroring preview/index.html.  Any new scale
+// MUST also be placed in FOUNDATION_SCALES above, or it will not render.
 const FOUNDATION_COLORS = {
-  gray:      {25:"#FCFCFD",50:"#F8FAFC",100:"#EEF2F6",200:"#E3E8EF",300:"#CDD5DF",400:"#9AA4B2",500:"#697586",600:"#4B5565",700:"#364152",800:"#202939",900:"#121926"},
-  brand:     {25:"#FFF7F0",50:"#FFEEDD",100:"#FFDFC2",200:"#FFC094",300:"#FFA168",400:"#FF8C45",500:"#FF7918",600:"#E5610A",700:"#BB4D08",800:"#913C0C",900:"#6D2D0E"},
-  error:     {25:"#FFFBFA",50:"#FEF2F2",100:"#FEE2E2",200:"#FECACA",300:"#FCA5A5",400:"#F87171",500:"#EF4444",600:"#DC2626",700:"#B91C1C",800:"#991B1B",900:"#7F1D1D"},
-  warning:   {25:"#FFFDF2",50:"#FEFCE8",100:"#FEF9C3",200:"#FEF08A",300:"#FDE047",400:"#FACC15",500:"#EAB308",600:"#CA8504",700:"#A16207",800:"#854D0E",900:"#713F12"},
-  success:   {25:"#F6FDF9",50:"#ECFDF5",100:"#D1FAE5",200:"#A7F3D0",300:"#6EE7B7",400:"#34D399",500:"#10B981",600:"#059669",700:"#047857",800:"#065F46",900:"#064E3B"},
-  blue:      {25:"#F5FAFF",50:"#EFF8FF",100:"#D1E9FF",200:"#B2DDFF",300:"#84CAFF",400:"#53B1FD",500:"#2E90FA",600:"#1570EF",700:"#175CD3",800:"#1849A9",900:"#194185"},
-  blueLight: {25:"#F5FBFF",50:"#F0F9FF",100:"#E0F2FE",200:"#B9E6FE",300:"#7CD4FD",400:"#36BFFA",500:"#0BA5EC",600:"#0086C9",700:"#026AA2",800:"#065986",900:"#0B4A6F"},
-  indigo:    {25:"#F5F8FF",50:"#EEF4FF",100:"#E0EAFF",200:"#C7D7FE",300:"#A4BCFD",400:"#8098F9",500:"#6172F3",600:"#444CE7",700:"#3538CD",800:"#2D31A6",900:"#2D3282"},
-  purple:    {25:"#FAFAFF",50:"#F4F3FF",100:"#EBE9FE",200:"#D9D6FE",300:"#BDB4FE",400:"#9B8AFB",500:"#7A5AF8",600:"#6938EF",700:"#5925DC",800:"#4A1FB8",900:"#3E1C96"},
-  pink:      {25:"#FEF6FB",50:"#FDF2FA",100:"#FCE7F6",200:"#FCCEEE",300:"#FAA7E0",400:"#F670C7",500:"#EE46BC",600:"#DD2590",700:"#C11574",800:"#9E165F",900:"#851651"},
-  rose:      {25:"#FFF5F6",50:"#FFF1F3",100:"#FFE4E8",200:"#FECDD6",300:"#FEA3B4",400:"#FD6F8E",500:"#F63D68",600:"#E31B54",700:"#C01048",800:"#A11043",900:"#89123E"},
-  orange:    {25:"#FEFAF5",50:"#FEF6EE",100:"#FDEAD7",200:"#F9DBAF",300:"#F7B27A",400:"#F38744",500:"#EF6820",600:"#E04F16",700:"#B93815",800:"#932F19",900:"#772917"},
-  teal:      {25:"#F6FEFC",50:"#F0FDF9",100:"#CCFBEF",200:"#99F6E0",300:"#5FE9D0",400:"#2ED3B7",500:"#15B79E",600:"#0E9384",700:"#107569",800:"#125D56",900:"#134E48"},
+  brand:      {25:"#FFF7F0",50:"#FFEEDD",100:"#FFDFC2",200:"#FFC094",300:"#FFA168",400:"#FF8C45",500:"#FF7918",600:"#E5610A",700:"#BB4D08",800:"#913C0C",900:"#6D2D0E"},
+  gray:       {25:"#FCFCFD",50:"#F8FAFC",100:"#EEF2F6",200:"#E3E8EF",300:"#CDD5DF",400:"#9AA4B2",500:"#697586",600:"#4B5565",700:"#364152",800:"#202939",900:"#121926"},
+  neutral:    {25:"#FCFCFC",50:"#FAFAFA",100:"#F5F5F5",200:"#E5E5E5",300:"#D4D4D4",400:"#A3A3A3",500:"#737373",600:"#525252",700:"#404040",800:"#262626",900:"#171717"},
+  slate:      {25:"#FBFCFD",50:"#F8FAFC",100:"#F1F5F9",200:"#E2E8F0",300:"#CBD5E1",400:"#94A3B8",500:"#64748B",600:"#475569",700:"#334155",800:"#1E293B",900:"#0F172A"},
+  zinc:       {25:"#FCFCFD",50:"#FAFAFA",100:"#F4F4F5",200:"#E4E4E7",300:"#D4D4D8",400:"#A1A1AA",500:"#71717A",600:"#52525B",700:"#3F3F46",800:"#27272A",900:"#18181B"},
+  stone:      {25:"#FDFCFB",50:"#FAFAF9",100:"#F5F5F4",200:"#E7E5E4",300:"#D6D3D1",400:"#A8A29E",500:"#78716C",600:"#57534E",700:"#44403C",800:"#292524",900:"#1C1917"},
+  warmGray:   {25:"#FCFAF7",50:"#F9F5F0",100:"#F3EBE0",200:"#E5D5C0",300:"#CDB89F",400:"#A8927A",500:"#7E6C57",600:"#5E4F3F",700:"#443A2F",800:"#2D2620",900:"#1A1614"},
+  coolGray:   {25:"#F9FAFB",50:"#F3F6FA",100:"#E5EDF3",200:"#C9D6E1",300:"#A6B7C7",400:"#7B8FA3",500:"#56697D",600:"#3F4F5F",700:"#2C3845",800:"#1B232C",900:"#10141A"},
+  error:      {25:"#FFFBFA",50:"#FEF2F2",100:"#FEE2E2",200:"#FECACA",300:"#FCA5A5",400:"#F87171",500:"#EF4444",600:"#DC2626",700:"#B91C1C",800:"#991B1B",900:"#7F1D1D"},
+  warning:    {25:"#FFFDF2",50:"#FEFCE8",100:"#FEF9C3",200:"#FEF08A",300:"#FDE047",400:"#FACC15",500:"#EAB308",600:"#CA8A04",700:"#A16207",800:"#854D0E",900:"#713F12"},
+  success:    {25:"#F6FDF9",50:"#ECFDF5",100:"#D1FAE5",200:"#A7F3D0",300:"#6EE7B7",400:"#34D399",500:"#10B981",600:"#059669",700:"#047857",800:"#065F46",900:"#064E3B"},
+  blue:       {25:"#F5FAFF",50:"#EFF8FF",100:"#D1E9FF",200:"#B2DDFF",300:"#84CAFF",400:"#53B1FD",500:"#2E90FA",600:"#1570EF",700:"#175CD3",800:"#1849A9",900:"#194185"},
+  blueLight:  {25:"#F5FBFF",50:"#F0F9FF",100:"#E0F2FE",200:"#B9E6FE",300:"#7CD4FD",400:"#36BFFA",500:"#0BA5EC",600:"#0086C9",700:"#026AA2",800:"#065986",900:"#0B4A6F"},
+  indigo:     {25:"#F5F8FF",50:"#EEF4FF",100:"#E0EAFF",200:"#C7D7FE",300:"#A4BCFD",400:"#8098F9",500:"#6172F3",600:"#444CE7",700:"#3538CD",800:"#2D31A6",900:"#2D3282"},
+  purple:     {25:"#FAFAFF",50:"#F4F3FF",100:"#EBE9FE",200:"#D9D6FE",300:"#BDB4FE",400:"#9B8AFB",500:"#7A5AF8",600:"#6938EF",700:"#5925DC",800:"#4A1FB8",900:"#3E1C96"},
+  violet:     {25:"#FBFAFF",50:"#F5F3FF",100:"#ECE9FE",200:"#DDD6FE",300:"#C3B5FD",400:"#A48AFB",500:"#875BF7",600:"#7839EE",700:"#6927DA",800:"#5720B7",900:"#491C96"},
+  fuchsia:    {25:"#FEFAFF",50:"#FDF4FF",100:"#FBE8FF",200:"#F6D0FE",300:"#EEAAFD",400:"#E478FA",500:"#D444F1",600:"#BA24D5",700:"#9F1AB1",800:"#821890",900:"#6F1877"},
+  pink:       {25:"#FEF6FB",50:"#FDF2FA",100:"#FCE7F6",200:"#FCCEEE",300:"#FAA7E0",400:"#F670C7",500:"#EE46BC",600:"#DD2590",700:"#C11574",800:"#9E165F",900:"#851651"},
+  rose:       {25:"#FFF5F6",50:"#FFF1F3",100:"#FFE4E8",200:"#FECDD6",300:"#FEA3B4",400:"#FD6F8E",500:"#F63D68",600:"#E31B54",700:"#C01048",800:"#A11043",900:"#89123E"},
+  orange:     {25:"#FEFAF5",50:"#FEF6EE",100:"#FDEAD7",200:"#F9DBAF",300:"#F7B27A",400:"#F38744",500:"#EF6820",600:"#E04F16",700:"#B93815",800:"#932F19",900:"#772917"},
+  yellow:     {25:"#FEFDF0",50:"#FEFBE8",100:"#FEF7C3",200:"#FEEE95",300:"#FDE272",400:"#FAC515",500:"#EAAA08",600:"#CA8504",700:"#A15C07",800:"#854A0E",900:"#713B12"},
+  teal:       {25:"#F6FEFC",50:"#F0FDF9",100:"#CCFBEF",200:"#99F6E0",300:"#5FE9D0",400:"#2ED3B7",500:"#15B79E",600:"#0E9384",700:"#107569",800:"#125D56",900:"#134E48"},
+  cyan:       {25:"#F5FEFF",50:"#ECFDFF",100:"#CFF9FE",200:"#A5F0FC",300:"#67E3F9",400:"#22CCEE",500:"#06AED4",600:"#088AB2",700:"#0E7090",800:"#155B75",900:"#164C63"},
+  moss:       {25:"#FAFDF7",50:"#F5FBEE",100:"#E6F4D7",200:"#CEEAB0",300:"#ACDC79",400:"#86CB3C",500:"#669F2A",600:"#4F7A21",700:"#3F621A",800:"#335015",900:"#2B4212"},
+  greenLight: {25:"#FAFEF5",50:"#F3FEE7",100:"#E4FBCC",200:"#D0F8AB",300:"#A6EF67",400:"#85E13A",500:"#66C61C",600:"#4CA30D",700:"#3B7C0F",800:"#326212",900:"#2B5314"},
 };
 
 // WCAG 2.1 contrast ratio against white
@@ -1670,6 +1720,55 @@ function sectionHeading(label, descText) {
   return h;
 }
 
+// Chart palette row — 12 categorical hues as uniform swatches (no 11-step
+// scale here). Each block has the hex + hue label beneath it, matching
+// the Vercel showcase's chart-palette strip.
+function createChartPaletteRow() {
+  const wrap = autoFrame("chart-palette", "VERTICAL", { px: 0, py: 0, gap: 12, fill: null });
+  wrap.primaryAxisSizingMode = "AUTO";
+  wrap.counterAxisSizingMode = "AUTO";
+  wrap.counterAxisAlignItems = "MIN";
+
+  const lbl = text("Chart palette · categorical", { size: 13, weight: "Semi Bold", color: COLORS.gray[800], colorVar: "color/gray/800" });
+  lbl.name = "lbl-chart";
+  wrap.appendChild(lbl);
+
+  const row = autoFrame("sw-chart", "HORIZONTAL", { px: 0, py: 0, gap: 12, fill: null });
+  row.primaryAxisSizingMode = "AUTO";
+  row.counterAxisSizingMode = "AUTO";
+
+  for (const c of CHART_PALETTE) {
+    const cell = autoFrame(`cell-${c.name}`, "VERTICAL", { px: 0, py: 0, gap: 6, fill: null });
+    cell.primaryAxisSizingMode = "FIXED";
+    cell.counterAxisSizingMode = "AUTO";
+    cell.resize(88, 90);
+    cell.counterAxisAlignItems = "MIN";
+
+    const block = figma.createFrame();
+    block.name = "block";
+    block.resize(88, 48);
+    block.cornerRadius = 6;
+    block.fills = solid(c.hex);
+    block.strokes = solid("#101828", 0.06);
+    block.strokeWeight = 1;
+    block.strokeAlign = "INSIDE";
+    cell.appendChild(block);
+
+    const name = text(c.name, { size: 10, weight: "Semi Bold", color: COLORS.gray[800], colorVar: "color/gray/800" });
+    name.name = "name";
+    cell.appendChild(name);
+
+    const hue = text(c.hue + " · " + c.hex, { size: 9, weight: "Regular", color: COLORS.gray[500], colorVar: "color/gray/500" });
+    hue.name = "hue";
+    cell.appendChild(hue);
+
+    row.appendChild(cell);
+  }
+
+  wrap.appendChild(row);
+  return wrap;
+}
+
 async function buildColorsPage(parent) {
   // Replace the plugin's standard "Base Components" section fill since
   // Foundations pages read better on a light background.
@@ -1681,22 +1780,38 @@ async function buildColorsPage(parent) {
   header.counterAxisSizingMode = "AUTO";
   header.appendChild(text("Colors", { size: 30, weight: "Semi Bold", color: COLORS.gray[900] }));
   header.appendChild(text(
-    "The full Pulse color system — 13 scales × 11 steps. Each swatch includes its WCAG contrast ratio against white.",
+    "The full Pulse color system — mirrors the Vercel showcase. Each swatch includes its WCAG contrast ratio against white.",
     { size: 14, weight: "Regular", color: COLORS.gray[600] }
   ));
   parent.appendChild(header);
 
-  // Primary
-  parent.appendChild(sectionHeading("Primary colors", "The main colors that make up most of the design system."));
-  for (const scale of FOUNDATION_SCALES.primary) {
+  // Core — brand + primary gray
+  parent.appendChild(sectionHeading("Core", "The core identity — brand and primary gray."));
+  for (const scale of FOUNDATION_SCALES.core) {
     parent.appendChild(createScaleRow(scale));
   }
 
-  // Secondary
-  parent.appendChild(sectionHeading("Secondary colors", "Accents used sparingly for pills, alerts, chart categories."));
-  for (const scale of FOUNDATION_SCALES.secondary) {
+  // Neutrals · extended — alternate neutral scales (different temperatures)
+  parent.appendChild(sectionHeading("Neutrals · extended", "Alternate neutral scales — pick when the primary gray doesn't match the surface temperature."));
+  for (const scale of FOUNDATION_SCALES.neutralsExtended) {
     parent.appendChild(createScaleRow(scale));
   }
+
+  // Semantic — error / warning / success
+  parent.appendChild(sectionHeading("Semantic", "Intents wired into components — destructive, risk, confirmation."));
+  for (const scale of FOUNDATION_SCALES.semantic) {
+    parent.appendChild(createScaleRow(scale));
+  }
+
+  // Extended palette — everything else
+  parent.appendChild(sectionHeading("Extended palette", "Accents used sparingly for pills, alerts, callouts, chart categories."));
+  for (const scale of FOUNDATION_SCALES.extended) {
+    parent.appendChild(createScaleRow(scale));
+  }
+
+  // Chart palette — 12 categorical hues for data-viz
+  parent.appendChild(sectionHeading("Chart palette", "Twelve distinct hues for data-viz categorical series. Ordered for max sequential contrast."));
+  parent.appendChild(createChartPaletteRow());
 }
 
 /* ─── Foundations · Typography ───────────────────────────────────
