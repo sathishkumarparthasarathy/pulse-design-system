@@ -26,7 +26,7 @@ const COLORS = {
   error:   { 50: "#FEF2F2", 300: "#FCA5A5", 500: "#EF4444", 600: "#DC2626", 700: "#B91C1C" },
   warning: { 50: "#FEFCE8", 500: "#EAB308", 700: "#A16207" },
   success: { 50: "#ECFDF5", 500: "#10B981", 700: "#047857" },
-  info:    { 50: "#EFF8FF", 500: "#2E90FA", 700: "#175CD3" },
+  blue:    { 50: "#EFF8FF", 500: "#2E90FA", 600: "#1570EF", 700: "#175CD3" },
   purple:  { 50: "#F4F3FF", 500: "#7A5AF8", 700: "#5925DC" },
   pink:    { 50: "#FDF2FA", 500: "#EE46BC", 700: "#C11574" },
   white:   "#FFFFFF",
@@ -778,7 +778,7 @@ const BADGE_TONES = [
   { id: "error",   bg: COLORS.error[50],    bgVar: "color/error/50",    text: COLORS.error[700],   textVar: "color/error/700",   border: COLORS.error[300],   borderVar: "color/error/300" },
   { id: "warning", bg: COLORS.warning[50],  bgVar: "color/warning/50",  text: COLORS.warning[700], textVar: "color/warning/700", border: COLORS.warning[500], borderVar: "color/warning/500" },
   { id: "success", bg: COLORS.success[50],  bgVar: "color/success/50",  text: COLORS.success[700], textVar: "color/success/700", border: COLORS.success[500], borderVar: "color/success/500" },
-  { id: "info",    bg: COLORS.info[50],     bgVar: "color/info/50",     text: COLORS.info[700],    textVar: "color/info/700",    border: COLORS.info[500],    borderVar: "color/info/500" },
+  { id: "info",    bg: COLORS.blue[50],     bgVar: "color/blue/50",     text: COLORS.blue[700],    textVar: "color/blue/700",    border: COLORS.blue[500],    borderVar: "color/blue/500" },
   { id: "ai",      bg: COLORS.purple[50],   bgVar: "color/purple/50",   text: COLORS.purple[700],  textVar: "color/purple/700",  border: COLORS.purple[500],  borderVar: "color/purple/500" },
 ];
 
@@ -1143,7 +1143,7 @@ const TOAST_LAYOUTS = [
 // user imports figma-export/tokens.json. Fills get bound to it when
 // present, otherwise the raw hex falls through.
 const TOAST_INTENTS = [
-  { id: "info",    label: "Info",    hasIcon: true,  color: "#1570EF", varPath: "color/info/600",    glyph: "i" },
+  { id: "info",    label: "Info",    hasIcon: true,  color: "#1570EF", varPath: "color/blue/600",    glyph: "i" },
   { id: "success", label: "Success", hasIcon: true,  color: "#059669", varPath: "color/success/600", glyph: "✓" },
   // warning-700 — 600 fails WCAG 3:1 against white
   { id: "warning", label: "Warning", hasIcon: true,  color: "#A16207", varPath: "color/warning/700", glyph: "!" },
@@ -1636,16 +1636,18 @@ function contrastBadge(hex) {
   return { label: txt, onDark: false };
 }
 
-function createColorSwatch(hex, step) {
+function createColorSwatch(hex, step, scaleId) {
   // Outer column — color block on top, contrast badge, step, hex
   const col = autoFrame(`swatch-${step}`, "VERTICAL", { px: 0, py: 0, gap: 4, fill: null });
   col.primaryAxisSizingMode = "AUTO";
   col.counterAxisSizingMode = "FIXED";
   col.resize(84, 100);
 
-  // Color block — auto-layout so the badge sits top-left cleanly
+  // Color block — auto-layout so the badge sits top-left cleanly.
+  // When the scale lives in tokens.json (every family in Colors page
+  // now does), its paint binds to color/<scale>/<step>.
   const block = autoFrame(`color-${step}`, "HORIZONTAL", {
-    px: 8, py: 8, fill: hex, radius: 6,
+    px: 8, py: 8, fill: hex, fillVar: scaleId ? `color/${scaleId}/${step}` : undefined, radius: 6,
   });
   block.primaryAxisSizingMode = "FIXED";
   block.counterAxisSizingMode = "FIXED";
@@ -1702,7 +1704,7 @@ function createScaleRow(scale) {
   const palette = FOUNDATION_COLORS[scale.id] || {};
   for (const step of SCALE_STEPS) {
     const hex = palette[step];
-    if (hex) swatchRow.appendChild(createColorSwatch(hex, step));
+    if (hex) swatchRow.appendChild(createColorSwatch(hex, step, scale.id));
   }
   row.appendChild(swatchRow);
 
